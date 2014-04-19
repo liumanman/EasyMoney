@@ -9,6 +9,7 @@ public class TN_Relation {
 	public static String COLUMN_INDATE = "InDate";
 	public static String COLUMN_INUSERID = "InUserID";
 	public static String COLUMN_FLAG = "Flag";
+    public static String COLUMN_AMOUNT = "Amount";
 	
 	public static String TABLE_NAME = "TN_Relation";
 	
@@ -18,8 +19,16 @@ public class TN_Relation {
 	private Date mInDate;
 	private String mInUserID;
 	private int mFlag;
-	
-	public int getID() {
+    private int mAmount;
+
+    public int getAmount() {
+        return mAmount;
+    }
+    public void setAmount(int amount) {
+        this.mAmount = amount;
+    }
+
+    public int getID() {
 		return mID;
 	}
 	public void setID(int id) {

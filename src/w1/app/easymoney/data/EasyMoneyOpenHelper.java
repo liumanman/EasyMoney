@@ -48,7 +48,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 																"[NodeID] INTEGER  NOT NULL,"+
 																"[InDate] TIMESTAMP  NOT NULL,"+
 																"[InUserID] VARCHAR(16)  NULL,"+
-																"[Flag] INTEGER  NOT NULL"+
+																"[Flag] INTEGER  NOT NULL,"+
+                                                                "[Amount] NUMERIC(8,2) NOT NULL"+
 																")";
 		
 		

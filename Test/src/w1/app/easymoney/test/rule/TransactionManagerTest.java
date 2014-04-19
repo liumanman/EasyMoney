@@ -2,11 +2,14 @@ package w1.app.easymoney.test.rule;
 
 import junit.framework.TestCase;
 
+import java.security.PrivateKey;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
+import w1.app.easymoney.common.Utility;
 import w1.app.easymoney.data.DatabaseOperator;
 import w1.app.easymoney.data.TN_RelationDBH;
 import w1.app.easymoney.data.TransactionDBH;
@@ -59,15 +62,16 @@ public class TransactionManagerTest extends TestCase {
     }
 
     public void test() throws Exception {
-        this.doTestCreate();
-        this.doTestModify();
-        this.doTestQuery();
-        this.doTestDelete();
+        this.doTestCreate2();
+
+//        this.doTestModify();
+//        this.doTestQuery();
+//        this.doTestDelete();
     }
 
     private void doTestCreate() throws Exception {
         Transaction tran = new Transaction();
-        tran.setAmount((float) 9.99);
+        tran.setAmount(999);
         tran.setInUserID("1w");
         tran.setComment("xxxx");
         tran.setTranDate(new SimpleDateFormat("yyyy-MM-dd")
@@ -84,7 +88,7 @@ public class TransactionManagerTest extends TestCase {
 
         //-------------------------
         Transaction tran2 = new Transaction();
-        tran2.setAmount((float) 19.99);
+        tran2.setAmount(999);
         tran2.setInUserID("1w");
         tran2.setComment("xxxx");
         tran2.setTranDate(new SimpleDateFormat("yyyy-MM-dd")
@@ -95,7 +99,7 @@ public class TransactionManagerTest extends TestCase {
         assertNotNull(tran2);
         //--------------------
         Transaction tran3 = new Transaction();
-        tran3.setAmount((float) 19.99);
+        tran3.setAmount(1999);
         tran3.setInUserID("1w");
         tran3.setComment("xxxx");
         tran3.setTranDate(new SimpleDateFormat("yyyy-MM-dd")
@@ -106,9 +110,36 @@ public class TransactionManagerTest extends TestCase {
         assertNotNull(tran3);
     }
 
+    private void doTestCreate2() throws Exception {
+       Transaction tran = new Transaction();
+        tran.setAmount(999);
+        tran.setComment("comment");
+        tran.setTranDate(Utility.StringToDate("2014-04-17 00:00:00"));
+
+        List<TN_Relation> list = new ArrayList<TN_Relation>(5);
+        TN_Relation tn = new TN_Relation();
+        tn.setAmount(999);
+        tn.setNodeID(ecR_1_3.getID());
+        list.add(tn);
+
+        tn = new TN_Relation();
+        tn.setAmount(599);
+        tn.setNodeID(ecR_2_1.getID());
+        list.add(tn);
+
+        tn = new TN_Relation();
+        tn.setAmount(400);
+        tn.setNodeID(ecR_2_2.getID());
+        list.add(tn);
+
+        tran.setTN_Relation(list);
+
+        tran = TransactionManager.create(tran);
+    }
+
 
     private void doTestModify() throws Exception {
-        float amount = 19.99f;
+        int amount = 1999;
         String comment = "updated comment";
         String tranDate = "2014-04-09";
         String editUserID = "2w";

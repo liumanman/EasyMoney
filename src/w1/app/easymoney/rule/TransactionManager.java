@@ -70,17 +70,42 @@ public class TransactionManager {
         return tran;
     }
 
-    public static void delete(int id) throws SQLException {
-        DatabaseOperator.getOperator().beginTransaction();
-        try {
-            TransactionDBH.delete(id);
-            TN_RelationDBH.deleteBYTranID(id);
+    public static Transaction create(Transaction tran) throws Exception {
+      tran.setInDate(new Date());
 
-            DatabaseOperator.getOperator().setTransactionSuccessful();
+        if (tran.getTN_Relation() == null || tran.getTN_Relation().size() < 1){
+            throw new Exception("Can't create a transaction without any node.");
         }
-        finally{
-            DatabaseOperator.getOperator().endTransaction();
+
+
+        int c = 0;
+        for(int i = 0; i < tran.getTN_Relation().size(); i ++){
+            Node node = NodeManager.get(tran.getTN_Relation().get(i).getNodeID());
+            if(node == null){
+                throw new Exception("Can't find node " + tran.getTN_Relation().get(i).getNodeID());
+            }
+
+            List<Node> list = NodeManager.getChildNodes(tran.getTN_Relation().get(i).getNodeID());
+            if(list != null && list.size() > 0){
+                throw new Exception("Can't put a transaction into a node which has child nodes.");
+            }
+
+            c = c + tran.getTN_Relation().get(i).getAmount();
         }
+
+        if(c % tran.getAmount() != 0){
+            throw new Exception("TN amount is not correct.");
+        }
+
+        tran.setID(TransactionDBH.insert(tran));
+        for(int i = 0; i < tran.getTN_Relation().size(); i ++){
+            tran.getTN_Relation().get(i).setTranID(tran.getID());
+            tran.getTN_Relation().get(i).setInDate(new Date());
+            tran.getTN_Relation().get(i).setID(TN_RelationDBH.insert(tran.getTN_Relation().get(i)));
+
+        }
+
+        return tran;
     }
 
     public static Transaction modify(Transaction tran, int[] nodeIDs, int[] negativeNodeIDs) throws Exception {
@@ -147,8 +172,21 @@ public class TransactionManager {
 
     }
 
-    public static List<Transaction> getByNodeID(int nodeID) {
+    public static List<Transaction> getByNodeID(int nodeID) throws Exception {
         return TransactionDBH.getByNodeID(nodeID);
+    }
+
+    public static void delete(int id) throws SQLException {
+        DatabaseOperator.getOperator().beginTransaction();
+        try {
+            TransactionDBH.delete(id);
+            TN_RelationDBH.deleteBYTranID(id);
+
+            DatabaseOperator.getOperator().setTransactionSuccessful();
+        }
+        finally{
+            DatabaseOperator.getOperator().endTransaction();
+        }
     }
 
     public static Transaction get(int id) throws  ParseException {

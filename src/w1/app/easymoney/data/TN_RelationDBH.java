@@ -20,12 +20,13 @@ public class TN_RelationDBH {
 		cv.put(TN_Relation.COLUMN_INUSERID, tn.getInUserID());
 		cv.put(TN_Relation.COLUMN_NODEID, tn.getNodeID());
 		cv.put(TN_Relation.COLUMN_TRANID, tn.getTranID());
+        cv.put(TN_Relation.COLUMN_AMOUNT, tn.getAmount());
 		
 		return (int) DatabaseOperator.getOperator().getWritableDatabase().insertOrThrow(TN_Relation.TABLE_NAME, null, cv);
 	}
 	
-	public static void update(TN_Relation tn){
-		
+	public static void update(TN_Relation tn) throws Exception {
+		throw new Exception("not finished.");
 	}
 	
 	public static void delete(int id) throws java.sql.SQLException {
@@ -56,6 +57,7 @@ public class TN_RelationDBH {
         r.setInUserID(cursor.getString(cursor.getColumnIndex(TN_Relation.COLUMN_INUSERID)));
         r.setNodeID(cursor.getInt(cursor.getColumnIndex(TN_Relation.COLUMN_NODEID)));
         r.setTranID(cursor.getInt(cursor.getColumnIndex(TN_Relation.COLUMN_TRANID)));
+        r.setAmount(cursor.getInt(cursor.getColumnIndex(TN_Relation.COLUMN_AMOUNT)));
 
         return r;
     }

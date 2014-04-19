@@ -27,8 +27,8 @@ public class TransactionDBH {
 		return (int) DatabaseOperator.getOperator().getWritableDatabase().insertOrThrow(Transaction.TABLE_NAME, null, cv);
 	}
 	
-	public static void update(Transaction tran){
-		
+	public static void update(Transaction tran) throws Exception {
+		throw new Exception("not finished.");
 	}
 	
 	public static void delete(int id) throws java.sql.SQLException {
@@ -48,8 +48,8 @@ public class TransactionDBH {
 		}
 	}
 	
-	public static List<Transaction> getByNodeID(int nodeID){
-		return null;
+	public static List<Transaction> getByNodeID(int nodeID) throws Exception {
+		throw new Exception("not finished.");
 	}
 
     public static List<Transaction> query(Date start, Date end, int[] nodeIDs) throws java.sql.SQLException, ParseException {
@@ -100,7 +100,7 @@ public class TransactionDBH {
 	private static Transaction createTransactionFromCursor(Cursor c) throws ParseException{
 		Transaction t = new Transaction();
 		
-		t.setAmount(c.getFloat(c.getColumnIndex(Transaction.COLUMN_AMOUNT)));
+		t.setAmount(c.getInt(c.getColumnIndex(Transaction.COLUMN_AMOUNT)));
 		t.setComment(c.getString(c.getColumnIndex(Transaction.COLUMN_COMMENT)));
 		t.setEditDate(Utility.StringToDate(c.getString(c.getColumnIndex(Transaction.COLUMN_EDITDATE))));
 		t.setEditUserID(c.getString(c.getColumnIndex(Transaction.COLUMN_EDITUSERID)));

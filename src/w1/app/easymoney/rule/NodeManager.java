@@ -91,6 +91,9 @@ public class NodeManager {
 		}
 	}
 
+    public static Node get(int id) throws ParseException {
+        return NodeDBH.get(id);
+    }
 
 	public static List<Node> getOCNodes() throws ParseException{
 		Node root = getByCode(Node.CODE_OUTGOING_CATEGORY);

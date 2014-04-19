@@ -1,6 +1,7 @@
 package w1.app.easymoney.entity;
 
 import java.util.Date;
+import java.util.List;
 
 public class Transaction {
 	public static String COLUMN_ID = "ID";
@@ -15,24 +16,33 @@ public class Transaction {
 	public static String TABLE_NAME = "[Transaction]";
 	
 	private int mID;
-	private float mAmount;
+	private int mAmount;
 	private String mComment;
 	private Date mTranDate;
 	private Date mInDate;
 	private String mInUserID;
 	private Date mEditDate;
 	private String mEditUserID;
-	
-	public int getID() {
+    private List<TN_Relation> mTN_Relation;
+
+    public List<TN_Relation> getTN_Relation() {
+        return mTN_Relation;
+    }
+
+    public void setTN_Relation(List<TN_Relation> tn_Relation) {
+        this.mTN_Relation = tn_Relation;
+    }
+
+    public int getID() {
 		return mID;
 	}
 	public void setID(int id) {
 		this.mID = id;
 	}
-	public float getAmount() {
+	public int getAmount() {
 		return mAmount;
 	}
-	public void setAmount(float amount) {
+	public void setAmount(int amount) {
 		this.mAmount = amount;
 	}
 	public String getComment() {

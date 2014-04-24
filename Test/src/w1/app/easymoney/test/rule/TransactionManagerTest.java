@@ -1,5 +1,6 @@
 package w1.app.easymoney.test.rule;
 
+import android.test.suitebuilder.TestSuiteBuilder;
 import junit.framework.TestCase;
 
 import java.security.PrivateKey;
@@ -7,10 +8,12 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import w1.app.easymoney.common.Utility;
 import w1.app.easymoney.data.DatabaseOperator;
+import w1.app.easymoney.data.NodeDBH;
 import w1.app.easymoney.data.TN_RelationDBH;
 import w1.app.easymoney.data.TransactionDBH;
 import w1.app.easymoney.entity.Node;
@@ -44,6 +47,8 @@ public class TransactionManagerTest extends TestCase {
 
         ecRoot = NodeManager.create("Expense Category", "Category",
                 Node.ROOT_NODE_ID, "1w");
+        ecRoot.setCode(Node.CODE_OUTGOING_CATEGORY);
+        NodeDBH.update(ecRoot);
 
         ecR_1 = NodeManager.create("Food", "Food", ecRoot.getID(), "1w");
         ecR_1_1 = NodeManager.create("Material", "Material", ecR_1.getID(),
@@ -64,6 +69,7 @@ public class TransactionManagerTest extends TestCase {
     public void test() throws Exception {
         this.doTestCreate2();
         this.doTestQuery();
+        this.doTestGetOutgoingSummaryByCurrentWeek();
 
 //        this.doTestModify();
 //        this.doTestQuery();
@@ -115,7 +121,7 @@ public class TransactionManagerTest extends TestCase {
        Transaction tran = new Transaction();
         tran.setAmount(999);
         tran.setComment("comment");
-        tran.setTranDate(Utility.StringToDate("2014-04-17 00:00:00"));
+        tran.setTranDate(new Date());
 
         List<TN_Relation> list = new ArrayList<TN_Relation>(5);
         TN_Relation tn = new TN_Relation();
@@ -183,7 +189,7 @@ public class TransactionManagerTest extends TestCase {
     }
 
     private void doTestQuery() throws Exception {
-        List<Transaction> list = TransactionManager.query(null, null, new int[] {ecR_1_2.getID()});
+        List<Transaction> list = TransactionManager.query(null, null, new int[] {ecR_1.getID()});
     }
 
     private void doTestDelete() throws SQLException, ParseException {
@@ -194,5 +200,9 @@ public class TransactionManagerTest extends TestCase {
         List<TN_Relation> list = TN_RelationDBH.getByTranID(mTran.getID());
         assertEquals(0, list.size());
 
+    }
+
+    private void doTestGetOutgoingSummaryByCurrentWeek() throws Exception {
+        int s = TransactionManager.getOutgoingSummaryByCurrentWeek();
     }
 }

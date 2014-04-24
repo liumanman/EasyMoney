@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import w1.app.easymoney.common.Utility;
 import w1.app.easymoney.data.DatabaseOperator;
 import w1.app.easymoney.data.TN_RelationDBH;
 import w1.app.easymoney.data.TransactionDBH;
@@ -199,9 +200,45 @@ public class TransactionManager {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(end);
             calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
-            e = new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).getGregorianChange();
+
+            calendar.set(Calendar.HOUR, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND,0);
+            calendar.set(Calendar.MILLISECOND, 0);
+
+            e = calendar.getTime();
         }
         return TransactionDBH.query(start, e, nodeIDs);
     }
 
+    public static int getSummary(Date start, Date end, int[] nodeIDs) throws Exception {
+        List<Transaction> list = query(start, end, nodeIDs);
+
+        int s = 0;
+        if (list != null && list.size() > 0){
+            for(int i = 0; i < list.size(); i ++){
+                s = s + list.get(i).getAmount();
+            }
+        }
+
+        return s;
+    }
+
+    public static int getCurrentDayOutgoingSummary() throws Exception {
+        Node ocRoot = NodeManager.getByCode(Node.CODE_OUTGOING_CATEGORY);
+
+        Date currentDay = new Date();
+
+        return getSummary(currentDay, currentDay, new int[] {ocRoot.getID()});
+    }
+
+    public static int getOutgoingSummaryByCurrentWeek() throws Exception {
+        Node ocRoot = NodeManager.getByCode(Node.CODE_OUTGOING_CATEGORY);
+
+        Date currentDay = new Date();
+        Date sun = Utility.getTheSunday(currentDay);
+        Date sat = Utility.getTheSaturday(currentDay);
+
+        return getSummary(sun, sat, new int[]{ocRoot.getID()});
+    }
 }

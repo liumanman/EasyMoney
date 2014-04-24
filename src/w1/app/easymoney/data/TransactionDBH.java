@@ -70,7 +70,7 @@ public class TransactionDBH {
 //       String sql = "select * from [transaction] a inner join tn_Relation b on a.id=b.tranid" +
 //               " where (a.TranDate>=?) and a.TranDate<? and b.nodeID in (?);";
 
-            String select = "select * from [transaction] a " ;
+            String select = "select distinct * from [transaction] a " ;
             String where =  " where a.TranDate>=? and a.TranDate<? ;";
         String join = "";
 

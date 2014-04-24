@@ -1,6 +1,7 @@
 package w1.app.easymoney.entity;
 
 import java.util.Date;
+import java.util.List;
 
 public class Node {
 	public static String CODE_OUTGOING_CATEGORY = "OC";
@@ -102,5 +103,12 @@ public class Node {
 	public void setCode(String code){
 		this.mCode = code;
 	}
-	
+
+    private List<Node> mChildren;
+    public List<Node> getChildren(){
+        return this.mChildren;
+    }
+    public void setChildren(List<Node> children){
+        this.mChildren = children;
+    }
 }

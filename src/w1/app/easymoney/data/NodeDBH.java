@@ -94,7 +94,7 @@ public class NodeDBH {
 	public static List<Node> getByCode(String code) throws ParseException{
 		Cursor c = DatabaseOperator.getOperator().getReadableDatabase().query(Node.TABLE_NAME
 				, null
-				, "Code='?'"
+				, "Code=?"
 				,new String[] {code}
 				, null
 				, null

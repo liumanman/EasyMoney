@@ -198,6 +198,7 @@ public class TransactionManager {
         if (end != null) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(end);
+            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
             e = new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).getGregorianChange();
         }
         return TransactionDBH.query(start, e, nodeIDs);

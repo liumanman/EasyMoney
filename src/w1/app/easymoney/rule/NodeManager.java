@@ -95,9 +95,19 @@ public class NodeManager {
         return NodeDBH.get(id);
     }
 
-	public static List<Node> getOCNodes() throws ParseException{
-		Node root = getByCode(Node.CODE_OUTGOING_CATEGORY);
-		return NodeManager.getChildNodes(root.getID());
+	public static List<Node> getAllByCode(String code) throws ParseException{
+		Node root = getByCode(code);
+        buildTree(root);
+	    return root.getChildren();
 	}
+    private static void buildTree(Node node) throws ParseException {
+        List<Node> list = NodeDBH.getByParentID(node.getID());
+        if (list != null && list.size() > 0){
+            node.setChildren(list);
+            for(int i = 0; i < list.size(); i ++){
+               buildTree(list.get(i));
+            }
+        }
+    }
 
 }

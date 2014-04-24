@@ -63,6 +63,7 @@ public class TransactionManagerTest extends TestCase {
 
     public void test() throws Exception {
         this.doTestCreate2();
+        this.doTestQuery();
 
 //        this.doTestModify();
 //        this.doTestQuery();

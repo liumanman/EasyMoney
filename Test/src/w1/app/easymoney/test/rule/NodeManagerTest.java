@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import w1.app.easymoney.common.Utility;
@@ -31,6 +32,8 @@ public class NodeManagerTest extends TestCase {
         this.testGetChildNodes(3);
         this.testDelete();
         this.testGetChildNodes(2);
+
+        this.testGetAllByCode();
     }
 
     private void testCreate() throws SQLException, ParseException {
@@ -149,6 +152,62 @@ public class NodeManagerTest extends TestCase {
         }
     }
 
+    private void testGetAllByCode() throws SQLException, ParseException {
+       Node root = new Node();
+        root.setCode(Node.CODE_OUTGOING_CATEGORY);
+        root.setDescription("Outgoing category root");
+        root.setInUserID("1w");
+        root.setName("Outgoing");
+        root.setParentID(-1);
+        root.setLevel("");
+        root.setInDate(new Date());
+
+        root.setID(NodeDBH.insert(root));
+        NodeDBH.update(root);
+
+        Node food = NodeManager.create("Food","Food", root.getID(), "1w");
+        Node house = NodeManager.create("house","house", root.getID(), "1w");
+        Node other = NodeManager.create("Other", "Other", root.getID(), "iw");
+
+        Node f_drink = NodeManager.create("Drink", "Drink", food.getID(), "1w");
+        Node f_restrent = NodeManager.create("restent", "restent", food.getID(),"1w");
+
+        Node f_d_tea = NodeManager.create("tea", "tea", f_drink.getID(), "1w");
+
+        Node h_hoa = NodeManager.create("Hoa", "hoa", house.getID(),"1w");
+
+
+        List<Node> list = NodeManager.getAllByCode(Node.CODE_OUTGOING_CATEGORY);
+
+        assertNotNull(list);
+        assertEquals(3, list.size());
+
+     for( int i = 0; i < list.size(); i ++){
+         String name = list.get(i).getName();
+         if (name.equals("Food")){
+             assertNotNull(list.get(i).getChildren());
+             assertEquals(2, list.get(i).getChildren().size());
+
+             continue;
+         }
+
+         if (name.equals("house")){
+             assertNotNull(list.get(i).getChildren());
+             assertEquals(1, list.get(i).getChildren().size());
+
+             continue;
+         }
+
+         if(name.equals("Other")){
+             assertNull(list.get(i).getChildren());
+
+             continue;
+         }
+
+         fail("wrong item.");
+     }
+
+    }
 	/*
 	private void testGetByCode() {
 		fail("Not yet implemented");

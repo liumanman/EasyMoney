@@ -10,7 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 import w1.app.easymoney.common.Utility;
+import w1.app.easymoney.entity.Node;
 import w1.app.easymoney.entity.Transaction;
+import w1.app.easymoney.rule.NodeManager;
 
 public class TransactionDBH {
 	public static int insert(Transaction tran) throws SQLException, java.sql.SQLException{
@@ -49,15 +51,50 @@ public class TransactionDBH {
 	}
 	
 	public static List<Transaction> getByNodeID(int nodeID) throws Exception {
-		throw new Exception("not finished.");
+        String sql = "select a.* from [transaction] a inner join tn_Relation b on a.id=b.tranid where  b.nodeID=?";
+
+        Cursor c = DatabaseOperator.getOperator().getReadableDatabase().rawQuery(sql, new String[] {String.valueOf(nodeID)});
+        if (c.getCount() == 0){
+            return null;
+        }else{
+            List<Transaction> list = new ArrayList<Transaction>(c.getCount());
+            while(c.moveToNext()){
+                list.add(createTransactionFromCursor(c));
+            }
+
+            return list;
+        }
 	}
 
     public static List<Transaction> query(Date start, Date end, int[] nodeIDs) throws java.sql.SQLException, ParseException {
 //       String sql = "select * from [transaction] a inner join tn_Relation b on a.id=b.tranid" +
 //               " where (a.TranDate>=?) and a.TranDate<? and b.nodeID in (?);";
 
-            String sql = "select * from [transaction] a inner join tn_Relation b on a.id=b.tranid" +
-              " where a.TranDate>=? and a.TranDate<? and  b.nodeID in (?);";
+            String select = "select * from [transaction] a " ;
+            String where =  " where a.TranDate>=? and a.TranDate<? ;";
+        String join = "";
+
+        if (nodeIDs != null && nodeIDs.length > 0){
+            List<Node> nodeList = new ArrayList<Node>(nodeIDs.length);
+            for(int i = 0; i < nodeIDs.length; i ++){
+                Node n = NodeManager.get(nodeIDs[i]);
+                if (n != null){
+                    nodeList.add(n);
+                }
+            }
+
+            StringBuilder sb = new StringBuilder(100*nodeIDs.length);
+            for(int i = 0; i < nodeList.size(); i ++){
+                sb.append(String.format(" inner join tn_Relation t%1$d on a.id=t%1$d.tranid ",i));
+                sb.append(String.format(" inner join Node n%1$d on t%1$d.NodeID=n%1$d.ID and (n%1$d.Level='%2$s' or n%1$d.Level like '%2$s-%%') ",i, nodeList.get(i).getLevel()));
+
+            }
+
+            join = sb.toString();
+        }
+
+        String sql = select + join + where;
+
 
        String s;
         if (start == null){
@@ -75,16 +112,8 @@ public class TransactionDBH {
             e = Utility.DateToString(end);
         }
 
-        StringBuilder sb = new StringBuilder(nodeIDs.length*6);
-       sb.append(nodeIDs[0]);
-        for(int i = 1; i < nodeIDs.length; i ++){
-            sb.append(",");
-            sb.append(nodeIDs[i]);
 
-
-        }
-
-        Cursor c = DatabaseOperator.getOperator().getWritableDatabase().rawQuery(sql, new String[]{s,e, sb.toString()});
+        Cursor c = DatabaseOperator.getOperator().getWritableDatabase().rawQuery(sql, new String[]{s,e});
         if(c == null || c.getCount() < 1){
             return null;
         }else{

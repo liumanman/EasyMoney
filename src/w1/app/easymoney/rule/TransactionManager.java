@@ -72,34 +72,34 @@ public class TransactionManager {
     }
 
     public static Transaction create(Transaction tran) throws Exception {
-      tran.setInDate(new Date());
+        tran.setInDate(new Date());
 
-        if (tran.getTN_Relation() == null || tran.getTN_Relation().size() < 1){
+        if (tran.getTN_Relation() == null || tran.getTN_Relation().size() < 1) {
             throw new Exception("Can't create a transaction without any node.");
         }
 
 
         int c = 0;
-        for(int i = 0; i < tran.getTN_Relation().size(); i ++){
+        for (int i = 0; i < tran.getTN_Relation().size(); i++) {
             Node node = NodeManager.get(tran.getTN_Relation().get(i).getNodeID());
-            if(node == null){
+            if (node == null) {
                 throw new Exception("Can't find node " + tran.getTN_Relation().get(i).getNodeID());
             }
 
             List<Node> list = NodeManager.getChildNodes(tran.getTN_Relation().get(i).getNodeID());
-            if(list != null && list.size() > 0){
+            if (list != null && list.size() > 0) {
                 throw new Exception("Can't put a transaction into a node which has child nodes.");
             }
 
             c = c + tran.getTN_Relation().get(i).getAmount();
         }
 
-        if(c % tran.getAmount() != 0){
+        if (c % tran.getAmount() != 0) {
             throw new Exception("TN amount is not correct.");
         }
 
         tran.setID(TransactionDBH.insert(tran));
-        for(int i = 0; i < tran.getTN_Relation().size(); i ++){
+        for (int i = 0; i < tran.getTN_Relation().size(); i++) {
             tran.getTN_Relation().get(i).setTranID(tran.getID());
             tran.getTN_Relation().get(i).setInDate(new Date());
             tran.getTN_Relation().get(i).setID(TN_RelationDBH.insert(tran.getTN_Relation().get(i)));
@@ -184,39 +184,33 @@ public class TransactionManager {
             TN_RelationDBH.deleteBYTranID(id);
 
             DatabaseOperator.getOperator().setTransactionSuccessful();
-        }
-        finally{
+        } finally {
             DatabaseOperator.getOperator().endTransaction();
         }
     }
 
-    public static Transaction get(int id) throws  ParseException {
+    public static Transaction get(int id) throws ParseException {
         return TransactionDBH.get(id);
     }
 
     public static List<Transaction> query(Date start, Date end, int[] nodeIDs) throws Exception {
-        Date e = null;
-        if (end != null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(end);
-            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
-
-            calendar.set(Calendar.HOUR, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND,0);
-            calendar.set(Calendar.MILLISECOND, 0);
-
-            e = calendar.getTime();
+        if (start != null) {
+            start = Utility.removeTime(start);
         }
-        return TransactionDBH.query(start, e, nodeIDs);
+        if (end != null) {
+            end = Utility.addDate(end, 1);
+            end = Utility.removeTime(end);
+        }
+
+        return TransactionDBH.query(start, end, nodeIDs);
     }
 
     public static int getSummary(Date start, Date end, int[] nodeIDs) throws Exception {
         List<Transaction> list = query(start, end, nodeIDs);
 
         int s = 0;
-        if (list != null && list.size() > 0){
-            for(int i = 0; i < list.size(); i ++){
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
                 s = s + list.get(i).getAmount();
             }
         }
@@ -224,21 +218,5 @@ public class TransactionManager {
         return s;
     }
 
-    public static int getCurrentDayOutgoingSummary() throws Exception {
-        Node ocRoot = NodeManager.getByCode(Node.CODE_OUTGOING_CATEGORY);
 
-        Date currentDay = new Date();
-
-        return getSummary(currentDay, currentDay, new int[] {ocRoot.getID()});
-    }
-
-    public static int getOutgoingSummaryByCurrentWeek() throws Exception {
-        Node ocRoot = NodeManager.getByCode(Node.CODE_OUTGOING_CATEGORY);
-
-        Date currentDay = new Date();
-        Date sun = Utility.getTheSunday(currentDay);
-        Date sat = Utility.getTheSaturday(currentDay);
-
-        return getSummary(sun, sat, new int[]{ocRoot.getID()});
-    }
 }

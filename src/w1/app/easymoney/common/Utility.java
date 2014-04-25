@@ -45,4 +45,44 @@ public class Utility {
 
         return c.getTime();
     }
+
+    public static Date removeTime(Date date){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.set(Calendar.HOUR, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        return c.getTime();
+    }
+
+    public static Date addDate(Date date, int days){
+       Calendar c = Calendar.getInstance();
+        c.setTime(date);
+
+        int day = c.get(Calendar.DATE);
+        day = day + days;
+        c.set(Calendar.DATE, day);
+
+        return c.getTime();
+    }
+
+    public static Date getFirstDayInMonth(Date date){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.set(Calendar.DATE, 1);
+
+        return c.getTime();
+    }
+
+    public static Date getLastDayInMonth(Date date){
+       Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.set(Calendar.DATE, 1);
+        c.add(Calendar.MONTH, 1);
+        c.add(Calendar.DATE, -1);
+
+        return c.getTime();
+    }
 }

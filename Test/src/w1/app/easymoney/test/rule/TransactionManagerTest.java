@@ -20,6 +20,7 @@ import w1.app.easymoney.entity.Node;
 import w1.app.easymoney.entity.TN_Relation;
 import w1.app.easymoney.entity.Transaction;
 import w1.app.easymoney.rule.NodeManager;
+import w1.app.easymoney.rule.OutgoingManager;
 import w1.app.easymoney.rule.TransactionManager;
 
 public class TransactionManagerTest extends TestCase {
@@ -69,8 +70,6 @@ public class TransactionManagerTest extends TestCase {
     public void test() throws Exception {
         this.doTestCreate2();
         this.doTestQuery();
-        this.doTestGetOutgoingSummaryByCurrentWeek();
-
 //        this.doTestModify();
 //        this.doTestQuery();
 //        this.doTestDelete();
@@ -84,9 +83,10 @@ public class TransactionManagerTest extends TestCase {
         tran.setTranDate(new SimpleDateFormat("yyyy-MM-dd")
                 .parse("2014-4-8"));
 
-        Transaction newTran = TransactionManager.create(tran, new int[] {
-                        ecR_1_2.getID(), ecR_2_1.getID() },
-                new int[] { ecR_3_1.getID() });
+        Transaction newTran = TransactionManager.create(tran, new int[]{
+                        ecR_1_2.getID(), ecR_2_1.getID()},
+                new int[]{ecR_3_1.getID()}
+        );
         assertNotNull(newTran);
         assertNotNull(newTran.getInDate());
 
@@ -101,7 +101,7 @@ public class TransactionManagerTest extends TestCase {
         tran2.setTranDate(new SimpleDateFormat("yyyy-MM-dd")
                 .parse("2014-4-8"));
 
-        tran2 = TransactionManager.create(tran2, new int[] {ecR_1_2.getID()}, null);
+        tran2 = TransactionManager.create(tran2, new int[]{ecR_1_2.getID()}, null);
         tran2 = TransactionDBH.get(tran2.getID());
         assertNotNull(tran2);
         //--------------------
@@ -112,13 +112,13 @@ public class TransactionManagerTest extends TestCase {
         tran3.setTranDate(new SimpleDateFormat("yyyy-MM-dd")
                 .parse("2014-4-8"));
 
-        tran3 = TransactionManager.create(tran3, null, new int[] {ecR_1_2.getID()});
+        tran3 = TransactionManager.create(tran3, null, new int[]{ecR_1_2.getID()});
         tran3 = TransactionDBH.get(tran3.getID());
         assertNotNull(tran3);
     }
 
     private void doTestCreate2() throws Exception {
-       Transaction tran = new Transaction();
+        Transaction tran = new Transaction();
         tran.setAmount(999);
         tran.setComment("comment");
         tran.setTranDate(new Date());
@@ -189,7 +189,7 @@ public class TransactionManagerTest extends TestCase {
     }
 
     private void doTestQuery() throws Exception {
-        List<Transaction> list = TransactionManager.query(null, null, new int[] {ecR_1.getID()});
+        List<Transaction> list = TransactionManager.query(null, null, new int[]{ecR_1.getID()});
     }
 
     private void doTestDelete() throws SQLException, ParseException {
@@ -202,7 +202,4 @@ public class TransactionManagerTest extends TestCase {
 
     }
 
-    private void doTestGetOutgoingSummaryByCurrentWeek() throws Exception {
-        int s = TransactionManager.getOutgoingSummaryByCurrentWeek();
-    }
 }

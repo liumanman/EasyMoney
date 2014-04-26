@@ -8,7 +8,7 @@ public class Node {
 	public static String CODE_INCOMING_CATEGORY = "IC";
 	public static String CODE_MEMBER = "MEM";
 	public static String CODE_MERCHANT = "MER";
-	public static String CODE_PHYSICAL_ACCOUNTING = "PA";
+	public static String CODE_ACCOUNT = "ACCT";
 	public static String CODE_VIRTUAL_ACCOUNTING = "VA";
 	public static String CODE_PROJECT = "PRO";
 	public static String CODE_TRANSFER = "TRAN";

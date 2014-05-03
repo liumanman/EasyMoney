@@ -9,7 +9,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import w1.app.easymoney.common.Utility;
-import w1.app.easymoney.entity.Node;
+import w1.app.easymoney.model.Node;
 
 
 public class NodeDBH {

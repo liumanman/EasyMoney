@@ -10,9 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 import w1.app.easymoney.common.Utility;
-import w1.app.easymoney.entity.Node;
-import w1.app.easymoney.entity.Transaction;
-import w1.app.easymoney.rule.NodeManager;
+import w1.app.easymoney.model.Node;
+import w1.app.easymoney.model.Transaction;
+
 
 public class TransactionDBH {
 	public static int insert(Transaction tran) throws SQLException, java.sql.SQLException{
@@ -77,7 +77,7 @@ public class TransactionDBH {
         if (nodeIDs != null && nodeIDs.length > 0){
             List<Node> nodeList = new ArrayList<Node>(nodeIDs.length);
             for(int i = 0; i < nodeIDs.length; i ++){
-                Node n = NodeManager.get(nodeIDs[i]);
+                Node n = NodeDBH.get(nodeIDs[i]);
                 if (n != null){
                     nodeList.add(n);
                 }

@@ -5,19 +5,21 @@ import w1.app.easymoney.entity.TN_Relation;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by el17 on 5/2/2014.
  */
 public class Outgoing extends Transaction {
-    public Outgoing()  {
+    public Outgoing() {
 
         super.mTN_Relation = new ArrayList<TN_Relation>(5);
+        this.mMap = new HashMap<String, TN_Relation>(5);
     }
 
     public static Outgoing get(int id) throws Exception {
-       Transaction tran = Transaction.get(id);
-        if (tran == null){
+        Transaction tran = Transaction.get(id);
+        if (tran == null) {
             return null;
         }
 
@@ -25,13 +27,13 @@ public class Outgoing extends Transaction {
     }
 
     public static Outgoing get(Transaction tran) throws Exception {
-        if (tran.mTN_Relation == null){
+        if (tran.mTN_Relation == null) {
             tran.mTN_Relation = TN_RelationDBH.getByTranID(tran.getID());
         }
 
         Outgoing og = new Outgoing();
 
-        for(int i = 0; i < tran.mTN_Relation.size(); i ++){
+        for (int i = 0; i < tran.mTN_Relation.size(); i++) {
             Node node = Node.get(tran.mTN_Relation.get(i).getNodeID());
 
             if (og.mAccount == null) {
@@ -42,117 +44,177 @@ public class Outgoing extends Transaction {
                 }
             }
 
-            if (og.mOC == null){
+            if (og.mOC == null) {
                 OutgoingCategory oc = OutgoingCategory.valueOf(node);
-                if (oc != null){
+                if (oc != null) {
                     og.mOC = oc;
                     continue;
                 }
             }
 
+            if (og.mMember == null) {
+                Member member = Member.valueOf(node);
+                if (member != null) {
+                    og.mMember = member;
+                }
 
+            }
 
+            if (og.mProject == null) {
+                Project project = Project.valueOf(node);
+                if (project != null) {
+                    og.mProject = project;
+                }
+            }
 
+            if (og.mMerchant == null) {
+                Merchant merchant = Merchant.valueOf(node);
+                if (merchant != null) {
+                    og.mMerchant = merchant;
+                }
+            }
         }
+
+        og.mAmount = tran.mAmount;
+        og.mComment = tran.mComment;
+        og.mEditDate = tran.mEditDate;
+        og.mEditUserID = tran.mEditUserID;
+        og.mID = tran.mID;
+        og.mTranDate = tran.mTranDate;
+        og.mInDate = tran.mInDate;
+        og.mInUserID = tran.mInUserID;
+
+        return og;
+
+
     }
 
     //Getter and Setter
     private OutgoingCategory mOC;
+
     public OutgoingCategory getOC() {
         return mOC;
     }
+
     public void setOC(OutgoingCategory oc) throws Exception {
         if (oc == null) {
             throw new Exception("Outgoing Category can't be null.");
         }
 
-        if (!oc.isChildOf(OutgoingCategory.CODE_OUTGOING_CATEGORY)) {
-            throw new Exception("The node is not outgoing category.");
-        }
+//        if (!oc.isChildOf(OutgoingCategory.CODE_OUTGOING_CATEGORY)) {
+//            throw new Exception("The node is not outgoing category.");
+//        }
 
-        mOC = OutgoingCategory.getInstance(oc);
-        TN_Relation r = new TN_Relation();
-        r.setNodeID(mOC.getID());
-
-        super.mTN_Relation.add(r);
+        this.setNode(oc);
     }
 
     private Account mAccount;
+
     public Account getAccount() {
         return mAccount;
     }
+
     public void setAccount(Account account) throws Exception {
         if (account == null) {
-            throw new Exception("Account can't be null.");
+            if (mAccount != null) {
+                TN_Relation r = mMap.get(Account.CODE_ACCOUNT);
+                mMap.remove(Account.CODE_ACCOUNT);
+                super.mTN_Relation.remove(r);
+            }
+        } else {
+            this.setNode(account);
         }
-
-        if (!account.isChildOf(Account.CODE_ACCOUNT)) {
-            throw new Exception("The node is not an Acount.");
-        }
-
-        mAccount = account;
-        TN_Relation r = new TN_Relation();
-        r.setNodeID(mAccount.getID());
-        super.mTN_Relation.add(r);
-
     }
 
     private Member mMember;
+
     public Member getMemeber() {
         return mMember;
     }
+
     public void setMember(Member member) throws Exception {
         if (member == null) {
-            throw new Exception("Member can't be null");
+            if (mMember != null) {
+                TN_Relation r = mMap.get(Member.CODE_MEMBER);
+                mMap.remove(Member.CODE_MEMBER);
+                super.mTN_Relation.remove(r);
+            }
+        } else {
+            this.setNode(member);
         }
-
-        if (!member.isChildOf()) {
-            throw new Exception("The node is not a Member.");
-        }
-
-        mMember = member;
-        TN_Relation r = new TN_Relation();
-        r.setNodeID(mMember.getID());
-        super.mTN_Relation.add(r);
     }
 
     private Project mProject;
+
     public Project getProject() {
         return mProject;
     }
+
     public void setProject(Project project) throws Exception {
         if (project == null) {
-            throw new Exception("Project can't be null");
+            if (mProject != null) {
+                TN_Relation r = mMap.get(Project.CODE_PROJECT);
+                mMap.remove(Project.CODE_PROJECT);
+                super.mTN_Relation.remove(r);
+            }
+        } else {
+            this.setNode(project);
         }
-
-        if (!project.isChildOf(Project.CODE_PROJECT)) {
-            throw new Exception("The node is not a Project");
-        }
-
-        mProject = project;
-        TN_Relation r = new TN_Relation();
-        r.setNodeID(project.getID());
-        super.mTN_Relation.add(r);
     }
 
     private Merchant mMerchant;
+
     public Merchant getMerchant() {
         return mMerchant;
     }
+
     public void setMerchant(Merchant merchant) throws Exception {
         if (merchant == null) {
-            throw new Exception("Merchant can't be null");
+            if (mMerchant != null) {
+                TN_Relation r = mMap.get(Merchant.CODE_MERCHANT);
+                mMap.remove(Merchant.CODE_MERCHANT);
+                super.mTN_Relation.remove(r);
+            }
+        } else {
+            this.setNode(merchant);
         }
-
-        if (!merchant.isChildOf(Merchant.CODE_MERCHANT)) {
-            throw new Exception("The node is not a Merchant.");
-        }
-
-        mMerchant = merchant;
-        TN_Relation r = new TN_Relation();
-        r.setNodeID(merchant.getID());
-        super.mTN_Relation.add(r);
     }
 
+    private HashMap<String, TN_Relation> mMap;
+
+    private void setNode(Node node) throws Exception {
+        if (node == null) {
+            throw new Exception("Node can't be null.");
+        }
+        String code;
+
+        if (node instanceof OutgoingCategory) {
+            mOC = (OutgoingCategory) node;
+            code = OutgoingCategory.CODE_OUTGOING_CATEGORY;
+
+        } else if (node instanceof Account) {
+            mAccount = (Account) node;
+            code = Account.CODE_ACCOUNT;
+        } else if (node instanceof Member) {
+            mMember = (Member) node;
+            code = Member.CODE_MEMBER;
+        } else if (node instanceof Project) {
+            mProject = (Project) node;
+            code = Project.CODE_PROJECT;
+        } else if (node instanceof Merchant) {
+            mMerchant = (Merchant) node;
+            code = Merchant.CODE_MERCHANT;
+        } else {
+            throw new Exception("Invalid node");
+        }
+
+        TN_Relation r = mMap.get(code);
+        if (r == null) {
+            r = new TN_Relation();
+            mTN_Relation.add(r);
+            mMap.put(code, r);
+        }
+        r.setNodeID(node.getID());
+    }
 
 }

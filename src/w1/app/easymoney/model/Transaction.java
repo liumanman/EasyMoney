@@ -219,7 +219,7 @@ public class Transaction {
         }
     }
 
-    public static Transaction get(int id) throws ParseException {
+    public static Transaction get(int id) throws ParseException, Exception {
         return TransactionDBH.get(id);
     }
 

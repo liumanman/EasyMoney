@@ -28,70 +28,18 @@ public class Transaction {
 
     public static String TABLE_NAME = "[Transaction]";
 
-    public static Transaction create(Transaction tran, int[] nodeIDs, int[] negativeNodeIDs) throws Exception {
-        if ((nodeIDs == null || nodeIDs.length < 1) && (negativeNodeIDs == null || negativeNodeIDs.length < 1)) {
-            throw new Exception("Can't create a transaction without any node.");
-        }
-
-        for (int i = 0; nodeIDs != null && i < nodeIDs.length; i++) {
-            List<Node> childNodes = Node.getChildNodes(nodeIDs[i]);
-            if (childNodes != null && childNodes.size() > 0) {
-                throw new Exception("Can't put a transction into a node which has child nodes.");
-            }
-        }
-
-        for (int i = 0; negativeNodeIDs != null && i < negativeNodeIDs.length; i++) {
-            List<Node> childNodes = Node.getChildNodes(negativeNodeIDs[i]);
-            if (childNodes != null && childNodes.size() > 0) {
-                throw new Exception("Can't put a transction into a node which has child nodes.");
-            }
-        }
-
-        DatabaseOperator.getOperator().beginTransaction();
-
-        try {
-            tran.setInDate(new Date());
-            tran.setID(TransactionDBH.insert(tran));
-
-            for (int i = 0; nodeIDs != null && i < nodeIDs.length; i++) {
-                TN_Relation r = new TN_Relation();
-                r.setInDate(new Date());
-                r.setNodeID(nodeIDs[i]);
-                r.setTranID(tran.getID());
-                r.setFlag(1);
-
-                TN_RelationDBH.insert(r);
-            }
-
-            for (int i = 0; negativeNodeIDs != null && i < negativeNodeIDs.length; i++) {
-                TN_Relation r = new TN_Relation();
-                r.setInDate(new Date());
-                r.setNodeID(negativeNodeIDs[i]);
-                r.setTranID(tran.getID());
-                r.setFlag(-1);
-
-                TN_RelationDBH.insert(r);
-            }
-
-            //throw new Exception();
-
-            DatabaseOperator.getOperator().setTransactionSuccessful();
-        } finally {
-            DatabaseOperator.getOperator().endTransaction();
-        }
-
-        return tran;
-    }
-
     public static void create(Transaction tran) throws Exception {
         tran.setInDate(new Date());
+
+        if (tran.getAmount() < 1){
+            throw new Exception("Amount can't be null.");
+        }
 
         if (tran.getTN_Relation() == null || tran.getTN_Relation().size() < 1) {
             throw new Exception("Can't create a transaction without any node.");
         }
 
 
-        int c = 0;
         for (int i = 0; i < tran.getTN_Relation().size(); i++) {
             Node node = Node.get(tran.getTN_Relation().get(i).getNodeID());
             if (node == null) {
@@ -103,11 +51,6 @@ public class Transaction {
                 throw new Exception("Can't put a transaction into a node which has child nodes.");
             }
 
-            c = c + tran.getTN_Relation().get(i).getAmount();
-        }
-
-        if (c % tran.getAmount() != 0) {
-            throw new Exception("TN amount is not correct.");
         }
 
         DatabaseOperator.getOperator().beginTransaction();
@@ -119,7 +62,6 @@ public class Transaction {
                 }
                 tran.getTN_Relation().get(i).setTranID(tran.getID());
                 tran.getTN_Relation().get(i).setInDate(new Date());
-                //tran.getTN_Relation().get(i).setAmount(tran.getAmount());
                 tran.getTN_Relation().get(i).setID(TN_RelationDBH.insert(tran.getTN_Relation().get(i)));
 
             }
@@ -131,76 +73,57 @@ public class Transaction {
         }
     }
 
-    public static void modify(Transaction tran, int[] nodeIDs, int[] negativeNodeIDs) throws Exception {
-
-        if ((nodeIDs == null || nodeIDs.length < 1) && (negativeNodeIDs == null || negativeNodeIDs.length < 1)) {
-            throw new Exception("Can't create a transaction without any node.");
+    public static void modify(Transaction tran) throws Exception {
+        if (tran.getAmount() < 1){
+            throw new Exception("Amount can't be null");
         }
 
-        for (int i = 0; nodeIDs != null && i < nodeIDs.length; i++) {
-            List<Node> childNodes = Node.getChildNodes(nodeIDs[i]);
-            if (childNodes != null && childNodes.size() > 0) {
-                throw new Exception("Can't put a transaction into a node which has child nodes.");
-            }
-        }
-
-        for (int i = 0; negativeNodeIDs != null && i < negativeNodeIDs.length; i++) {
-            List<Node> childNodes = Node.getChildNodes(negativeNodeIDs[i]);
-            if (childNodes != null && childNodes.size() > 0) {
-                throw new Exception("Can't put a transaction into a node which has child nodes.");
-            }
-        }
-
-        //don't allow to modify indate and inuser
         Transaction oldTran = TransactionDBH.get(tran.getID());
+        if (oldTran == null){
+            throw new Exception("Can't find tran.");
+        }
+
         tran.setInDate(oldTran.getInDate());
         tran.setInUserID(oldTran.getInUserID());
 
-        tran.setEditDate(new Date());
-
-        DatabaseOperator.getOperator().beginTransaction();
-
-        try {
-            TN_RelationDBH.deleteBYTranID(tran.getID());
-
-//            for (int i = 0; nodeIDs != null && i < nodeIDs.length; i++) {
-//                TN_Relation r = new TN_Relation();
-//                r.setInDate(new Date());
-//                r.setNodeID(nodeIDs[i]);
-//                r.setTranID(tran.getID());
-//                r.setFlag(1);
-//
-//                TN_RelationDBH.insert(r);
-//            }
-//
-//            for (int i = 0; negativeNodeIDs != null && i < negativeNodeIDs.length; i++) {
-//                TN_Relation r = new TN_Relation();
-//                r.setInDate(new Date());
-//                r.setNodeID(negativeNodeIDs[i]);
-//                r.setTranID(tran.getID());
-//                r.setFlag(-1);
-//
-//                TN_RelationDBH.insert(r);
-//            }
-
-            for (int i = 0; i < tran.getTN_Relation().size(); i++) {
-                if (tran.getTN_Relation().get(i).getAmount() <= 0){
-                    throw new Exception("Relation amount can't be empty.");
-                }
-                tran.getTN_Relation().get(i).setTranID(tran.getID());
-                tran.getTN_Relation().get(i).setInDate(new Date());
-                //tran.getTN_Relation().get(i).setAmount(tran.getAmount());
-                tran.getTN_Relation().get(i).setID(TN_RelationDBH.insert(tran.getTN_Relation().get(i)));
-
-            }
-
-            TransactionDBH.update(tran);
-
-            DatabaseOperator.getOperator().setTransactionSuccessful();
-        } finally {
-            DatabaseOperator.getOperator().endTransaction();
+        if (tran.getTN_Relation() == null || tran.getTN_Relation().size() < 1) {
+            throw new Exception("Can't create a transaction without any node.");
         }
 
+
+        for (int i = 0; i < tran.getTN_Relation().size(); i++) {
+            if (tran.getTN_Relation().get(i).getAmount() < 1){
+                throw new Exception("The amount in relation can't be null");
+            }
+
+            Node node = Node.get(tran.getTN_Relation().get(i).getNodeID());
+            if (node == null) {
+                throw new Exception("Can't find node " + tran.getTN_Relation().get(i).getNodeID());
+            }
+
+            List<Node> list = Node.getChildNodes(tran.getTN_Relation().get(i).getNodeID());
+            if (list != null && list.size() > 0) {
+                throw new Exception("Can't put a transaction into a node which has child nodes.");
+            }
+
+        }
+
+        DatabaseOperator.getOperator().beginTransaction();
+        try {
+            TransactionDBH.update(tran);
+            TN_RelationDBH.deleteBYTranID(tran.getID());
+
+            for (int i = 0; i < tran.getTN_Relation().size(); i++) {
+                tran.getTN_Relation().get(i).setTranID(tran.getID());
+                tran.getTN_Relation().get(i).setInDate(new Date());
+                tran.getTN_Relation().get(i).setID(TN_RelationDBH.insert(tran.getTN_Relation().get(i)));
+            }
+
+            DatabaseOperator.getOperator().setTransactionSuccessful();
+        }
+        finally {
+            DatabaseOperator.getOperator().endTransaction();
+        }
     }
 
     public static List<Transaction> getByNodeID(int nodeID) throws Exception {
@@ -317,4 +240,20 @@ public class Transaction {
     public void setEditUserID(String editUserID) {
         this.mEditUserID = editUserID;
     }
+
+    public void save() throws Exception {
+        if (mID > 0){
+            modify(this);
+        }else {
+            create(this);
+        }
+    }
+
+    public void delete() throws SQLException {
+        if (mID > 0){
+            Transaction.delete(mID);
+        }
+    }
+
 }
+

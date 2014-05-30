@@ -23,10 +23,10 @@ public class Outgoing extends Transaction {
             return null;
         }
 
-        return get(tran);
+        return valueOf(tran);
     }
 
-    public static Outgoing get(Transaction tran) throws Exception {
+    public static Outgoing valueOf(Transaction tran) throws Exception {
         if (tran.mTN_Relation == null) {
             tran.mTN_Relation = TN_RelationDBH.getByTranID(tran.getID());
         }
@@ -89,13 +89,12 @@ public class Outgoing extends Transaction {
 
     }
 
+
     //Getter and Setter
     private OutgoingCategory mOC;
-
     public OutgoingCategory getOC() {
         return mOC;
     }
-
     public void setOC(OutgoingCategory oc) throws Exception {
         if (oc == null) {
             throw new Exception("Outgoing Category can't be null.");
@@ -109,11 +108,9 @@ public class Outgoing extends Transaction {
     }
 
     private Account mAccount;
-
     public Account getAccount() {
         return mAccount;
     }
-
     public void setAccount(Account account) throws Exception {
         if (account == null) {
             if (mAccount != null) {
@@ -127,11 +124,9 @@ public class Outgoing extends Transaction {
     }
 
     private Member mMember;
-
     public Member getMemeber() {
         return mMember;
     }
-
     public void setMember(Member member) throws Exception {
         if (member == null) {
             if (mMember != null) {
@@ -145,11 +140,9 @@ public class Outgoing extends Transaction {
     }
 
     private Project mProject;
-
     public Project getProject() {
         return mProject;
     }
-
     public void setProject(Project project) throws Exception {
         if (project == null) {
             if (mProject != null) {
@@ -163,11 +156,9 @@ public class Outgoing extends Transaction {
     }
 
     private Merchant mMerchant;
-
     public Merchant getMerchant() {
         return mMerchant;
     }
-
     public void setMerchant(Merchant merchant) throws Exception {
         if (merchant == null) {
             if (mMerchant != null) {
@@ -215,6 +206,22 @@ public class Outgoing extends Transaction {
             mMap.put(code, r);
         }
         r.setNodeID(node.getID());
+    }
+    public void save() throws Exception {
+        if (mOC == null){
+            throw new Exception("Outgoing category can't be null");
+        }
+
+        this.refresh();
+
+        super.save();
+    }
+    private void refresh(){
+        if (mTN_Relation != null){
+            for(int i = 0; i < mTN_Relation.size(); i ++){
+                mTN_Relation.get(i).setAmount(this.mAmount);
+            }
+        }
     }
 
 }

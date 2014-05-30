@@ -11,12 +11,12 @@ import java.util.List;
 
 public class Node {
     //Constant
-    public static final String CODE_INCOMING_CATEGORY = "IC";
+//    public static final String CODE_INCOMING_CATEGORY = "IC";
 
 
     //public static final String CODE_VIRTUAL_ACCOUNTING = "VA";
 
-    public static final String CODE_TRANSFER = "TRAN";
+//    public static final String CODE_TRANSFER = "TRAN";
 
     public static final String COLUMN_CODE = "Code";
     public static final String COLUMN_ID = "ID";
@@ -305,7 +305,7 @@ public class Node {
         return isChildOf(node.getID());
     }
 
-    public void save() throws SQLException, ParseException {
+    public void save() throws Exception {
         if (mID >= 0){
             Node.modify(this);
         }else{

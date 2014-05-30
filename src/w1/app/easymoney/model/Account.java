@@ -2,23 +2,83 @@ package w1.app.easymoney.model;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Account extends Node {
     public static final String CODE_ACCOUNT = "ACCT";
-    public static final String CODE_ACOUNT_DEBIT = "DEBIT";
-    public static final String CODE_ACOUNT_CREDIT = "CREDIT";
+    public static final String CODE_ACCOUNT_DEBIT = "DEBIT";
+    public static final String CODE_ACCOUNT_CREDIT = "CREDIT";
 
     public static final String TYPE_CREDIT = "C";
     public static final String TYPE_DEBIT = "D";
     private String mType;
 
+    private static List<Account> CACHE;
+    public static List<Account> getCache() throws Exception {
+        if (CACHE == null){
+            Node rootDebit = Node.buildByCode(CODE_ACCOUNT_DEBIT);
+            if (rootDebit == null){
+                throw new Exception("Can't find root of DEBIT");
+            }
+
+            Node rootCredit = Node.buildByCode(CODE_ACCOUNT_CREDIT);
+            if (rootCredit == null){
+                throw new Exception("Can't find root of CREDIT");
+            }
+
+            int c_d = 0;
+            if (rootDebit.getChildren() != null && rootDebit.getChildren().size() > 0){
+                c_d = rootDebit.getChildren().size();
+            }
+
+            int c_c = 0;
+            if (rootCredit.getChildren() != null && rootCredit.getChildren().size() > 0){
+                c_c = rootCredit.getChildren().size();
+            }
+
+            if (c_c+ c_d == 0){
+                return null;
+            }
+
+            CACHE = new ArrayList<Account>(c_c + c_d);
+            for(int i = 0; i < c_c; i ++){
+                CACHE.add(valueOf(rootCredit.getChildren().get(i)));
+            }
+
+            for(int i = 0; i < c_d; i ++ ){
+                CACHE.add(valueOf(rootDebit.getChildren().get(i)));
+            }
+        }
+
+        return CACHE;
+    }
+
+    private static Node ROOT_CREDIT;
+    public static Node getCreidtRoot() throws ParseException {
+       if (ROOT_CREDIT == null){
+          ROOT_CREDIT = Node.getByCode(Account.CODE_ACCOUNT_CREDIT);
+       }
+
+        return ROOT_CREDIT;
+    }
+
+    private static Node ROOT_DEBIT;
+    public static Node getDebitRoot() throws ParseException {
+        if (ROOT_DEBIT == null){
+            ROOT_DEBIT = Node.getByCode(Account.CODE_ACCOUNT_DEBIT);
+        }
+
+        return ROOT_DEBIT;
+    }
+
     public Account(String type) throws Exception {
         Node node;
         if (type == Account.TYPE_CREDIT){
-            node = this.getByCode(Account.CODE_ACOUNT_CREDIT);
+            node = getCreidtRoot();
         }else{
             if (type == Account.TYPE_DEBIT){
-                node = this.getByCode(Account.CODE_ACOUNT_DEBIT);
+                node = getDebitRoot();
             }else{
                 throw new Exception("Invalid type.");
             }
@@ -59,10 +119,10 @@ public class Account extends Node {
         a.mInUserID = node.mInUserID;
         a.mName = node.mName;
 
-        if (a.isChildOf(Account.CODE_ACOUNT_CREDIT)){
+        if (a.isChildOf(Account.CODE_ACCOUNT_CREDIT)){
             a.mType = Account.TYPE_CREDIT;
         }else{
-            if (a.isChildOf(Account.CODE_ACOUNT_DEBIT)){
+            if (a.isChildOf(Account.CODE_ACCOUNT_DEBIT)){
                 a.mType = Account.TYPE_DEBIT;
             }else{
                 throw new Exception("Can't decide account type.");
@@ -77,9 +137,22 @@ public class Account extends Node {
         return mType;
     }
 
-//    public void save() throws ParseException, SQLException {
-//        super.save();
-//
-//    }
+    @Override
+    public void save() throws Exception {
+        super.save();
+
+        CACHE = null;
+    }
+
+    @Override
+    public void delete() throws Exception {
+        super.delete();
+
+        CACHE = null;
+    }
+
+
+
+
 
 }

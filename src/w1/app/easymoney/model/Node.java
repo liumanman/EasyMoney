@@ -74,7 +74,7 @@ public class Node {
             int id = NodeDBH.insert(node);
             node.mID = id;
 
-            if (node.mParentID >= 0) {
+            if (node.mParentID > 0) {
                 node.mLevel = Node.get(node.mParentID).getLevel();
             }
             node.mLevel = node.mLevel + String.valueOf(id) + "-";
@@ -288,13 +288,13 @@ public class Node {
 
     public boolean isChildOf(int id) throws ParseException {
         Node n = this;
-        {
+        do {
            if(n.mID == id) {
                return true;
            }
 
 
-        }while ((n = this.getParent()) != null);
+        }while ((n = n.getParent()) != null);
 
         return false;
     }
@@ -306,7 +306,7 @@ public class Node {
     }
 
     public void save() throws Exception {
-        if (mID >= 0){
+        if (mID > 0){
             Node.modify(this);
         }else{
             Node.create(this);

@@ -84,6 +84,10 @@ public class Account extends Node {
             }
         }
 
+        if (node == null){
+            throw new Exception("Can't find the root node of Account.");
+        }
+
         mParentID = node.getID();
         mParent = node;
 

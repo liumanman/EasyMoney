@@ -139,6 +139,10 @@ public class Account extends Node {
 
     @Override
     public void save() throws Exception {
+        if (!super.isChildOf(CODE_ACCOUNT)){
+            throw new Exception("It's not an Account node.");
+        }
+
         super.save();
 
         CACHE = null;

@@ -48,6 +48,8 @@ public class OutgoingCategory extends Node {
             ogList.add(valueOf(nodeList.get(i)));
         }
 
+        //todo
+
         return ogList;
     }
 
@@ -65,19 +67,25 @@ public class OutgoingCategory extends Node {
 
     }
 
-    public OutgoingCategory(int parentID) throws Exception {
+    public OutgoingCategory createSub() throws Exception {
+        if (mID < 1){
+            throw new Exception("Id is null.");
+        }
 
-        mParentID = parentID;
+        OutgoingCategory c = new OutgoingCategory();
+        c.mParent = this;
+        c.mParentID = this.mID;
+
+        this.getChildren().add(c);
+
+        return c;
     }
 
     @Override
     public void save() throws Exception {
-        Node p = Node.get(mParentID);
-        if (p == null || !p.isChildOf(CODE_OUTGOING_CATEGORY)) {
-            throw new Exception("Parent id is not valid.");
+        if(!super.isChildOf(CODE_OUTGOING_CATEGORY)){
+            throw new Exception("It's not a OC node.");
         }
-
-        mParent = p;
 
         super.save();
 

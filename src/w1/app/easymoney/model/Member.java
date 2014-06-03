@@ -84,8 +84,8 @@ public class Member extends  Node {
 
     @Override
     public void save() throws Exception {
-        if(super.mParentID <= 0){
-            throw new Exception("Parentid is null");
+        if(!super.isChildOf(CODE_MEMBER)){
+            throw new Exception("IT's not a Member node.");
         }
 
         super.save();

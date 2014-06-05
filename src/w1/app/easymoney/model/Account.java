@@ -138,7 +138,7 @@ public class Account extends Node {
             if (a.isChildOf(Account.CODE_ACCOUNT_DEBIT)){
                 a.mType = Account.TYPE_DEBIT;
             }else{
-                throw new Exception("Can't decide account type.");
+               return null;
             }
         }
 

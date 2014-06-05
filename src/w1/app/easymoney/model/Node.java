@@ -301,6 +301,9 @@ public class Node {
 
     public boolean isChildOf(String code) throws Exception {
         Node node = Node.getByCode(code);
+        if (node == null){
+            return false;
+        }
 
         return isChildOf(node.getID());
     }

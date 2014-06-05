@@ -83,6 +83,7 @@ public class Outgoing extends Transaction {
         og.mTranDate = tran.mTranDate;
         og.mInDate = tran.mInDate;
         og.mInUserID = tran.mInUserID;
+        og.mTN_Relation = tran.mTN_Relation;
 
         return og;
 

@@ -12,7 +12,7 @@ import java.util.List;
 public class Merchant extends Node {
     public static final String CODE_MERCHANT = "MER";
 
-    public static Merchant valueOf(Node node) throws ParseException {
+    public static Merchant valueOf(Node node) throws Exception {
         if (!node.isChildOf(CODE_MERCHANT)){
            return null;
         }
@@ -33,7 +33,7 @@ public class Merchant extends Node {
         return merchant;
     }
 
-    public static List<Merchant> getAll() throws ParseException {
+    public static List<Merchant> getAll() throws Exception {
         Node root = Node.buildByCode(CODE_MERCHANT);
         if (root == null) {
             return null;
@@ -54,7 +54,7 @@ public class Merchant extends Node {
     }
 
     private static List<Merchant> CACHE;
-    public static List<Merchant> getCACHE() throws ParseException {
+    public static List<Merchant> getCACHE() throws Exception {
         if (CACHE == null){
            CACHE = getAll();
         }
@@ -71,6 +71,15 @@ public class Merchant extends Node {
         return ROOT;
     }
 
+    public static Merchant get(int id) throws Exception {
+        Node node = Node.get(id);
+        if (node == null){
+            return null;
+        }
+
+        return valueOf(node);
+
+    }
     public Merchant() throws ParseException {
         super.mParent = getRoot();
         super.mParentID = getRoot().getID();

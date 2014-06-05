@@ -64,7 +64,16 @@ public class Member extends  Node {
         return CACHE;
     }
 
-    private Member() throws Exception {
+    public static Member get(int id) throws Exception {
+        Node node = Node.get(id);
+        if (node == null){
+            return null;
+        }
+
+        return valueOf(node);
+    }
+
+    public Member() throws Exception {
         super.mParentID = getRoot().getID();
         super.mParent = getRoot();
     }

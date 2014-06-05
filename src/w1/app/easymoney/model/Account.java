@@ -14,6 +14,15 @@ public class Account extends Node {
     public static final String TYPE_DEBIT = "D";
     private String mType;
 
+    public static Account get(int id) throws Exception {
+        Node node = Node.get(id);
+        if (node == null){
+            return null;
+        }
+
+        return valueOf(node);
+    }
+
     private static List<Account> CACHE;
     public static List<Account> getCache() throws Exception {
         if (CACHE == null){

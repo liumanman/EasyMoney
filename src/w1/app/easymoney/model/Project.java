@@ -10,7 +10,7 @@ import java.util.List;
 public class Project extends Node {
     public static final String CODE_PROJECT = "PRO";
 
-    public static Project valueOf(Node node) throws ParseException {
+    public static Project valueOf(Node node) throws Exception {
         if (!node.isChildOf(CODE_PROJECT)){
            return null;
         }
@@ -33,7 +33,7 @@ public class Project extends Node {
 
     }
 
-    public static List<Project> getAll() throws ParseException {
+    public static List<Project> getAll() throws Exception {
         Node root = Node.buildByCode(CODE_PROJECT);
         if (root == null || root.getChildren() == null || root.getChildren().size() < 1){
             return null;
@@ -48,7 +48,7 @@ public class Project extends Node {
     }
 
     private  static List<Project> CACHE;
-    public static List<Project> getCACHE() throws ParseException {
+    public static List<Project> getCACHE() throws Exception {
         if (CACHE == null){
             CACHE = getAll();
         }
@@ -65,6 +65,19 @@ public class Project extends Node {
         return ROOT;
     }
 
+    public static Project get(int id) throws Exception {
+        Node node = Node.get(id);
+        if (node == null){
+            return null;
+        }
+
+        return valueOf(node);
+    }
+
+    public Project() throws ParseException {
+        mParent = getRoot();
+        mParentID = mParent.getID();
+    }
     @Override
     public void save() throws Exception {
         if (!super.isChildOf(CODE_PROJECT)){

@@ -65,7 +65,7 @@ public class Node {
 //        }
 //    }
 
-    public static void create(Node node) throws SQLException, ParseException {
+    public static void create(Node node) throws Exception {
         node.mInDate = new Date();
         node.mLevel = "";
 
@@ -139,7 +139,7 @@ public class Node {
         }
     }
 
-    public static Node get(int id) throws ParseException {
+    public static Node get(int id) throws ParseException, Exception {
         return NodeDBH.get(id);
     }
 
@@ -149,7 +149,7 @@ public class Node {
         return node;
     }
 
-    public static Node buildByID(int id) throws ParseException {
+    public static Node buildByID(int id) throws Exception {
         Node node = get(id);
         buildTree(node);
         return node;
@@ -273,7 +273,7 @@ public class Node {
     }
 
 
-    public Node getParent() throws ParseException {
+    public Node getParent() throws Exception {
         if (mParent == null && mParentID != Node.ROOT_NODE_ID){
            mParent = Node.get(mParentID) ;
         }
@@ -286,7 +286,7 @@ public class Node {
     }
 
 
-    public boolean isChildOf(int id) throws ParseException {
+    public boolean isChildOf(int id) throws Exception {
         Node n = this;
         do {
            if(n.mID == id) {
@@ -299,7 +299,7 @@ public class Node {
         return false;
     }
 
-    public boolean isChildOf(String code) throws ParseException {
+    public boolean isChildOf(String code) throws Exception {
         Node node = Node.getByCode(code);
 
         return isChildOf(node.getID());

@@ -46,11 +46,13 @@ public class AccountTest extends TestCase {
     }
 
     public void test() throws Exception {
-        this.doTestIssue();
+        int id = this.doTestIssue();
+        this.doTestModify(id);
+        this.doTestDelete(id);
     }
 
 
-    private void doTestIssue() throws Exception {
+    private int doTestIssue() throws Exception {
         Account a = new Account(Account.TYPE_DEBIT);
         a.setName("BOA");
         a.setDescription("Bank of America");
@@ -61,5 +63,33 @@ public class AccountTest extends TestCase {
         }
 
         assertEquals(root_D.getID(), a.getParentID());
+
+        Account a2 = Account.get(a.getID());
+        assertNotNull(a2);
+        assertEquals("BOA", a2.getName());
+        assertEquals("Bank of America", a2.getDescription());
+        assertEquals(root_D.getID(), a2.getParentID());
+
+        return a.getID();
+    }
+
+    private void doTestModify(int id) throws Exception {
+        Account a = Account.get(id);
+        a.setName("BOA2");
+        a.setDescription("Bank of America2");
+        a.save();
+
+        Account a2 = Account.get(id);
+        assertEquals("BOA2", a2.getName());
+        assertEquals("Bank of America2", a2.getDescription());
+        assertEquals(root_D.getID(), a2.getParentID());
+    }
+
+    private void doTestDelete(int id) throws Exception {
+        Account a = Account.get(id);
+        a.delete();
+
+        Account a2 = Account.get(id);
+        assertNull(a2);
     }
 }

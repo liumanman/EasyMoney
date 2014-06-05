@@ -1,5 +1,6 @@
 package w1.app.easymoney.model;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,6 @@ public class OutgoingCategory extends Node {
     }
 
     private static List<OutgoingCategory> CACHE;
-
     public static List<OutgoingCategory> getCache() throws Exception {
         if (CACHE == null) {
             CACHE = getAll();
@@ -63,8 +63,33 @@ public class OutgoingCategory extends Node {
         return CACHE;
     }
 
-    private OutgoingCategory() {
+    public static OutgoingCategory get(int id) throws Exception {
+        Node node = Node.get(id);
+        if (node == null){
+            return null;
+        }
 
+        return valueOf(node);
+    }
+    private OutgoingCategory() {
+        this.mChildren = new ArrayList<Node>(8);
+    }
+
+    private static Node ROOT;
+    public static Node getRoot() throws ParseException {
+        if (ROOT == null){
+            ROOT = Node.getByCode(CODE_OUTGOING_CATEGORY);
+        }
+
+        return ROOT;
+    }
+
+    public static OutgoingCategory create() throws ParseException {
+        OutgoingCategory oc = new OutgoingCategory();
+        oc.mParent = getRoot();
+        oc.mParentID = oc.mParent.getID();
+
+        return oc;
     }
 
     public OutgoingCategory createSub() throws Exception {

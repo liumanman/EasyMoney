@@ -1,7 +1,5 @@
 package w1.app.easymoney.model;
 
-import org.w3c.dom.NodeList;
-
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;

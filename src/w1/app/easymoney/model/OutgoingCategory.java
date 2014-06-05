@@ -29,6 +29,10 @@ public class OutgoingCategory extends Node {
         oc.mInUserID = node.mInUserID;
         oc.mParentID = node.mParentID;
 
+        if (oc.mChildren == null){
+            oc.mChildren = new ArrayList<Node>(8);
+        }
+
         return oc;
 
     }
@@ -72,7 +76,7 @@ public class OutgoingCategory extends Node {
         return valueOf(node);
     }
     private OutgoingCategory() {
-        this.mChildren = new ArrayList<Node>(8);
+//        this.mChildren = new ArrayList<Node>(8);
     }
 
     private static Node ROOT;
@@ -88,6 +92,7 @@ public class OutgoingCategory extends Node {
         OutgoingCategory oc = new OutgoingCategory();
         oc.mParent = getRoot();
         oc.mParentID = oc.mParent.getID();
+        oc.mChildren = new ArrayList<Node>(8);
 
         return oc;
     }
@@ -100,8 +105,10 @@ public class OutgoingCategory extends Node {
         OutgoingCategory c = new OutgoingCategory();
         c.mParent = this;
         c.mParentID = this.mID;
+        c.mChildren = new ArrayList<Node>(8);
 
         this.getChildren().add(c);
+
 
         return c;
     }

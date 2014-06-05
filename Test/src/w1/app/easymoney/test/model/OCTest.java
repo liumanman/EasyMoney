@@ -29,8 +29,11 @@ public class OCTest extends TestCase {
     }
 
     public void test() throws Exception {
-        this.doTestIssue();
+        int id = this.doTestIssue();
+        this.doTestModify(id);
+        this.doTestDelete(id);
     }
+
     private int doTestIssue() throws Exception {
         OutgoingCategory oc1 = OutgoingCategory.create();
         oc1.setName("1");
@@ -56,10 +59,30 @@ public class OCTest extends TestCase {
         oc11 = OutgoingCategory.get(oc11.getID());
         assertEquals(oc1.getID(), oc11.getParentID());
         assertEquals("1-1", oc11.getName());
-        assertEquals("Level1-1", oc11.getDescription());
+        assertEquals("Level 1-1", oc11.getDescription());
 
         return oc11.getID();
     }
 
+    private void doTestModify(int id) throws Exception {
+        OutgoingCategory oc = OutgoingCategory.get(id);
+        oc.setName("1-2");
+        oc.setDescription("Level 1-2");
+        oc.save();
+
+        OutgoingCategory oc2 = OutgoingCategory.get(id);
+        assertNotNull(oc2);
+        assertEquals(oc.getParentID(), oc2.getParentID());
+        assertEquals("1-2", oc2.getName());
+        assertEquals("Level 1-2", oc2.getDescription());
+    }
+
+    private void doTestDelete(int id) throws Exception {
+        OutgoingCategory oc = OutgoingCategory.get(id);
+        oc.delete();
+
+        oc = OutgoingCategory.get(id);
+        assertNull(oc);
+    }
 
 }

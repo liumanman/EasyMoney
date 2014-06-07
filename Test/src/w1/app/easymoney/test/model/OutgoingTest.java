@@ -104,10 +104,11 @@ public class OutgoingTest extends TestCase{
     public void test() throws Exception {
         int id = doTestIssue();
         this.doTestModify(id);
+        this.doTestDelete(id);
 
     }
     private int doTestIssue() throws Exception {
-        Outgoing outgoing = new Outgoing();
+        Outgoing outgoing = Outgoing.create();
         outgoing.setAmount(999);
         outgoing.setTranDate(Utility.StringToDate("2014-06-04 00:00:00"));
         outgoing.setOC(res);
@@ -165,6 +166,32 @@ public class OutgoingTest extends TestCase{
         assertEquals(evan.getID(),outgoing2.getMemeber().getID());
         assertEquals(costco.getID(), outgoing2.getMerchant().getID());
         assertEquals(pro1.getID(), outgoing2.getProject().getID());
+
+
+        boolean ex = false;
+        try{
+            outgoing2.setOC(null);
+        }catch (Exception e) {
+            ex = true;
+        }
+
+        if(!ex){
+            fail("no exception.");
+        }
+
+        outgoing2.setProject(null);
+        outgoing2.save();
+
+        Outgoing outgoing3 = Outgoing.get(outgoing2.getID());
+        assertNull(outgoing3.getProject());
+
     }
 
+    private void doTestDelete(int id) throws Exception {
+        Outgoing outgoing = Outgoing.get(id);
+        outgoing.delete();
+
+        outgoing = Outgoing.get(id);
+        assertNull(outgoing);
+    }
 }

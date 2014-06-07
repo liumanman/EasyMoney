@@ -30,7 +30,17 @@ public class TransactionDBH {
 	}
 	
 	public static void update(Transaction tran) throws Exception {
-		throw new Exception("not finished.");
+        ContentValues cv = new ContentValues(8);
+        cv.put(Transaction.COLUMN_AMOUNT, tran.getAmount());
+        cv.put(Transaction.COLUMN_COMMENT, tran.getComment());
+        cv.put(Transaction.COLUMN_EDITDATE, Utility.DateToString(tran.getEditDate()));
+        cv.put(Transaction.COLUMN_EDITUSERID, tran.getEditUserID());
+        cv.put(Transaction.COLUMN_ID, tran.getID());
+        cv.put(Transaction.COLUMN_INDATE, Utility.DateToString(tran.getInDate()));
+        cv.put(Transaction.COLUMN_INUSERID, tran.getInUserID());
+        cv.put(Transaction.COLUMN_TRANDATE, Utility.DateToString(tran.getTranDate()));
+
+        DatabaseOperator.getOperator().getWritableDatabase().update(Transaction.TABLE_NAME, cv, "id=?", new String[] {String.valueOf(tran.getID())});
 	}
 	
 	public static void delete(int id) throws java.sql.SQLException {

@@ -11,10 +11,17 @@ import java.util.HashMap;
  * Created by el17 on 5/2/2014.
  */
 public class Outgoing extends Transaction {
-    public Outgoing() {
+    private Outgoing() {
 
-        super.mTN_Relation = new ArrayList<TN_Relation>(5);
-        this.mMap = new HashMap<String, TN_Relation>(5);
+    }
+
+    public static Outgoing create(){
+        Outgoing outgoing = new Outgoing();
+
+        outgoing.mTN_Relation = new ArrayList<TN_Relation>(5);
+        outgoing.mMap = new HashMap<String, TN_Relation>(5);
+
+        return outgoing;
     }
 
     public static Outgoing get(int id) throws Exception {
@@ -31,15 +38,23 @@ public class Outgoing extends Transaction {
             tran.mTN_Relation = TN_RelationDBH.getByTranID(tran.getID());
         }
 
-        Outgoing og = new Outgoing();
+        if(tran.mTN_Relation == null || tran.mTN_Relation.size() < 1){
+            return null;
+        }
 
-        for (int i = 0; i < tran.mTN_Relation.size(); i++) {
-            Node node = Node.get(tran.mTN_Relation.get(i).getNodeID());
+        Outgoing og = new Outgoing();
+        og.mTN_Relation = tran.mTN_Relation;
+        og.mMap = new HashMap<String, TN_Relation>(5);
+
+        for (int i = 0; i < og.mTN_Relation.size(); i++) {
+            Node node = Node.get(og.mTN_Relation.get(i).getNodeID());
 
             if (og.mAccount == null) {
                 Account account = Account.valueOf(node);
                 if (account != null) {
                     og.mAccount = account;
+                    og.mMap.put(Account.CODE_ACCOUNT, og.mTN_Relation.get(i));
+
                     continue;
                 }
             }
@@ -48,6 +63,7 @@ public class Outgoing extends Transaction {
                 OutgoingCategory oc = OutgoingCategory.valueOf(node);
                 if (oc != null) {
                     og.mOC = oc;
+                    og.mMap.put(OutgoingCategory.CODE_OUTGOING_CATEGORY, og.mTN_Relation.get(i));
                     continue;
                 }
             }
@@ -56,6 +72,9 @@ public class Outgoing extends Transaction {
                 Member member = Member.valueOf(node);
                 if (member != null) {
                     og.mMember = member;
+                    og.mMap.put(Member.CODE_MEMBER, og.mTN_Relation.get(i));
+
+                    continue;
                 }
 
             }
@@ -64,6 +83,9 @@ public class Outgoing extends Transaction {
                 Project project = Project.valueOf(node);
                 if (project != null) {
                     og.mProject = project;
+                    og.mMap.put(Project.CODE_PROJECT, og.mTN_Relation.get(i));
+
+                    continue;
                 }
             }
 
@@ -71,8 +93,15 @@ public class Outgoing extends Transaction {
                 Merchant merchant = Merchant.valueOf(node);
                 if (merchant != null) {
                     og.mMerchant = merchant;
+                    og.mMap.put(Merchant.CODE_MERCHANT, og.mTN_Relation.get(i));
+
+                    continue;
                 }
             }
+        }
+
+        if (og.mOC == null){
+            return null;
         }
 
         og.mAmount = tran.mAmount;
@@ -83,7 +112,6 @@ public class Outgoing extends Transaction {
         og.mTranDate = tran.mTranDate;
         og.mInDate = tran.mInDate;
         og.mInUserID = tran.mInUserID;
-        og.mTN_Relation = tran.mTN_Relation;
 
         return og;
 
@@ -213,15 +241,39 @@ public class Outgoing extends Transaction {
             throw new Exception("Outgoing category can't be null");
         }
 
+        if (mAmount < 0){
+            throw new Exception("Amount can't be less than 0.");
+        }
+
         this.refresh();
 
         super.save();
     }
     private void refresh(){
-        if (mTN_Relation != null){
-            for(int i = 0; i < mTN_Relation.size(); i ++){
-                mTN_Relation.get(i).setAmount(this.mAmount);
-            }
+        TN_Relation r = mMap.get(OutgoingCategory.CODE_OUTGOING_CATEGORY);
+        r.setAmount(mAmount);
+
+        r = mMap.get(Account.CODE_ACCOUNT);
+//        if (mAccount.getType().equals(Account.CODE_ACCOUNT_CREDIT)){
+//            r.setAmount(mAmount);
+//        }else {
+//            r.setAmount(-mAmount);
+//        }
+        r.setAmount(mAmount);
+
+        r = mMap.get(Member.CODE_MEMBER);
+        if (r != null){
+            r.setAmount(mAmount);
+        }
+
+        r = mMap.get(Merchant.CODE_MERCHANT);
+        if (r != null){
+            r.setAmount(getAmount());
+        }
+
+        r = mMap.get(Project.CODE_PROJECT);
+        if (r != null){
+            r.setAmount(mAmount);
         }
     }
 

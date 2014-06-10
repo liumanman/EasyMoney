@@ -146,6 +146,7 @@ public class Outgoing extends Transaction {
                 TN_Relation r = mMap.get(Account.CODE_ACCOUNT);
                 mMap.remove(Account.CODE_ACCOUNT);
                 super.mTN_Relation.remove(r);
+                mAccount = null;
             }
         } else {
             this.setNode(account);
@@ -156,12 +157,13 @@ public class Outgoing extends Transaction {
     public Member getMemeber() {
         return mMember;
     }
-    public void setMember(Member member) throws Exception {
+    public void setMember(Member member) throws Exception{
         if (member == null) {
             if (mMember != null) {
                 TN_Relation r = mMap.get(Member.CODE_MEMBER);
                 mMap.remove(Member.CODE_MEMBER);
                 super.mTN_Relation.remove(r);
+                mMember = null;
             }
         } else {
             this.setNode(member);
@@ -178,6 +180,7 @@ public class Outgoing extends Transaction {
                 TN_Relation r = mMap.get(Project.CODE_PROJECT);
                 mMap.remove(Project.CODE_PROJECT);
                 super.mTN_Relation.remove(r);
+                mProject = null;
             }
         } else {
             this.setNode(project);
@@ -194,6 +197,7 @@ public class Outgoing extends Transaction {
                 TN_Relation r = mMap.get(Merchant.CODE_MERCHANT);
                 mMap.remove(Merchant.CODE_MERCHANT);
                 super.mTN_Relation.remove(r);
+                mMerchant = null;
             }
         } else {
             this.setNode(merchant);

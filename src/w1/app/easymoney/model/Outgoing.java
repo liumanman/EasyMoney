@@ -3,6 +3,7 @@ package w1.app.easymoney.model;
 import w1.app.easymoney.data.TN_RelationDBH;
 import w1.app.easymoney.entity.TN_Relation;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -281,4 +282,7 @@ public class Outgoing extends Transaction {
         }
     }
 
+    public void delete() throws SQLException {
+        super.delete();
+    }
 }

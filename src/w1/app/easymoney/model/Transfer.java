@@ -3,6 +3,7 @@ package w1.app.easymoney.model;
 import w1.app.easymoney.data.TN_RelationDBH;
 import w1.app.easymoney.entity.TN_Relation;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -216,6 +217,57 @@ public class Transfer extends Transaction {
             }
             r.setNodeID(to.getID());
             mToAccount = to;
+        }
+    }
+
+    @Override
+    public void save() throws Exception {
+        if (mAmount <= 0){
+            throw new Exception("Amount can't less then 0.");
+        }
+
+        if (!(mFromAccount != null && mToAccount != null)){
+            if (!(mFromAccount != null && mToAccount != null)){
+                throw new Exception("Invalid from and to.");
+            }
+        }
+
+        refresh();
+        super.save();
+    }
+
+    @Override
+    public void delete() throws SQLException {
+       super.delete();
+    }
+
+    private void refresh(){
+        if (mFromAccount != null){
+            TN_Relation r = mMap.get(CODE_FROM_ACCOUNT);
+            if (mFromAccount.getType().equals(Account.TYPE_DEBIT)){
+               r.setAmount(-mAmount);
+            }else {
+                r.setAmount(mAmount);
+            }
+        }
+
+        if (mToAccount != null){
+            TN_Relation r = mMap.get(CODE_TO_ACCOUNT);
+            if (mToAccount.getType().equals(Account.CODE_ACCOUNT_DEBIT)){
+                r.setAmount(mAmount);
+            }else {
+                r.setAmount(-mAmount);
+            }
+        }
+
+        if (mFromMember != null){
+            TN_Relation r = mMap.get(CODE_FROM_MEMBER);
+            r.setAmount(-mAmount);
+        }
+
+        if (mToMember != null){
+            TN_Relation r = mMap.get(CODE_TO_MEMBER);
+            r.setAmount(mAmount);
         }
     }
 }

@@ -85,4 +85,16 @@ public class Utility {
 
         return c.getTime();
     }
+
+    public static int getMonth(Date date){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c.get(Calendar.MONTH) + 1;
+    }
+
+    public static int getYear(Date date){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c.get(Calendar.YEAR);
+    }
 }

@@ -19,8 +19,24 @@ import java.util.List;
 public class TranListAdapter extends BaseExpandableListAdapter {
     private List<Group> mGroups;
     private Context mContext;
+    private int mIn = 0;
+    private int mOut = 0;
     public TranListAdapter(Context context, List<Transaction> transactions) throws Exception {
-        mGroups = this.toGroups(transactions);
+        List<Child> children;
+        if (transactions == null){
+            children = null;
+        }else {
+            children = new ArrayList<Child>(transactions.size());
+
+            for(int i = 0; i < transactions.size(); i ++){
+                children.add(toChild(transactions.get(i)));
+            }
+        }
+
+        mGroups = this.toGroups(children);
+        this.calulateSummary(transactions);
+        this.setIsFirstInOneDay(children);
+
         mContext = context;
     }
 
@@ -31,10 +47,10 @@ public class TranListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        if (this.mGroups.get(groupPosition) == null || this.mGroups.get(groupPosition).mTransactions == null){
+        if (this.mGroups.get(groupPosition) == null || this.mGroups.get(groupPosition).mChildren == null){
             return 0;
         }else {
-            return this.mGroups.get(groupPosition).mTransactions.size();
+            return this.mGroups.get(groupPosition).mChildren.size();
         }
     }
 
@@ -45,10 +61,10 @@ public class TranListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        if (this.mGroups.get(groupPosition) == null || this.mGroups.get(groupPosition).mTransactions == null){
+        if (this.mGroups.get(groupPosition) == null || this.mGroups.get(groupPosition).mChildren == null){
             return null;
         }else {
-            return this.mGroups.get(groupPosition).mTransactions.get(childPosition);
+            return this.mGroups.get(groupPosition).mChildren.get(childPosition);
         }
     }
 
@@ -59,11 +75,11 @@ public class TranListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        if (this.mGroups.get(groupPosition) == null || this.mGroups.get(groupPosition).mTransactions == null
-                || this.mGroups.get(groupPosition).mTransactions.get(childPosition) == null){
+        if (this.mGroups.get(groupPosition) == null || this.mGroups.get(groupPosition).mChildren == null
+                || this.mGroups.get(groupPosition).mChildren.get(childPosition) == null){
             return -1;
         }else{
-            return this.mGroups.get(groupPosition).mTransactions.get(childPosition).getID();
+            return this.mGroups.get(groupPosition).mChildren.get(childPosition).getID();
         }
     }
 
@@ -102,7 +118,7 @@ public class TranListAdapter extends BaseExpandableListAdapter {
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
         convertView = inflater.inflate(R.layout.view_tranlistview_child, null);
         TextView vAmount = (TextView)convertView.findViewById(R.id.view_tranlistview_child_amount);
-        vAmount.setText(String.valueOf(this.mGroups.get(groupPosition).mTransactions.get(childPosition).getAmount()));
+        vAmount.setText(String.valueOf(this.mGroups.get(groupPosition).mChildren.get(childPosition).getAmount()));
 
         return convertView;
     }
@@ -112,10 +128,23 @@ public class TranListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    private List<Group> toGroups(List<Transaction> transactions) throws Exception {
+    private Child toChild(Transaction transaction){
+        Child c = new Child();
+        c.setID(transaction.getID());
+        c.setAmount(transaction.getAmount());
+        c.setTranDate(transaction.getTranDate());
+        c.setCalFlag(transaction.getCalFlag());
+        c.mYear = Utility.getYear(transaction.getTranDate());
+        c.mMonth = Utility.getMonth(transaction.getTranDate());
+        c.mDay = Utility.getDay(transaction.getTranDate());
+
+        return c;
+    }
+
+    private List<Group> toGroups(List<Child> children) throws Exception {
         Group cg = null;
         List<Group> groups = new ArrayList<Group>(12);
-        if (transactions == null || transactions.size() < 1){
+        if (children == null || children.size() < 1){
             cg = new Group();
             groups.add(cg);
 
@@ -125,17 +154,17 @@ public class TranListAdapter extends BaseExpandableListAdapter {
         int cy = 0;
         int cm = 0;
 
-        for (int i = 0; i < transactions.size(); i ++){
+        for (int i = 0; i < children.size(); i ++){
             int m,y;
-            m = Utility.getMonth(transactions.get(i).getTranDate());
-            y = Utility.getYear(transactions.get(i).getTranDate());
+            m = children.get(i).mMonth;
+            y = children.get(i).mYear;
             if (cy != y || cm != m){
                 cy = y;
                 cm = m;
                 cg = new Group();
                 cg.mMonth = cm;
                 cg.mYear = cy;
-                cg.mTransactions = new ArrayList<Transaction>(30);
+                cg.mChildren = new ArrayList<Child>(30);
                 groups.add(cg);
             }
 
@@ -143,7 +172,7 @@ public class TranListAdapter extends BaseExpandableListAdapter {
                 throw new Exception("Current group is null.");
             }
 
-            cg.mTransactions.add(transactions.get(i));
+            cg.mChildren.add(children.get(i));
         }
 
         int i = 0;
@@ -170,14 +199,45 @@ public class TranListAdapter extends BaseExpandableListAdapter {
         return groups;
     }
 
+    private void calulateSummary(List<Transaction> transactions){
+        for (int i = 0; i < transactions.size(); i ++){
+            Transaction t = transactions.get(i);
+            if (t.getCalFlag() > 0){
+                this.mIn = this.mIn + t.getAmount();
+            }else if (t.getCalFlag() < 0) {
+                this.mOut = this.mOut + t.getAmount();
+            }
+        }
+    }
+
+    private void setIsFirstInOneDay(List<Child> children){
+        int y = 0,m = 0,d = 0;
+        for (int i = 0; i < children.size(); i ++){
+            Child c = children.get(i);
+            if (c.mYear != y || c.mMonth != m || c.mDay != d){
+                c.mIsFirstInOneDay = true;
+            }else {
+                c.mIsFirstInOneDay = false;
+            }
+        }
+    }
+
     private class Group{
         public int mYear;
         public int mMonth;
         public int mOutAmount;
         public int mInAcount;
 
-        public List<Transaction> mTransactions;
+        public List<Child> mChildren;
     }
+
+    private class Child extends Transaction{
+        public int mYear;
+        public int mMonth;
+        public int mDay;
+        public boolean mIsFirstInOneDay;
+    }
+
 
 
 }

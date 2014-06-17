@@ -4,7 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 
 //import android.os.Handler;
-//import android.support.v4.widget.SwipeRefreshLayout;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.ExpandableListView;
 
 import w1.app.easymoney.R;
@@ -16,9 +17,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main extends Activity {
+public class Main extends Activity implements SwipeRefreshLayout.OnRefreshListener {
     private ExpandableListView lv;
-//    private SwipeRefreshLayout sl;
+    private SwipeRefreshLayout sl;
     private String[] model = new String[] {"北京","上海","广州", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳" };
     /**
      * Called when the activity is first created.
@@ -40,8 +41,8 @@ public class Main extends Activity {
         }
         lv.setAdapter(adapter);
 
-//        sl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-//        sl.setOnRefreshListener(this);
+        sl = (SwipeRefreshLayout) findViewById(R.id.id_swipe_ly);
+        sl.setOnRefreshListener(this);
     }
 
     private List<Transaction> getData() throws ParseException {
@@ -70,12 +71,12 @@ public class Main extends Activity {
         return list;
     }
 
-//    @Override
-//    public void onRefresh() {
-//        new Handler().postDelayed(new Runnable() {
-//            @Override public void run() {
-//                sl.setRefreshing(false);
-//            }
-//        }, 5000);
-//    }
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override public void run() {
+                sl.setRefreshing(false);
+            }
+        }, 5000);
+    }
 }

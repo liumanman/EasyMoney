@@ -241,6 +241,7 @@ public class Transaction {
         this.mEditUserID = editUserID;
     }
 
+
     public void save() throws Exception {
         if (mID > 0){
             modify(this);
@@ -254,6 +255,15 @@ public class Transaction {
             Transaction.delete(mID);
         }
     }
+
+    private int mCalFlag;
+    public int getCalFlag(){
+        return mCalFlag;
+    }
+    public void setCalFlag(int flag){
+        this.mCalFlag = flag;
+    }
+
 
 }
 

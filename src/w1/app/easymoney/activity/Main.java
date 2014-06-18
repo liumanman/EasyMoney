@@ -12,14 +12,14 @@ import w1.app.easymoney.R;
 import w1.app.easymoney.common.Utility;
 import w1.app.easymoney.model.Transaction;
 import w1.app.easymoney.view.TranListAdapter;
+import w1.app.easymoney.view.TranListView;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main extends Activity implements SwipeRefreshLayout.OnRefreshListener {
-    private ExpandableListView lv;
-    private SwipeRefreshLayout sl;
+public class Main extends Activity  {
+    private TranListView lv;
     private String[] model = new String[] {"北京","上海","广州", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳" };
     /**
      * Called when the activity is first created.
@@ -29,7 +29,7 @@ public class Main extends Activity implements SwipeRefreshLayout.OnRefreshListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        lv = (ExpandableListView)findViewById(R.id.test_listview);
+        lv = (TranListView)findViewById(R.id.test_listview);
         lv.setGroupIndicator(null);
 
         lv.setDividerHeight(0);
@@ -41,8 +41,6 @@ public class Main extends Activity implements SwipeRefreshLayout.OnRefreshListen
         }
         lv.setAdapter(adapter);
 
-        sl = (SwipeRefreshLayout) findViewById(R.id.id_swipe_ly);
-        sl.setOnRefreshListener(this);
     }
 
     private List<Transaction> getData() throws ParseException {
@@ -51,32 +49,28 @@ public class Main extends Activity implements SwipeRefreshLayout.OnRefreshListen
         Transaction tran = new Transaction();
         tran.setAmount(111);
         tran.setTranDate(Utility.StringToDate("2014-12-02 00:00:00"));
+        tran.setCalFlag(1);
         list.add(tran);
 
         tran = new Transaction();
         tran.setAmount(222);
         tran.setTranDate(Utility.StringToDate("2014-12-01 00:00:00"));
+        tran.setCalFlag(1);
         list.add(tran);
 
         tran = new Transaction();
         tran.setAmount(333);
         tran.setTranDate(Utility.StringToDate("2014-11-20 00:00:00"));
+        tran.setCalFlag(1);
         list.add(tran);
 
         tran = new Transaction();
         tran.setAmount(444);
         tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
         list.add(tran);
+        tran.setCalFlag(-1);
 
         return list;
     }
 
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override public void run() {
-                sl.setRefreshing(false);
-            }
-        }, 5000);
-    }
 }

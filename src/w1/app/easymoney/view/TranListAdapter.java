@@ -40,6 +40,8 @@ public class TranListAdapter extends BaseExpandableListAdapter {
         mContext = context;
     }
 
+    private int mExpandedPosition = -1;
+
     @Override
     public int getGroupCount() {
         return this.mGroups.size();
@@ -93,12 +95,16 @@ public class TranListAdapter extends BaseExpandableListAdapter {
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
         if (groupPosition == 0){
             convertView = inflater.inflate(R.layout.view_tranlistview_group_first, null);
-            TextView vy = (TextView)convertView.findViewById(R.id.view_tranlistview_group_first_year);
-            vy.setText(String.valueOf(this.mGroups.get(groupPosition).mYear));
-            TextView vm = (TextView)convertView.findViewById(R.id.view_tranlistview_group_first_month);
-            vm.setText(String.valueOf(this.mGroups.get(groupPosition).mMonth));
-            TextView vd = (TextView)convertView.findViewById(R.id.view_tranlistview_group_first_desctription);
-            vd.setText("Header");
+            TextView vSum = (TextView)convertView.findViewById(R.id.summary);
+            vSum.setText(String.valueOf(mIn - mOut));
+            TextView vIn = (TextView)convertView.findViewById(R.id.in);
+            vIn.setText(String.valueOf(mIn));
+            TextView vOut = (TextView)convertView.findViewById(R.id.out);
+            vOut.setText(String.valueOf(mOut));
+            TextView vYear = (TextView)convertView.findViewById(R.id.view_tranlistview_group_year);
+            vYear.setText(String.valueOf(mGroups.get(groupPosition).mYear));
+            TextView vMonth = (TextView)convertView.findViewById(R.id.view_tranlistview_group_month);
+            vMonth.setText(String.valueOf(mGroups.get(groupPosition).mMonth));
 
         }else
         {
@@ -117,7 +123,7 @@ public class TranListAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
         convertView = inflater.inflate(R.layout.view_tranlistview_child, null);
-        TextView vAmount = (TextView)convertView.findViewById(R.id.view_tranlistview_child_amount);
+        TextView vAmount = (TextView)convertView.findViewById(R.id.amount);
         vAmount.setText(String.valueOf(this.mGroups.get(groupPosition).mChildren.get(childPosition).getAmount()));
 
         return convertView;
@@ -222,6 +228,17 @@ public class TranListAdapter extends BaseExpandableListAdapter {
         }
     }
 
+//    @Override
+//    public void onGroupCollapsed(int groupPosition){
+//        super.onGroupCollapsed(groupPosition);
+//    }
+//
+//    @Override
+//    public void onGroupExpanded(int groupPosition){
+//        super.onGroupExpanded(groupPosition);
+//        this.mExpandedPosition = groupPosition;
+//    }
+
     private class Group{
         public int mYear;
         public int mMonth;
@@ -236,6 +253,7 @@ public class TranListAdapter extends BaseExpandableListAdapter {
         public int mMonth;
         public int mDay;
         public boolean mIsFirstInOneDay;
+        public String mDescription;
     }
 
 

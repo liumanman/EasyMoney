@@ -4,22 +4,38 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <TextView android:id="@+id/view_tranlistview_group_first_year"
+
+    <TextView android:id="@+id/view_tranlistview_group_year"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginLeft="0dp"
               android:gravity="center_vertical"
               android:singleLine="true"/>
-    <TextView android:id="@+id/view_tranlistview_group_first_month"
+
+    <TextView android:id="@+id/view_tranlistview_group_month"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginLeft="5dp"
               android:gravity="center_vertical"
               android:singleLine="true" />
-    <TextView android:id="@+id/view_tranlistview_group_first_desctription"
+
+    <TextView android:id="@+id/summary"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="5dp"
+              android:gravity="center_vertical"
+              android:singleLine="true"/>
+    <TextView android:id="@+id/in"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginLeft="5dp"
               android:gravity="center_vertical"
               android:singleLine="true" />
+    <TextView android:id="@+id/out"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="5dp"
+              android:gravity="center_vertical"
+              android:singleLine="true" />
+
 </LinearLayout>

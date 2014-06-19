@@ -59,6 +59,24 @@ public class Main extends Activity  {
         list.add(tran);
 
         tran = new Transaction();
+        tran.setAmount(21);
+        tran.setTranDate(Utility.StringToDate("2014-11-21 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(111);
+        tran.setTranDate(Utility.StringToDate("2014-11-20 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(222);
+        tran.setTranDate(Utility.StringToDate("2014-11-20 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
         tran.setAmount(333);
         tran.setTranDate(Utility.StringToDate("2014-11-20 00:00:00"));
         tran.setCalFlag(1);

@@ -121,8 +121,23 @@ public class TranListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        Child c = this.mGroups.get(groupPosition).mChildren.get(childPosition);
+
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
-        convertView = inflater.inflate(R.layout.view_tranlistview_child, null);
+        if (c.mIsFirstInDay){
+            if (c.mIsLastInDay){
+                convertView = inflater.inflate(R.layout.view_tranlistview_child_fl, null);
+            }else {
+                convertView = inflater.inflate(R.layout.view_tranlistview_child_f, null);
+            }
+        }else {
+            if (c.mIsLastInDay){
+                convertView = inflater.inflate(R.layout.view_tranlistview_child_l, null);
+            }else {
+                convertView = inflater.inflate(R.layout.view_tranlistview_child, null);
+            }
+        }
+
         TextView vAmount = (TextView)convertView.findViewById(R.id.amount);
         vAmount.setText(String.valueOf(this.mGroups.get(groupPosition).mChildren.get(childPosition).getAmount()));
 
@@ -221,10 +236,22 @@ public class TranListAdapter extends BaseExpandableListAdapter {
         for (int i = 0; i < children.size(); i ++){
             Child c = children.get(i);
             if (c.mYear != y || c.mMonth != m || c.mDay != d){
-                c.mIsFirstInOneDay = true;
+                c.mIsFirstInDay = true;
+                if (i > 0){
+                    children.get( i - 1).mIsLastInDay = true;
+                }
             }else {
-                c.mIsFirstInOneDay = false;
+                c.mIsFirstInDay = false;
+                c.mIsLastInDay = false;
             }
+
+            if (i == children.size() - 1){
+                c.mIsLastInDay = true;
+            }
+
+            y = c.mYear;
+            m = c.mMonth;
+            d = c.mDay;
         }
     }
 
@@ -252,7 +279,8 @@ public class TranListAdapter extends BaseExpandableListAdapter {
         public int mYear;
         public int mMonth;
         public int mDay;
-        public boolean mIsFirstInOneDay;
+        public boolean mIsFirstInDay;
+        public boolean mIsLastInDay;
         public String mDescription;
     }
 

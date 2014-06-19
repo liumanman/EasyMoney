@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<w1.app.easymoney.view.TranListGroupLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:background="#e8e8e8"
+              android:minHeight="171px">
     <TextView android:id="@+id/view_tranlistview_group_year"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -15,4 +17,4 @@
               android:layout_marginLeft="5dp"
               android:gravity="center_vertical"
               android:singleLine="true" />
-</LinearLayout>
+</w1.app.easymoney.view.TranListGroupLayout>

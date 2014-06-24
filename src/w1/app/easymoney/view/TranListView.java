@@ -22,6 +22,8 @@ public class TranListView extends ExpandableListView implements ExpandableListVi
     public void setAdapter(TranListAdapter adapter){
         super.setAdapter(adapter);
         super.setOnGroupExpandListener(this);
+        super.setOnGroupCollapseListener(this);
+
     }
 
     private int mExpandGroupPosition = -1;

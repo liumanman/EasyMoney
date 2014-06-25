@@ -1,6 +1,7 @@
 package w1.app.easymoney.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,12 @@ import java.util.List;
 /**
  * Created by el17 on 6/12/2014.
  */
-public class TranListAdapter extends BaseExpandableListAdapter {
+public class TranListViewAdapter extends BaseExpandableListAdapter {
     private List<Group> mGroups;
     private Context mContext;
     private int mIn = 0;
     private int mOut = 0;
-    public TranListAdapter(Context context, List<Transaction> transactions) throws Exception {
+    public TranListViewAdapter(Context context, List<Transaction> transactions) throws Exception {
         List<Child> children;
         if (transactions == null){
             children = null;
@@ -92,6 +93,11 @@ public class TranListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        if (convertView != null){
+            return convertView;
+        }
+
+        Log.i("","getGroupView");
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
         if (groupPosition == 0){
             convertView = inflater.inflate(R.layout.view_tranlistview_group_first, null);
@@ -124,18 +130,24 @@ public class TranListAdapter extends BaseExpandableListAdapter {
         Child c = this.mGroups.get(groupPosition).mChildren.get(childPosition);
 
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
-        if (c.mIsFirstInDay){
-            if (c.mIsLastInDay){
-                convertView = inflater.inflate(R.layout.view_tranlistview_child_fl, null);
-            }else {
-                convertView = inflater.inflate(R.layout.view_tranlistview_child_f, null);
-            }
+//        if (c.mIsFirstInDay){
+//            if (c.mIsLastInDay){
+//                convertView = inflater.inflate(R.layout.view_tranlistview_child_fl, null);
+//            }else {
+//                convertView = inflater.inflate(R.layout.view_tranlistview_child_f, null);
+//            }
+//        }else {
+//            if (c.mIsLastInDay){
+//                convertView = inflater.inflate(R.layout.view_tranlistview_child_l, null);
+//            }else {
+//                convertView = inflater.inflate(R.layout.view_tranlistview_child, null);
+//            }
+//        }
+
+        if (c.mIsLastInDay){
+            convertView = inflater.inflate(R.layout.view_tranlistview_child_2, null);
         }else {
-            if (c.mIsLastInDay){
-                convertView = inflater.inflate(R.layout.view_tranlistview_child_l, null);
-            }else {
-                convertView = inflater.inflate(R.layout.view_tranlistview_child, null);
-            }
+            convertView = inflater.inflate(R.layout.view_tranlistview_child_1, null);
         }
 
         TextView vAmount = (TextView)convertView.findViewById(R.id.amount);

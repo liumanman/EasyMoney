@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="168px"
+              android:background="#FFFFFF">
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="166px">
+        <w1.app.easymoney.view.TranListView_ChildLeftLayout
+                android:layout_width="0px"
+                android:layout_weight="15"
+                android:layout_height="166px"
+                android:background="#FFFFFF">
+
+        </w1.app.easymoney.view.TranListView_ChildLeftLayout>
+        <w1.app.easymoney.view.TranListView_ChildRightLayout
+                android:layout_width="0px"
+                android:layout_weight="85"
+                android:layout_height="166px"
+                android:orientation="horizontal"
+                android:background="#FFFFFF">
+            <TextView android:id="@+id/description"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginLeft="0dp"
+                      android:gravity="center_vertical"
+                      android:singleLine="true"/>
+            <TextView android:id="@+id/amount"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginLeft="0dp"
+                      android:gravity="center_vertical"
+                      android:singleLine="true"/>
+
+        </w1.app.easymoney.view.TranListView_ChildRightLayout>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="2px"
+            android:background="#FFFFFF"
+            >
+
+    </LinearLayout>
+
+</LinearLayout>

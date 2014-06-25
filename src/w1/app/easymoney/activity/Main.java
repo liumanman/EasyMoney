@@ -3,15 +3,9 @@ package w1.app.easymoney.activity;
 import android.app.Activity;
 import android.os.Bundle;
 
-//import android.os.Handler;
-import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.widget.ExpandableListView;
-
 import w1.app.easymoney.R;
 import w1.app.easymoney.common.Utility;
 import w1.app.easymoney.model.Transaction;
-import w1.app.easymoney.view.TranListAdapter;
 import w1.app.easymoney.view.TranListView;
 
 import java.text.ParseException;
@@ -33,13 +27,18 @@ public class Main extends Activity  {
         lv.setGroupIndicator(null);
 
         lv.setDividerHeight(0);
-        TranListAdapter adapter = null;
+
+//        TranListViewAdapter adapter = null;
+//        try {
+//            adapter = new TranListViewAdapter(this, this.getData());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         try {
-            adapter = new TranListAdapter(this, this.getData());
+            lv.setTranList(this.getData());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        lv.setAdapter(adapter);
 
     }
 

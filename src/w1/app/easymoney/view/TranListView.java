@@ -2,8 +2,11 @@ package w1.app.easymoney.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ExpandableListView;
-import w1.app.easymoney.model.Project;
+import w1.app.easymoney.model.Transaction;
+
+import java.util.List;
 
 
 /**
@@ -11,19 +14,33 @@ import w1.app.easymoney.model.Project;
  */
 public class TranListView extends ExpandableListView implements ExpandableListView.OnGroupExpandListener
         , ExpandableListView.OnGroupCollapseListener {
+    private Context mContext;
+
     public TranListView(Context context) {
         super(context);
+        this.mContext = context;
+
+        super.setOnGroupExpandListener(this);
+        super.setOnGroupCollapseListener(this);
     }
 
     public TranListView(Context context, AttributeSet attrs){
         super(context, attrs);
-    }
+        this.mContext = context;
 
-    public void setAdapter(TranListAdapter adapter){
-        super.setAdapter(adapter);
         super.setOnGroupExpandListener(this);
         super.setOnGroupCollapseListener(this);
+    }
 
+//    public void setAdapter(TranListViewAdapter adapter){
+//        super.setAdapter(adapter);
+//
+//
+//    }
+
+    public void setTranList(List<Transaction> tranList) throws Exception {
+        TranListViewAdapter adapter = new TranListViewAdapter(this.mContext, tranList);
+        super.setAdapter(adapter);
     }
 
     private int mExpandGroupPosition = -1;
@@ -35,10 +52,21 @@ public class TranListView extends ExpandableListView implements ExpandableListVi
         }
 
         this.mExpandGroupPosition = groupPosition;
+
+
+        View v = this.getChildAt(groupPosition);
+        if (v instanceof TranListView_GroupLayout){
+            ((TranListView_GroupLayout)v).setIsExpand(true);
+        }
     }
 
     @Override
     public void onGroupCollapse(int groupPosition) {
         this.mExpandGroupPosition = -1;
+
+        View v = this.getChildAt(groupPosition);
+        if (v instanceof TranListView_GroupLayout){
+            ((TranListView_GroupLayout)v).setIsExpand(false);
+        }
     }
 }

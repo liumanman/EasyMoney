@@ -4,7 +4,7 @@
     <entry_points version="2.0" />
   </component>
   <component name="ProjectResources">
-    <resource url="http://schemas.android.com/apk/res/android" location="http://schemas.android.com/apk/res/android" />
+    <resource url="http://schemas.android.com/apk/res/android" location="" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="Android API 19 Platform" project-jdk-type="Android SDK">
     <output url="file://$PROJECT_DIR$/out" />

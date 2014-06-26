@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TranListView">
+        <attr name="borderColorDark" format="color" />
+        <attr name="borderColorLight" format="color" />
+    </declare-styleable>
+</resources>

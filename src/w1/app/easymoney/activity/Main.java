@@ -58,6 +58,54 @@ public class Main extends Activity  {
         list.add(tran);
 
         tran = new Transaction();
+        tran.setAmount(222);
+        tran.setTranDate(Utility.StringToDate("2014-12-01 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(222);
+        tran.setTranDate(Utility.StringToDate("2014-12-01 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(222);
+        tran.setTranDate(Utility.StringToDate("2014-12-01 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(222);
+        tran.setTranDate(Utility.StringToDate("2014-12-01 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(222);
+        tran.setTranDate(Utility.StringToDate("2014-12-01 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+        tran = new Transaction();
+        tran.setAmount(222);
+        tran.setTranDate(Utility.StringToDate("2014-12-01 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(222);
+        tran.setTranDate(Utility.StringToDate("2014-12-01 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(222);
+        tran.setTranDate(Utility.StringToDate("2014-12-01 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+
+        tran = new Transaction();
         tran.setAmount(21);
         tran.setTranDate(Utility.StringToDate("2014-11-21 00:00:00"));
         tran.setCalFlag(1);
@@ -80,6 +128,139 @@ public class Main extends Activity  {
         tran.setTranDate(Utility.StringToDate("2014-11-20 00:00:00"));
         tran.setCalFlag(1);
         list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(444);
+        tran.setTranDate(Utility.StringToDate("2014-11-19 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(555);
+        tran.setTranDate(Utility.StringToDate("2014-11-18 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(6666);
+        tran.setTranDate(Utility.StringToDate("2014-11-17 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(6666);
+        tran.setTranDate(Utility.StringToDate("2014-11-17 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(6666);
+        tran.setTranDate(Utility.StringToDate("2014-11-17 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(6666);
+        tran.setTranDate(Utility.StringToDate("2014-11-17 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(6666);
+        tran.setTranDate(Utility.StringToDate("2014-11-17 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(6666);
+        tran.setTranDate(Utility.StringToDate("2014-11-17 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(6666);
+        tran.setTranDate(Utility.StringToDate("2014-11-17 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(6666);
+        tran.setTranDate(Utility.StringToDate("2014-11-17 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(6666);
+        tran.setTranDate(Utility.StringToDate("2014-11-17 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
+        tran.setAmount(444);
+        tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
+        list.add(tran);
+        tran.setCalFlag(-1);
+
+        tran = new Transaction();
+        tran.setAmount(444);
+        tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
+        list.add(tran);
+        tran.setCalFlag(-1);
+
+        tran = new Transaction();
+        tran.setAmount(444);
+        tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
+        list.add(tran);
+        tran.setCalFlag(-1);
+
+        tran = new Transaction();
+        tran.setAmount(444);
+        tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
+        list.add(tran);
+        tran.setCalFlag(-1);
+
+        tran = new Transaction();
+        tran.setAmount(444);
+        tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
+        list.add(tran);
+        tran.setCalFlag(-1);
+
+        tran = new Transaction();
+        tran.setAmount(444);
+        tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
+        list.add(tran);
+        tran.setCalFlag(-1);
+
+        tran = new Transaction();
+        tran.setAmount(444);
+        tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
+        list.add(tran);
+        tran.setCalFlag(-1);
+
+        tran = new Transaction();
+        tran.setAmount(444);
+        tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
+        list.add(tran);
+        tran.setCalFlag(-1);
+
+        tran = new Transaction();
+        tran.setAmount(444);
+        tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
+        list.add(tran);
+        tran.setCalFlag(-1);
+
+        tran = new Transaction();
+        tran.setAmount(444);
+        tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
+        list.add(tran);
+        tran.setCalFlag(-1);
+
+
+        tran = new Transaction();
+        tran.setAmount(444);
+        tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
+        list.add(tran);
+        tran.setCalFlag(-1);
 
         tran = new Transaction();
         tran.setAmount(444);

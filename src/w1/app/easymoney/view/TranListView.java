@@ -2,7 +2,6 @@ package w1.app.easymoney.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ExpandableListView;
 import w1.app.easymoney.model.Transaction;
 
@@ -52,21 +51,10 @@ public class TranListView extends ExpandableListView implements ExpandableListVi
         }
 
         this.mExpandGroupPosition = groupPosition;
-
-
-        View v = this.getChildAt(groupPosition);
-        if (v instanceof TranListView_GroupLayout){
-            ((TranListView_GroupLayout)v).setIsExpand(true);
-        }
     }
 
     @Override
     public void onGroupCollapse(int groupPosition) {
         this.mExpandGroupPosition = -1;
-
-        View v = this.getChildAt(groupPosition);
-        if (v instanceof TranListView_GroupLayout){
-            ((TranListView_GroupLayout)v).setIsExpand(false);
-        }
     }
 }

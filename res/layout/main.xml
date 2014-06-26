@@ -17,7 +17,9 @@
                       <!--android:layout_height="match_parent">-->
             <w1.app.easymoney.view.TranListView android:id="@+id/test_listview"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_height="match_parent"
+                                android:background="@color/tranlistview_child_bg"
+                                >
             </w1.app.easymoney.view.TranListView>
         <!--</LinearLayout>-->
 </LinearLayout>

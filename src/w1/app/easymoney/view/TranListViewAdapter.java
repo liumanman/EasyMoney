@@ -93,8 +93,12 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        if (convertView != null){
-            return convertView;
+        if (isExpanded && this.mGroups.get(groupPosition).mExpandView != null){
+            return this.mGroups.get(groupPosition).mExpandView;
+        }
+
+        if (!isExpanded && this.mGroups.get(groupPosition).mCollapseView != null){
+            return this.mGroups.get(groupPosition).mCollapseView;
         }
 
         Log.i("","getGroupView");
@@ -112,21 +116,37 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
             TextView vMonth = (TextView)convertView.findViewById(R.id.view_tranlistview_group_month);
             vMonth.setText(String.valueOf(mGroups.get(groupPosition).mMonth));
 
+
         }else
         {
-            convertView = inflater.inflate(R.layout.view_tranlistview_group, null);
+            if (isExpanded)
+            {
+                convertView = inflater.inflate(R.layout.view_tranlistview_group_expand, null);
+            }else{
+                convertView = inflater.inflate(R.layout.view_tranlistview_group_collapse, null);
+            }
+
             TextView vy = (TextView)convertView.findViewById(R.id.view_tranlistview_group_year);
             vy.setText(String.valueOf(this.mGroups.get(groupPosition).mYear));
             TextView vm = (TextView)convertView.findViewById(R.id.view_tranlistview_group_month);
             vm.setText(String.valueOf(this.mGroups.get(groupPosition).mMonth));
         }
 
+        if (isExpanded){
+            this.mGroups.get(groupPosition).mExpandView = convertView;
+        }else{
+            this.mGroups.get(groupPosition).mCollapseView = convertView;
+        }
 
         return convertView;
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        if (this.mGroups.get(groupPosition).mChildren.get(childPosition).mView != null){
+            return this.mGroups.get(groupPosition).mChildren.get(childPosition).mView;
+        }
+
         Child c = this.mGroups.get(groupPosition).mChildren.get(childPosition);
 
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
@@ -153,6 +173,8 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
         TextView vAmount = (TextView)convertView.findViewById(R.id.amount);
         vAmount.setText(String.valueOf(this.mGroups.get(groupPosition).mChildren.get(childPosition).getAmount()));
 
+        this.mGroups.get(groupPosition).mChildren.get(childPosition).mView = convertView;
+
         return convertView;
     }
 
@@ -175,15 +197,15 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
     }
 
     private List<Group> toGroups(List<Child> children) throws Exception {
-        Group cg = null;
-        List<Group> groups = new ArrayList<Group>(12);
+        List<Group> groups = new ArrayList<Group>(13);
+
         if (children == null || children.size() < 1){
-            cg = new Group();
-            groups.add(cg);
+            groups.add(new Group());
 
             return groups;
         }
 
+        Group cg = null;
         int cy = 0;
         int cm = 0;
 
@@ -228,6 +250,8 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
 
             i ++;
         }
+
+        groups.add(0, new Group());
 
         return groups;
     }
@@ -283,6 +307,8 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
         public int mMonth;
         public int mOutAmount;
         public int mInAcount;
+        public View mExpandView;
+        public View mCollapseView;
 
         public List<Child> mChildren;
     }
@@ -294,6 +320,7 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
         public boolean mIsFirstInDay;
         public boolean mIsLastInDay;
         public String mDescription;
+        public View mView;
     }
 
 

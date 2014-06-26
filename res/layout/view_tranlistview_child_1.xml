@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:local="http://schemas.android.com/apk/res/w1.app.easymoney"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="166px"
-              android:background="@color/mycolor"
+              android:layout_height="match_parent"
+              android:minHeight="55dp"
+              android:background="@color/tranlistview_child_bg"
               >
     <LinearLayout
-            android:layout_width="0px"
+            android:layout_width="0dp"
             android:layout_weight="15"
-            android:layout_height="166px"
-            android:background="#FFFFFF"
+            android:layout_height="match_parent"
+            android:background="@color/tranlistview_child_bg"
             >
 
     </LinearLayout>
     <w1.app.easymoney.view.TranListView_ChildRightLayout
-            android:layout_width="0px"
+            android:layout_width="0dp"
             android:layout_weight="85"
-            android:layout_height="166px"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:background="#FFFFFF"
+            android:background="@color/tranlistview_child_bg"
+            local:borderColorDark="@color/tranlistview_darkborder"
+            local:borderColorLight="@color/tranlistview_lightborder"
             >
 
         <TextView android:id="@+id/description"

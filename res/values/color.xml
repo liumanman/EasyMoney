@@ -7,4 +7,5 @@
     <color name="tranlistview_group_first_bg">#866E54</color>
     <color name="tranlistview_group_first_darkborder">#7B644B</color>
     <color name="tranlistview_group_first_lightborder">#CCCCCC</color>
+    <color name="pullrefreshlistview_header_bg">#77624B</color>
 </resources>

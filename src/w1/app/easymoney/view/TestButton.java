@@ -44,7 +44,7 @@ public class TestButton extends Button {
         }
 
         Log.i("onTouchEvent", "TestButton:" + a);
-        return false;
+        return true;
 
 //        return super.onTouchEvent(event);
     }

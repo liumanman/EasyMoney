@@ -6,6 +6,7 @@ import android.os.Bundle;
 import w1.app.easymoney.R;
 import w1.app.easymoney.common.Utility;
 import w1.app.easymoney.model.Transaction;
+import w1.app.easymoney.view.PullRefreshListView;
 import w1.app.easymoney.view.TranListView;
 
 import java.text.ParseException;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class Main extends Activity  {
     private TranListView lv;
+    private PullRefreshListView plv;
     private String[] model = new String[] {"北京","上海","广州", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳" };
     /**
      * Called when the activity is first created.
@@ -23,10 +25,11 @@ public class Main extends Activity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        lv = (TranListView)findViewById(R.id.test_listview);
-        lv.setGroupIndicator(null);
+        lv = new TranListView(this);
 
-        lv.setDividerHeight(0);
+//        lv.setGroupIndicator(null);
+//
+//        lv.setDividerHeight(0);
 
 //        TranListViewAdapter adapter = null;
 //        try {
@@ -40,6 +43,8 @@ public class Main extends Activity  {
             e.printStackTrace();
         }
 
+        plv = (PullRefreshListView) findViewById(R.id.test_listview);
+        plv.setListView(lv);
     }
 
     private List<Transaction> getData() throws ParseException {

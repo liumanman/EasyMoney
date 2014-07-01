@@ -21,6 +21,9 @@ public class TranListView extends ExpandableListView implements ExpandableListVi
 
         super.setOnGroupExpandListener(this);
         super.setOnGroupCollapseListener(this);
+
+        setGroupIndicator(null);
+        setDividerHeight(0);
     }
 
     public TranListView(Context context, AttributeSet attrs){
@@ -29,6 +32,9 @@ public class TranListView extends ExpandableListView implements ExpandableListVi
 
         super.setOnGroupExpandListener(this);
         super.setOnGroupCollapseListener(this);
+
+        setGroupIndicator(null);
+        setDividerHeight(0);
     }
 
 //    public void setAdapter(TranListViewAdapter adapter){

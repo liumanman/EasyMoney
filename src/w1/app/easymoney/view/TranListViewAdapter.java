@@ -41,8 +41,6 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
         mContext = context;
     }
 
-    private int mExpandedPosition = -1;
-
     @Override
     public int getGroupCount() {
         return this.mGroups.size();
@@ -199,9 +197,8 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
     private List<Group> toGroups(List<Child> children) throws Exception {
         List<Group> groups = new ArrayList<Group>(13);
 
+        groups.add(new Group());
         if (children == null || children.size() < 1){
-            groups.add(new Group());
-
             return groups;
         }
 
@@ -230,7 +227,7 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
             cg.mChildren.add(children.get(i));
         }
 
-        int i = 0;
+        int i = 1;
         while (i < groups.size() - 1){
             if (!(groups.get(i).mYear == groups.get(i + 1).mYear && groups.get(i).mMonth == groups.get(i + 1).mMonth + 1)){
                 if (!(groups.get(i).mMonth == 1 && groups.get(i +1).mMonth == 12 && groups.get(i).mYear == groups.get(i + 1).mYear + 1)){
@@ -251,7 +248,7 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
             i ++;
         }
 
-        groups.add(0, new Group());
+        //groups.add(0, new Group());
 
         return groups;
     }

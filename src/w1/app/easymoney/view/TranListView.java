@@ -2,6 +2,7 @@ package w1.app.easymoney.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ExpandableListView;
 import w1.app.easymoney.model.Transaction;
 
@@ -46,6 +47,18 @@ public class TranListView extends ExpandableListView implements ExpandableListVi
     public void setTranList(List<Transaction> tranList) throws Exception {
         TranListViewAdapter adapter = new TranListViewAdapter(this.mContext, tranList);
         super.setAdapter(adapter);
+    }
+
+    public boolean isFirstPositionVisibleFully(){
+        int flatPosition = this.getFirstVisiblePosition();
+        Log.i("isFirstPositionVisibleFully", String.valueOf(flatPosition));
+        Log.i("isFirstPositionVisibleFully", String.valueOf(this.getChildAt(0).getTop()));
+        if (flatPosition == 0 && this.getChildAt(0).getTop() >= 0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     private int mExpandGroupPosition = -1;

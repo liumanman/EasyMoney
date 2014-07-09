@@ -13,7 +13,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main extends Activity  {
+public class Main extends Activity implements PullRefreshListView.OnRefreshListener {
     private TranListView lv;
     private PullRefreshListView plv;
     private String[] model = new String[] {"北京","上海","广州", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳" };
@@ -27,16 +27,6 @@ public class Main extends Activity  {
 
         lv = new TranListView(this);
 
-//        lv.setGroupIndicator(null);
-//
-//        lv.setDividerHeight(0);
-
-//        TranListViewAdapter adapter = null;
-//        try {
-//            adapter = new TranListViewAdapter(this, this.getData());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         try {
             lv.setTranList(this.getData());
         } catch (Exception e) {
@@ -45,6 +35,7 @@ public class Main extends Activity  {
 
         plv = (PullRefreshListView) findViewById(R.id.test_listview);
         plv.setListView(lv);
+        plv.setOnRefreshListener(this);
     }
 
     private List<Transaction> getData() throws ParseException {
@@ -276,4 +267,8 @@ public class Main extends Activity  {
         return list;
     }
 
+    @Override
+    public void onRefresh() throws InterruptedException {
+        Thread.sleep(2000);
+    }
 }

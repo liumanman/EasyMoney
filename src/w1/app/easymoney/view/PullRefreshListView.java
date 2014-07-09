@@ -1,6 +1,8 @@
 package w1.app.easymoney.view;
 
 import android.content.Context;
+import android.os.Looper;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +22,8 @@ public class PullRefreshListView extends LinearLayout {
     private static final int STATUS_PULL = 1;
     private static final int STATUS_READY = 2;
     private static final int STATUS_DOING = 3;
+
+    OnRefreshListener mListener;
 
     private TranListView mListView;
     private PullRefreshListViewHeader mHeader;
@@ -44,6 +48,10 @@ public class PullRefreshListView extends LinearLayout {
         super(context, attrs, defStyle);
         this.mContext = context;
         this.init();
+    }
+
+    public void setOnRefreshListener(OnRefreshListener listener){
+        this.mListener = listener;
     }
 
     private void init(){
@@ -107,15 +115,19 @@ public class PullRefreshListView extends LinearLayout {
     public boolean onTouchEvent(MotionEvent ev){
         switch (ev.getAction()){
             case MotionEvent.ACTION_MOVE:
-                if (this.mStatus == STATUS_PULL) {
+                if (this.mStatus == STATUS_PULL || this.mStatus == STATUS_READY) {
                     final float deltaY = ev.getRawY() - mLastY;
                     //Log.i("onTouchEvent",String.valueOf((int)deltaY));
-                    Log.i("onTouchEvent - top", String.valueOf(this.getScrollY()));
+                    Log.i("onTouchEvent - ScrollY", String.valueOf(this.getScrollY()));
                     //this.mListView.isFirstPositionVisibleFully();
 
                     this.smoothScrollBy(0, -(int) deltaY / 2);
-                    if (this.getScaleY() >= 250){
+                    if (this.getScrollY() <= -200){
+                        this.mHeader.setReadyStstus();
                         this.mStatus = STATUS_READY;
+                    }else {
+                        this.mHeader.setPullStatus();
+                        this.mStatus = STATUS_PULL;
                     }
                 }
                 break;
@@ -124,9 +136,17 @@ public class PullRefreshListView extends LinearLayout {
                 break;
             case MotionEvent.ACTION_UP:
                 Log.i("onTouchEvent","up");
+                if (this.mStatus == STATUS_READY && this.mListener != null){
+                    this.smoothScrollTo(0, - 180);
+                    this.mStatus = STATUS_DOING;
+                    this.mHeader.setDoingStatus();
+                    this.doing();
+                }else {
+                    this.smoothScrollTo(0, 0);
+                    this.mStatus = STATUS_NORMAL;
+                    this.mHeader.setNormalStatus();
+                }
 
-                this.smoothScrollTo(0, 0);
-                this.mStatus = STATUS_NORMAL;
                 break;
             default:
                 Log.i("onTouchEvent","other");
@@ -136,6 +156,38 @@ public class PullRefreshListView extends LinearLayout {
         this.mLastY = ev.getRawY();
 
         return super.onTouchEvent(ev);
+    }
+
+    private void setNormalStatus(){
+        if (Thread.currentThread().getId() == Looper.getMainLooper().getThread().getId()){
+            this.smoothScrollTo(0, 0);
+            this.mHeader.setNormalStatus();
+            this.mStatus = STATUS_NORMAL;
+        }else {
+            this.post(new Runnable() {
+                @Override
+                public void run() {
+                    setNormalStatus();
+                }
+            });
+        }
+    }
+
+    private Thread mDoingThread;
+    private void doing(){
+        this.mDoingThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mListener.onRefresh();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                setNormalStatus();
+            }
+        });
+
+        this.mDoingThread.start();
     }
 
     @Override
@@ -149,6 +201,7 @@ public class PullRefreshListView extends LinearLayout {
                     if (this.mListView.isFirstPositionVisibleFully()){
                         Log.i("onInterceptTouchEvent", "this first one is shown.");
                         this.mStatus = STATUS_PULL;
+                        this.mHeader.setPullStatus();
                         r = true;
 
                     }else{
@@ -176,6 +229,8 @@ public class PullRefreshListView extends LinearLayout {
         //return super.onInterceptTouchEvent(ev);
     }
 
-
+    public static interface OnRefreshListener{
+        void onRefresh() throws InterruptedException;
+    }
 
 }

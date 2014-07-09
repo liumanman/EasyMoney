@@ -51,14 +51,20 @@ public class TranListView extends ExpandableListView implements ExpandableListVi
 
     public boolean isFirstPositionVisibleFully(){
         int flatPosition = this.getFirstVisiblePosition();
-        Log.i("isFirstPositionVisibleFully", String.valueOf(flatPosition));
-        Log.i("isFirstPositionVisibleFully", String.valueOf(this.getChildAt(0).getTop()));
+        Log.i("child count", String.valueOf(this.getChildCount()));
+//        Log.i("isFirstPositionVisibleFully", String.valueOf(flatPosition));
+//        Log.i("isFirstPositionVisibleFully", String.valueOf(this.getChildAt(0).getTop()));
         if (flatPosition == 0 && this.getChildAt(0).getTop() >= 0){
             return true;
         }
         else{
             return false;
         }
+    }
+
+    public boolean isLastPositionVisibleFully(){
+        int flatPosition = this.getLastVisiblePosition();
+        return false;
     }
 
     private int mExpandGroupPosition = -1;

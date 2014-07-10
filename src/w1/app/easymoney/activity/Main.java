@@ -192,6 +192,12 @@ public class Main extends Activity implements PullRefreshListView.OnRefreshListe
         list.add(tran);
 
         tran = new Transaction();
+        tran.setAmount(6666);
+        tran.setTranDate(Utility.StringToDate("2014-10-17 00:00:00"));
+        tran.setCalFlag(1);
+        list.add(tran);
+
+        tran = new Transaction();
         tran.setAmount(444);
         tran.setTranDate(Utility.StringToDate("2014-09-20 00:00:00"));
         list.add(tran);

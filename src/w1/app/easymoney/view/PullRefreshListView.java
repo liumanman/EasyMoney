@@ -23,14 +23,19 @@ public class PullRefreshListView extends LinearLayout {
     private static final int STATUS_READY = 2;
     private static final int STATUS_DOING = 3;
 
+    private static final int DIRECTION_HEADER = 0;
+    private static final int DIRECTION_FOOTER = 1;
+
     OnRefreshListener mListener;
 
     private TranListView mListView;
     private PullRefreshListViewHeader mHeader;
+    private PullRefreshListViewHeader mFooter;
 
     private Context mContext;
 
     private int mStatus = STATUS_NORMAL;
+    private int mDirection;
 
     public PullRefreshListView(Context context) {
         super(context);
@@ -58,14 +63,13 @@ public class PullRefreshListView extends LinearLayout {
         this.mScroller = new Scroller(this.mContext);
         this.setOrientation(LinearLayout.VERTICAL);
 
-        Log.i("init","init");
+//        Log.i("init","init");
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
         this.mHeader = (PullRefreshListViewHeader) inflater.inflate(R.layout.view_pullrefreshlistview_header, null);
-        this.addView(this.mHeader, 0);
+        this.addView(this.mHeader);
 
-//        MarginLayoutParams mlp = (MarginLayoutParams)this.mHeader.getLayoutParams();
-//        mlp.topMargin = -mHeader.getHeight();
-//        this.requestLayout();
+        this.mFooter = (PullRefreshListViewHeader) inflater.inflate(R.layout.view_pullrefreshlistview_footer, null);
+        this.addView(this.mFooter);
     }
 
     private boolean mLoadOnce = false;
@@ -73,8 +77,18 @@ public class PullRefreshListView extends LinearLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         if (changed && !mLoadOnce){
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)this.mListView.getLayoutParams();
+            lp.height = this.getHeight();
+
+//            this.mListView.setLayoutParams(lp);
+
+
             MarginLayoutParams mlp = (MarginLayoutParams)this.mHeader.getLayoutParams();
-            mlp.topMargin = -mHeader.getHeight();
+            mlp.topMargin = - this.mHeader.getHeight();
+
+            mlp = (MarginLayoutParams)this.mFooter.getLayoutParams();
+            //mlp.topMargin = - this.mFooter.getHeight();
+            mlp.bottomMargin = - this.mHeader.getHeight();
 
             this.mLoadOnce = true;
         }
@@ -82,9 +96,7 @@ public class PullRefreshListView extends LinearLayout {
     }
 
     public void setListView(TranListView listView){
-        LinearLayout.LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        listView.setLayoutParams(lp);
-        this.addView(listView, 1);
+        this.addView(listView,1);
         this.mListView = listView;
     }
 
@@ -118,17 +130,30 @@ public class PullRefreshListView extends LinearLayout {
                 if (this.mStatus == STATUS_PULL || this.mStatus == STATUS_READY) {
                     final float deltaY = ev.getRawY() - mLastY;
                     //Log.i("onTouchEvent",String.valueOf((int)deltaY));
-                    Log.i("onTouchEvent - ScrollY", String.valueOf(this.getScrollY()));
+                    //Log.i("onTouchEvent - ScrollY", String.valueOf(this.getScrollY()));
                     //this.mListView.isFirstPositionVisibleFully();
 
-                    this.smoothScrollBy(0, -(int) deltaY / 2);
-                    if (this.getScrollY() <= -200){
-                        this.mHeader.setReadyStstus();
-                        this.mStatus = STATUS_READY;
-                    }else {
-                        this.mHeader.setPullStatus();
-                        this.mStatus = STATUS_PULL;
+                    if (this.mDirection == DIRECTION_HEADER) {
+//                        Log.i("onTouchEvent",String.valueOf(this.getScrollY()));
+                        if (deltaY < 0 && this.getScrollY() >= 0){
+                            if (this.getScrollY() != 0) {
+                                this.smoothScrollTo(0, 0);
+                            }
+                        }else{
+                            this.smoothScrollBy(0, -(int) deltaY / 2);
+                            if (this.getScrollY() <= -200) {
+                                this.mHeader.setReadyStstus();
+                                this.mStatus = STATUS_READY;
+                            } else {
+                                this.mHeader.setPullStatus();
+                                this.mStatus = STATUS_PULL;
+                            }
+                        }
+
+                    }else{
+                        this.smoothScrollBy(0, -(int) deltaY / 2);
                     }
+
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
@@ -196,20 +221,34 @@ public class PullRefreshListView extends LinearLayout {
         switch (ev.getAction()){
             case MotionEvent.ACTION_MOVE:
                 final float deltaY = ev.getRawY() - mLastY;
+//                Log.i("deltaY", String.valueOf(deltaY));
+                if (deltaY == 0){
+                    return super.onInterceptHoverEvent(ev);
+                }
                 //mLastY = ev.getRawY();
                 if (deltaY > 0){ //swipe down
+                    this.mDirection = DIRECTION_HEADER;
                     if (this.mListView.isFirstPositionVisibleFully()){
-                        Log.i("onInterceptTouchEvent", "this first one is shown.");
+//                        Log.i("onInterceptTouchEvent", "this first one is shown.");
                         this.mStatus = STATUS_PULL;
                         this.mHeader.setPullStatus();
                         r = true;
 
                     }else{
-                        Log.i("onInterceptTouchEvent","the first one is hidden");
+//                        Log.i("onInterceptTouchEvent","the first one is hidden");
                     }
 
                 }else{
                     Log.i("onInterceptTouchEvent","swipe up");
+                    this.mDirection = DIRECTION_FOOTER;
+                    if (this.mListView.isLastPositionVisibleFully()){
+                        Log.i("onInterceptTouchEvent", "this last one is shown.");
+                        this.mStatus = STATUS_PULL;
+                        this.mFooter.setPullStatus();
+                        r = true;
+                    }else{
+                        Log.i("onInterceptTouchEvent", "this last one is hidden.");
+                    }
                 }
                 break;
             case MotionEvent.ACTION_DOWN:

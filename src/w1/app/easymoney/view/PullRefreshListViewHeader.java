@@ -95,25 +95,25 @@ public class PullRefreshListViewHeader extends LinearLayout {
         if (mIsArrowUp){
             this.rotateArrow();
         }
-        Log.i("Arrow" , "setNormalStatus");
+//        Log.i("Arrow" , "setNormalStatus");
     }
 
     public void setReadyStstus(){
         if (!this.mIsArrowUp){
             this.rotateArrow();
         }
-        Log.i("Arrow" , "setReadyStstus");
+//        Log.i("Arrow" , "setReadyStstus");
     }
 
     public void setPullStatus(){
         if (mIsArrowUp){
             this.rotateArrow();
         }
-        Log.i("Arrow" , "setPullStatus");
+//        Log.i("Arrow" , "setPullStatus");
     }
 
     public void setDoingStatus(){
         this.rotateArrow2();
-        Log.i("Arrow" , "setDoingStatus");
+//        Log.i("Arrow" , "setDoingStatus");
     }
 }

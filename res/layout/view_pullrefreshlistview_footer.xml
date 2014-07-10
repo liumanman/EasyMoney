@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<w1.app.easymoney.view.PullRefreshListViewHeader xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 android:orientation="vertical"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:minHeight="120dp"
+                                                 android:gravity="top"
+                                                 android:background="@color/pullrefreshlistview_header_bg">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/pullrefreshlistview_header_bg">
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/pullrefreshlistview_header_bg">
+        <ImageView
+                android:id="@+id/iv_arrow"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="40dp"
+                android:src="@drawable/arrow"/>
+    </LinearLayout>
+
+
+</w1.app.easymoney.view.PullRefreshListViewHeader>

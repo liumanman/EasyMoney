@@ -52,7 +52,7 @@ public class TranListView extends ExpandableListView implements ExpandableListVi
         TranListViewAdapter adapter = new TranListViewAdapter(this.mContext, tranList);
         super.setAdapter(adapter);
 
-        this.setLastFlatPosition();
+//        this.setLastFlatPosition();
     }
 
     private void setLastFlatPosition(){
@@ -98,32 +98,25 @@ public class TranListView extends ExpandableListView implements ExpandableListVi
     }
 
     public boolean isLastPositionVisibleFully(){
-//        ExpandableListAdapter adapter = this.getExpandableListAdapter();
-//        int groupCount = adapter.getGroupCount();
-//        if (groupCount < 1){
-//            return false;
-//        }
-//
-//        int childCount = adapter.getChildrenCount(groupCount - 1);
-//        long packedPosition;
-//        if (childCount < 1){
-//            packedPosition = this.getPackedPositionForGroup(groupCount - 1);
-//        }else {
-//           packedPosition = this.getPackedPositionForChild(groupCount - 1, childCount - 1);
-//        }
-//
-//        Log.i("packedPosition", String.valueOf(packedPosition));
-//        int flatPosition = 0;
-//        try {
-//            flatPosition = getFlatListPosition(packedPosition);
-//        }
-//        catch (NullPointerException e){//i don't know what caused this exception, so catch it.
-//            //do nothing
-//            Log.i("getFlatListPosition", "NullPointerException");
-//        }
+        ExpandableListAdapter adapter = this.getExpandableListAdapter();
+        int groupCount = adapter.getGroupCount();
+        if (groupCount < 1){
+            return false;
+        }
 
-        Log.i("getLastVisiblePosition", String.valueOf(this.getLastVisiblePosition()));
-        if (this.mLastFlatPosition == this.getLastVisiblePosition()){
+        int childCount = adapter.getChildrenCount(groupCount - 1);
+        long packedPosition;
+        if (childCount < 1 || !this.isGroupExpanded(groupCount - 1)){
+            packedPosition = this.getPackedPositionForGroup(groupCount - 1);
+        }else {
+           packedPosition = this.getPackedPositionForChild(groupCount - 1, childCount - 1);
+        }
+
+//        Log.i("packedPosition", String.valueOf(packedPosition));
+        int flatPosition = getFlatListPosition(packedPosition);
+
+//        Log.i("getLastVisiblePosition", String.valueOf(this.getLastVisiblePosition()));
+        if (flatPosition == this.getLastVisiblePosition()){
             View lastOne = this.getChildAt(this.getChildCount() - 1) ;
 //            Log.i("isLastPositionVisibleFully",String.valueOf(this.getHeight() - lastOne.getTop()) + ":" + String.valueOf(lastOne.getHeight()));
             if (this.getHeight() - lastOne.getTop() >= lastOne.getHeight()){
@@ -145,13 +138,13 @@ public class TranListView extends ExpandableListView implements ExpandableListVi
         }
 
         this.mExpandGroupPosition = groupPosition;
-        this.setLastFlatPosition();
+//        this.setLastFlatPosition();
     }
 
     @Override
     public void onGroupCollapse(int groupPosition) {
         this.mExpandGroupPosition = -1;
 
-        this.setLastFlatPosition();
+//        this.setLastFlatPosition();
     }
 }

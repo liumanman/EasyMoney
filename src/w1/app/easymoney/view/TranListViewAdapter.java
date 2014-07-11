@@ -124,6 +124,8 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
                 convertView = inflater.inflate(R.layout.view_tranlistview_group_collapse, null);
             }
 
+
+
             TextView vy = (TextView)convertView.findViewById(R.id.view_tranlistview_group_year);
             vy.setText(String.valueOf(this.mGroups.get(groupPosition).mYear));
             TextView vm = (TextView)convertView.findViewById(R.id.view_tranlistview_group_month);

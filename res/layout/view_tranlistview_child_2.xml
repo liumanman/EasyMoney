@@ -26,7 +26,7 @@
                 android:layout_weight="85"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:background="@color/tranlistview_child_bg"
+                android:background="@drawable/tranlistview_child_right_bg"
                 local:borderColorDark="@color/tranlistview_darkborder"
                 local:borderColorLight="@color/tranlistview_lightborder"
                 >

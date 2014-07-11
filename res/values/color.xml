@@ -4,6 +4,7 @@
     <color name="tranlistview_lightborder">#E1E1E1</color>
     <color name="tranlistview_child_bg">#F5F5F5</color>
     <color name="tranlistview_group_bg">#e8e8e8</color>
+    <color name="tranlistview_group_bg_pressed">#fff8d7</color>
     <color name="tranlistview_group_first_bg">#866E54</color>
     <color name="tranlistview_group_first_darkborder">#7B644B</color>
     <color name="tranlistview_group_first_lightborder">#CCCCCC</color>

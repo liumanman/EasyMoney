@@ -5,11 +5,11 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
         >
-    <LinearLayout
+    <w1.app.easymoney.view.TranListView_Group
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/tranlistview_group_bg"
+            android:background="@drawable/tranlistview_group_bg"
             android:minHeight="55dp"
             >
         <TextView android:id="@+id/view_tranlistview_group_year"
@@ -24,7 +24,7 @@
                   android:layout_marginLeft="5dp"
                   android:gravity="center_vertical"
                   android:singleLine="true" />
-    </LinearLayout>
+    </w1.app.easymoney.view.TranListView_Group>
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"

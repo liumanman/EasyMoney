@@ -31,36 +31,21 @@ public class PullRefreshListViewHeader extends LinearLayout {
     }
 
     ImageView mArrow;
-    private boolean mIsArrowUp = false;
-    //AnimationSet mArrowAnimation;
+    private boolean mIsRotated = false;
     private void init(){
-//        mArrowAnimation = new AnimationSet(true);
-//        RotateAnimation ra = new RotateAnimation(0, 180,
-//                Animation.RELATIVE_TO_SELF, 0.5f,
-//                Animation.RELATIVE_TO_SELF, 0.5f);
-//        ra.setDuration(300);
-//        mArrowAnimation.addAnimation(ra);
-//        mArrowAnimation.setFillAfter(true);
     }
 
     private void rotateArrow(){
+        if (this.mIsRotated){
+            return;
+        }
+
         if (mArrow == null){
             mArrow = (ImageView)findViewById(R.id.iv_arrow);
-            //mArrow.setAnimation(mArrowAnimation);
         }
 
-        //mArrowAnimation.startNow();
-
-        float from, to;
-        if (this.mIsArrowUp){
-            from = 180;
-            to = 0;
-        }else {
-            from = 0;
-            to = 180;
-        }
         AnimationSet as = new AnimationSet(true);
-        RotateAnimation ra = new RotateAnimation(from, to,
+        RotateAnimation ra = new RotateAnimation(0, 180,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
         ra.setDuration(300);
@@ -68,7 +53,28 @@ public class PullRefreshListViewHeader extends LinearLayout {
         as.setFillAfter(true);
 
         mArrow.startAnimation(as);
-        this.mIsArrowUp = !this.mIsArrowUp;
+        this.mIsRotated = true;
+    }
+
+    private void reverseArrow(){
+        if (!this.mIsRotated){
+            return ;
+        }
+
+        if (mArrow == null){
+            mArrow = (ImageView)findViewById(R.id.iv_arrow);
+        }
+
+        AnimationSet as = new AnimationSet(true);
+        RotateAnimation ra = new RotateAnimation(180, 0,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        ra.setDuration(300);
+        as.addAnimation(ra);
+        as.setFillAfter(true);
+
+        mArrow.startAnimation(as);
+        this.mIsRotated = false;
     }
 
     private void rotateArrow2(){
@@ -92,23 +98,19 @@ public class PullRefreshListViewHeader extends LinearLayout {
     }
 
     public void setNormalStatus(){
-        if (mIsArrowUp){
-            this.rotateArrow();
-        }
+            this.reverseArrow();
+
 //        Log.i("Arrow" , "setNormalStatus");
     }
 
     public void setReadyStstus(){
-        if (!this.mIsArrowUp){
             this.rotateArrow();
-        }
+
 //        Log.i("Arrow" , "setReadyStstus");
     }
 
     public void setPullStatus(){
-        if (mIsArrowUp){
-            this.rotateArrow();
-        }
+            this.reverseArrow();
 //        Log.i("Arrow" , "setPullStatus");
     }
 

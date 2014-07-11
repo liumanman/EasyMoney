@@ -71,7 +71,8 @@ public class TestLinearLayout2 extends LinearLayout {
 
         Log.i("onTouchEvent", "TestLinearLayout2:" + a);
 
-        return super.onTouchEvent(event);
+        return true;
+//        return super.onTouchEvent(event);
     }
 
 }

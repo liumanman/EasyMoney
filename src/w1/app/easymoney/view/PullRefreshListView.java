@@ -80,14 +80,10 @@ public class PullRefreshListView extends LinearLayout {
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)this.mListView.getLayoutParams();
             lp.height = this.getHeight();
 
-//            this.mListView.setLayoutParams(lp);
-
-
             MarginLayoutParams mlp = (MarginLayoutParams)this.mHeader.getLayoutParams();
             mlp.topMargin = - this.mHeader.getHeight();
 
             mlp = (MarginLayoutParams)this.mFooter.getLayoutParams();
-            //mlp.topMargin = - this.mFooter.getHeight();
             mlp.bottomMargin = - this.mHeader.getHeight();
 
             this.mLoadOnce = true;
@@ -112,6 +108,10 @@ public class PullRefreshListView extends LinearLayout {
         this.invalidate();
     }
 
+    private int prepareScrollY(int dy){
+        return this.mScroller.getFinalY() + dy;
+    }
+
     @Override
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
@@ -129,29 +129,38 @@ public class PullRefreshListView extends LinearLayout {
             case MotionEvent.ACTION_MOVE:
                 if (this.mStatus == STATUS_PULL || this.mStatus == STATUS_READY) {
                     final float deltaY = ev.getRawY() - mLastY;
-                    //Log.i("onTouchEvent",String.valueOf((int)deltaY));
-                    //Log.i("onTouchEvent - ScrollY", String.valueOf(this.getScrollY()));
-                    //this.mListView.isFirstPositionVisibleFully();
-
                     if (this.mDirection == DIRECTION_HEADER) {
-//                        Log.i("onTouchEvent",String.valueOf(this.getScrollY()));
-                        if (deltaY < 0 && this.getScrollY() >= 0){
+                        if (deltaY < 0 && this.prepareScrollY( -(int) deltaY / 2) >= 0){
                             if (this.getScrollY() != 0) {
                                 this.smoothScrollTo(0, 0);
                             }
                         }else{
                             this.smoothScrollBy(0, -(int) deltaY / 2);
-                            if (this.getScrollY() <= -200) {
-                                this.mHeader.setReadyStstus();
-                                this.mStatus = STATUS_READY;
-                            } else {
-                                this.mHeader.setPullStatus();
-                                this.mStatus = STATUS_PULL;
-                            }
                         }
 
+                        if (this.getScrollY() <= -200) {
+                            this.mHeader.setReadyStstus();
+                            this.mStatus = STATUS_READY;
+                        } else {
+                            this.mHeader.setPullStatus();
+                            this.mStatus = STATUS_PULL;
+                        }
                     }else{
-                        this.smoothScrollBy(0, -(int) deltaY / 2);
+                        if (deltaY > 0 && this.prepareScrollY( -(int) deltaY / 2) <= 0){
+                            if (this.getScrollY() != 0){
+                                this.smoothScrollTo(0, 0);
+                            }
+                        }else {
+                            this.smoothScrollBy(0, -(int) deltaY / 2);
+                        }
+
+                        if (this.getScrollY() >= 200){
+                            this.mFooter.setReadyStstus();
+                            this.mStatus = STATUS_READY;
+                        }else {
+                            this.mFooter.setPullStatus();
+                            this.mStatus = STATUS_PULL;
+                        }
                     }
 
                 }
@@ -161,15 +170,28 @@ public class PullRefreshListView extends LinearLayout {
                 break;
             case MotionEvent.ACTION_UP:
                 Log.i("onTouchEvent","up");
-                if (this.mStatus == STATUS_READY && this.mListener != null){
-                    this.smoothScrollTo(0, - 180);
-                    this.mStatus = STATUS_DOING;
-                    this.mHeader.setDoingStatus();
-                    this.doing();
+                if (this.mDirection == DIRECTION_HEADER) {
+                    if (this.mStatus == STATUS_READY && this.mListener != null) {
+                        this.smoothScrollTo(0, -180);
+                        this.mStatus = STATUS_DOING;
+                        this.mHeader.setDoingStatus();
+                        this.doing(DIRECTION_HEADER);
+                    } else {
+                        this.smoothScrollTo(0, 0);
+                        this.mStatus = STATUS_NORMAL;
+                        this.mHeader.setNormalStatus();
+                    }
                 }else {
-                    this.smoothScrollTo(0, 0);
-                    this.mStatus = STATUS_NORMAL;
-                    this.mHeader.setNormalStatus();
+                    if (this.mStatus == STATUS_READY && this.mListener != null) {
+                        this.smoothScrollTo(0, 180);
+                        this.mStatus = STATUS_DOING;
+                        this.mFooter.setDoingStatus();
+                        this.doing(DIRECTION_FOOTER);
+                    } else {
+                        this.smoothScrollTo(0, 0);
+                        this.mStatus = STATUS_NORMAL;
+                        this.mFooter.setNormalStatus();
+                    }
                 }
 
                 break;
@@ -183,23 +205,27 @@ public class PullRefreshListView extends LinearLayout {
         return super.onTouchEvent(ev);
     }
 
-    private void setNormalStatus(){
+    private void setNormalStatus(final int direction){
         if (Thread.currentThread().getId() == Looper.getMainLooper().getThread().getId()){
             this.smoothScrollTo(0, 0);
-            this.mHeader.setNormalStatus();
+            if (direction == DIRECTION_HEADER) {
+                this.mHeader.setNormalStatus();
+            }else {
+                this.mFooter.setNormalStatus();
+            }
             this.mStatus = STATUS_NORMAL;
         }else {
             this.post(new Runnable() {
                 @Override
                 public void run() {
-                    setNormalStatus();
+                    setNormalStatus(direction);
                 }
             });
         }
     }
 
     private Thread mDoingThread;
-    private void doing(){
+    private void doing(final int direction){
         this.mDoingThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -208,7 +234,7 @@ public class PullRefreshListView extends LinearLayout {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                setNormalStatus();
+                setNormalStatus(direction);
             }
         });
 
@@ -220,9 +246,14 @@ public class PullRefreshListView extends LinearLayout {
         boolean r = false;
         switch (ev.getAction()){
             case MotionEvent.ACTION_MOVE:
+                if (this.mStatus == STATUS_DOING){ //如果在doing时仍有滚屏的操作，则拦截，不允许在doing时滚动listview里面的items
+                    r = true;
+                    break;
+                }
+
                 final float deltaY = ev.getRawY() - mLastY;
 //                Log.i("deltaY", String.valueOf(deltaY));
-                if (deltaY == 0){
+                if (Math.abs(deltaY) < 16){ //解决
                     return super.onInterceptHoverEvent(ev);
                 }
                 //mLastY = ev.getRawY();
@@ -252,13 +283,13 @@ public class PullRefreshListView extends LinearLayout {
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
-                Log.i("onInterceptTouchEvent","down");
+//                Log.i("onInterceptTouchEvent","down");
                 break;
             case MotionEvent.ACTION_UP:
-                Log.i("onInterceptTouchEvent","up");
+//                Log.i("onInterceptTouchEvent","up");
                 break;
             default:
-                Log.i("onInterceptTouchEvent","other");
+//                Log.i("onInterceptTouchEvent","other");
 
         }
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<mce:style name="PopupAnimation" parent="android:Animation"></mce:style>-->
+    <style name="TranListViewPopupWindowAnimation" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/tranlistview_popupwindow_enter</item>
+        <item name="android:windowExitAnimation">@anim/tranlistview_popupwindow_exit</item>
+    </style>
+</resources>

@@ -17,6 +17,7 @@
 
     </LinearLayout>
     <w1.app.easymoney.view.TranListView_ChildRightLayout
+            android:id="@+id/tranlistview_child_right"
             android:layout_width="0dp"
             android:layout_weight="85"
             android:layout_height="match_parent"

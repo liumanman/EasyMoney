@@ -23,8 +23,8 @@ public class PullRefreshListView extends LinearLayout {
     private static final int STATUS_READY = 2;
     private static final int STATUS_DOING = 3;
 
-    private static final int DIRECTION_HEADER = 0;
-    private static final int DIRECTION_FOOTER = 1;
+    public static final int DIRECTION_HEADER = 0;
+    public static final int DIRECTION_FOOTER = 1;
 
     OnRefreshListener mListener;
 
@@ -230,7 +230,7 @@ public class PullRefreshListView extends LinearLayout {
             @Override
             public void run() {
                 try {
-                    mListener.onRefresh();
+                    mListener.onRefresh(direction);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -300,7 +300,7 @@ public class PullRefreshListView extends LinearLayout {
     }
 
     public static interface OnRefreshListener{
-        void onRefresh() throws InterruptedException;
+        void onRefresh(int direction) throws InterruptedException;
     }
 
 }

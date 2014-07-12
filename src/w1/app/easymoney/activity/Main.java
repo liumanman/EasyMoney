@@ -7,15 +7,19 @@ import w1.app.easymoney.R;
 import w1.app.easymoney.common.Utility;
 import w1.app.easymoney.model.Transaction;
 import w1.app.easymoney.view.PullRefreshListView;
+import w1.app.easymoney.view.RollingTextSwitcher;
 import w1.app.easymoney.view.TranListView;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Main extends Activity implements PullRefreshListView.OnRefreshListener {
     private TranListView lv;
     private PullRefreshListView plv;
+    private RollingTextSwitcher rts;
     private String[] model = new String[] {"北京","上海","广州", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳", "深圳" };
     /**
      * Called when the activity is first created.
@@ -36,6 +40,9 @@ public class Main extends Activity implements PullRefreshListView.OnRefreshListe
         plv = (PullRefreshListView) findViewById(R.id.test_listview);
         plv.setListView(lv);
         plv.setOnRefreshListener(this);
+
+        rts = (RollingTextSwitcher)findViewById(R.id.rollingtextview);
+        rts.setTextSize(16);
     }
 
     private List<Transaction> getData() throws ParseException {
@@ -274,7 +281,20 @@ public class Main extends Activity implements PullRefreshListView.OnRefreshListe
     }
 
     @Override
-    public void onRefresh() throws InterruptedException {
+    public void onRefresh(final int direction) throws InterruptedException {
         Thread.sleep(2000);
+
+        this.rts.post(new Runnable() {
+            @Override
+            public void run() {
+                Calendar c = Calendar.getInstance();
+                c.setTime(new Date());
+                if (direction == PullRefreshListView.DIRECTION_HEADER){
+                    rts.setTextByRollingUp(String.valueOf(c.get(Calendar.SECOND)));
+                }else {
+                    rts.setTextByRollingDown(String.valueOf(c.get(Calendar.SECOND)));
+                }
+            }
+        });
     }
 }

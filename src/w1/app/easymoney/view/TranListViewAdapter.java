@@ -2,6 +2,7 @@ package w1.app.easymoney.view;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,6 +170,19 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
         }else {
             convertView = inflater.inflate(R.layout.view_tranlistview_child_1, null);
         }
+
+        final View p = convertView;
+        View childRight = convertView.findViewById(R.id.tranlistview_child_right);
+        childRight.setLongClickable(true);
+        childRight.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                TranListView_PopupWindow menu = new TranListView_PopupWindow(mContext);
+                menu.showAtLocation(p, Gravity.TOP, 0 , p.getTop());
+
+                return false;
+            }
+        });
 
         TextView vAmount = (TextView)convertView.findViewById(R.id.amount);
         vAmount.setText(String.valueOf(this.mGroups.get(groupPosition).mChildren.get(childPosition).getAmount()));

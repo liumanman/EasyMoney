@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="#FF0000">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="120dp"
+                  android:gravity="center">
+        <w1.app.easymoney.view.RollingTextSwitcher android:layout_width="wrap_content"
+                                                   android:layout_height="wrap_content"
+                                                   android:id="@+id/rollingtextview"
+                                                    android:background="#FFFFFF">
+         </w1.app.easymoney.view.RollingTextSwitcher>
+    </LinearLayout>
 
-
-        <!--<ListView-->
-                <!--android:id="@+id/id_listview"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent" >-->
-        <!--</ListView>-->
-        <!--<LinearLayout-->
-                      <!--android:orientation="vertical"-->
-                      <!--android:layout_width="match_parent"-->
-                      <!--android:layout_height="match_parent">-->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent">
             <w1.app.easymoney.view.PullRefreshListView android:id="@+id/test_listview"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="@color/tranlistview_child_bg"
                                 >
             </w1.app.easymoney.view.PullRefreshListView>
-        <!--</LinearLayout>-->
-</RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

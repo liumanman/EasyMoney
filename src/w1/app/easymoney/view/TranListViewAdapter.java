@@ -178,7 +178,9 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
             @Override
             public boolean onLongClick(View v) {
                 TranListView_PopupWindow menu = new TranListView_PopupWindow(mContext);
-                menu.showAtLocation(p, Gravity.TOP, 0 , p.getTop());
+                int[] location = new int[2];
+                p.getLocationOnScreen(location);
+                menu.showAtLocation(p, Gravity.TOP, 0 , location[1]);
 
                 return false;
             }

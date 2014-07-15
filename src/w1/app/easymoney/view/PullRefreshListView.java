@@ -283,10 +283,10 @@ public class PullRefreshListView extends LinearLayout {
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
-//                Log.i("onInterceptTouchEvent","down");
+                Log.i("onInterceptTouchEvent","down");
                 break;
             case MotionEvent.ACTION_UP:
-//                Log.i("onInterceptTouchEvent","up");
+                Log.i("onInterceptTouchEvent","up");
                 break;
             default:
 //                Log.i("onInterceptTouchEvent","other");

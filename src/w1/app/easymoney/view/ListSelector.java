@@ -54,16 +54,13 @@ public class ListSelector extends ListView {
         switch (ev.getAction()){
             case MotionEvent.ACTION_UP:
                 View first = this.getChildAt(0);
-                int p = this.getFirstVisiblePosition();
-                int offset = Math.abs(first.getTop()) ;
-                Log.i("",String.valueOf(p));
+                int offset = Math.abs(first.getTop())  ;
+                Log.i("",String.valueOf(offset));
                 if (offset >= first.getHeight()/2){
-                    this.smoothScrollToPosition(p + 8);
-//                    this.setSelectionFromTop(p + 1, 0);
+                    this.smoothScrollBy(first.getHeight() - offset, 500);
 
                 }else {
-                    this.smoothScrollToPosition(p);
-//                    this.setSelectionFromTop(p, 0);
+                    this.smoothScrollBy(- offset, 500);
                 }
 
 

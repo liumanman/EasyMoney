@@ -2,7 +2,6 @@ package w1.app.easymoney.view;
 
 import android.content.Context;
 import android.os.Looper;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;

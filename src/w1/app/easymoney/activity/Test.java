@@ -27,7 +27,7 @@ public class Test extends Activity {
 
         LayoutInflater inflater = LayoutInflater.from(this);
         View v = inflater.inflate(R.layout.view_tranlistview_popupwindow, null);
-        this.addContentView(v,new AbsListView.LayoutParams(500, 100));
+//        this.addContentView(v,new AbsListView.LayoutParams(500, 100));
     }
 
     private List<String> getData(){

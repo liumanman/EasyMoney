@@ -100,7 +100,7 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
             return this.mGroups.get(groupPosition).mCollapseView;
         }
 
-        Log.i("","getGroupView");
+//        Log.i("","getGroupView");
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
         if (groupPosition == 0){
             convertView = inflater.inflate(R.layout.view_tranlistview_group_first, null);
@@ -114,8 +114,6 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
             vYear.setText(String.valueOf(mGroups.get(groupPosition).mYear));
             TextView vMonth = (TextView)convertView.findViewById(R.id.view_tranlistview_group_month);
             vMonth.setText(String.valueOf(mGroups.get(groupPosition).mMonth));
-
-
         }else
         {
             if (isExpanded)
@@ -124,8 +122,6 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
             }else{
                 convertView = inflater.inflate(R.layout.view_tranlistview_group_collapse, null);
             }
-
-
 
             TextView vy = (TextView)convertView.findViewById(R.id.view_tranlistview_group_year);
             vy.setText(String.valueOf(this.mGroups.get(groupPosition).mYear));
@@ -144,56 +140,101 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        if (this.mGroups.get(groupPosition).mChildren.get(childPosition).mView != null){
-            return this.mGroups.get(groupPosition).mChildren.get(childPosition).mView;
-        }
+//        if (this.mGroups.get(groupPosition).mChildren.get(childPosition).mView != null){
+//            return this.mGroups.get(groupPosition).mChildren.get(childPosition).mView;
+//        }
 
         Child c = this.mGroups.get(groupPosition).mChildren.get(childPosition);
 
-        LayoutInflater inflater = LayoutInflater.from(this.mContext);
-//        if (c.mIsFirstInDay){
-//            if (c.mIsLastInDay){
-//                convertView = inflater.inflate(R.layout.view_tranlistview_child_fl, null);
-//            }else {
-//                convertView = inflater.inflate(R.layout.view_tranlistview_child_f, null);
-//            }
-//        }else {
-//            if (c.mIsLastInDay){
-//                convertView = inflater.inflate(R.layout.view_tranlistview_child_l, null);
-//            }else {
-//                convertView = inflater.inflate(R.layout.view_tranlistview_child, null);
-//            }
-//        }
-
-        if (c.mIsLastInDay){
-            convertView = inflater.inflate(R.layout.view_tranlistview_child_2, null);
-        }else {
-            convertView = inflater.inflate(R.layout.view_tranlistview_child_1, null);
+        TextView vAmount = null;
+        if (convertView != null && convertView.getTag() != null){
+            ChildViewHolder holder = (ChildViewHolder) convertView.getTag();
+            if (holder.mIsLastInDay && c.mIsLastInDay){
+                vAmount = holder.mAmount;
+            }else {
+                if (!holder.mIsLastInDay && !c.mIsLastInDay){
+                    vAmount = holder.mAmount;
+                }
+            }
         }
 
-        final View p = convertView;
-        View childRight = convertView.findViewById(R.id.tranlistview_child_right);
+        if (vAmount == null){
+            convertView = this.createChildView(c.mIsLastInDay);
+            vAmount = (TextView)convertView.findViewById(R.id.amount);
+
+            ChildViewHolder holder = new ChildViewHolder();
+            holder.mIsLastInDay = c.mIsLastInDay;
+            holder.mAmount = vAmount;
+            convertView.setTag(holder);
+        }
+
+        vAmount.setText(String.valueOf(this.mGroups.get(groupPosition).mChildren.get(childPosition).getAmount()));
+
+
+
+
+//        Child c = this.mGroups.get(groupPosition).mChildren.get(childPosition);
+//
+//        LayoutInflater inflater = LayoutInflater.from(this.mContext);
+//
+//        if (c.mIsLastInDay){
+//            convertView = inflater.inflate(R.layout.view_tranlistview_child_2, null);
+//        }else {
+//            convertView = inflater.inflate(R.layout.view_tranlistview_child_1, null);
+//        }
+//
+//        TextView vAmount = (TextView)convertView.findViewById(R.id.amount);
+//        vAmount.setText(String.valueOf(this.mGroups.get(groupPosition).mChildren.get(childPosition).getAmount()));
+//
+//        final View p = convertView;
+//        View childRight = convertView.findViewById(R.id.tranlistview_child_right);
+//        childRight.setLongClickable(true);
+//        childRight.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                TranListView_PopupWindow menu = new TranListView_PopupWindow(mContext);
+//
+//                menu.setHeight(p.getHeight());
+//                int[] location = new int[2];
+//                p.getLocationOnScreen(location);
+//                menu.showAtLocation(p, Gravity.TOP, 0 , location[1]);
+//
+//                return false;
+//            }
+//        });
+
+
+//        this.mGroups.get(groupPosition).mChildren.get(childPosition).mView = convertView;
+
+        return convertView;
+    }
+
+    private View createChildView(boolean isLastInDay){
+        final View childView;
+        LayoutInflater inflater = LayoutInflater.from(this.mContext);
+        if (isLastInDay){
+            childView = inflater.inflate(R.layout.view_tranlistview_child_2, null);
+        }else {
+            childView = inflater.inflate(R.layout.view_tranlistview_child_1, null);
+        }
+
+        final View childRight = childView.findViewById(R.id.tranlistview_child_right);
         childRight.setLongClickable(true);
         childRight.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 TranListView_PopupWindow menu = new TranListView_PopupWindow(mContext);
 
-                menu.setHeight(p.getHeight()*3);
+                menu.setHeight(childRight.getHeight());
                 int[] location = new int[2];
-                p.getLocationOnScreen(location);
-                menu.showAtLocation(p, Gravity.TOP, 0 , location[1]);
+                childRight.getLocationOnScreen(location);
+                menu.showAtLocation(childRight, Gravity.TOP, 0 , location[1]);
 
                 return false;
             }
         });
 
-        TextView vAmount = (TextView)convertView.findViewById(R.id.amount);
-        vAmount.setText(String.valueOf(this.mGroups.get(groupPosition).mChildren.get(childPosition).getAmount()));
-
-        this.mGroups.get(groupPosition).mChildren.get(childPosition).mView = convertView;
-
-        return convertView;
+        return childView;
     }
 
     @Override
@@ -308,17 +349,6 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
         }
     }
 
-//    @Override
-//    public void onGroupCollapsed(int groupPosition){
-//        super.onGroupCollapsed(groupPosition);
-//    }
-//
-//    @Override
-//    public void onGroupExpanded(int groupPosition){
-//        super.onGroupExpanded(groupPosition);
-//        this.mExpandedPosition = groupPosition;
-//    }
-
     private class Group{
         public int mYear;
         public int mMonth;
@@ -337,9 +367,12 @@ public class TranListViewAdapter extends BaseExpandableListAdapter {
         public boolean mIsFirstInDay;
         public boolean mIsLastInDay;
         public String mDescription;
-        public View mView;
+//        public View mView;
     }
 
-
+    private class ChildViewHolder{
+        public TextView mAmount;
+        public boolean mIsLastInDay;
+    }
 
 }

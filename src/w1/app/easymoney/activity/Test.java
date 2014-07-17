@@ -44,16 +44,16 @@ public class Test extends Activity {
         data.add("测试数据5");
         data.add("测试数据66");
         data.add("测试数据7");
-        data.add("测试数据8");
-        data.add("测试数据9");
-        data.add("测试数据10");
-        data.add("测试数据11");
-        data.add("测试数12");
-        data.add("测试数据13");
-        data.add("测试数据14");
-        data.add("测试数据15");
-        data.add("测试数据16");
-        data.add("测试数据17");
+//        data.add("测试数据8");
+//        data.add("测试数据9");
+//        data.add("测试数据10");
+//        data.add("测试数据11");
+//        data.add("测试数12");
+//        data.add("测试数据13");
+//        data.add("测试数据14");
+//        data.add("测试数据15");
+//        data.add("测试数据16");
+//        data.add("测试数据17");
 
 
         return data;
@@ -87,17 +87,17 @@ public class Test extends Activity {
 
         @Override
         public int getTopOfSelectionLine() {
-            return 0;
+            return 500;
         }
 
         @Override
         public int getUpperBlankCount() {
-            return 15;
+            return 6;
         }
 
         @Override
         public int getLowerBlankCount() {
-            return 15;
+            return 6;
         }
     }
 }

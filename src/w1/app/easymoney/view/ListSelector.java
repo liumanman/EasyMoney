@@ -1,6 +1,9 @@
 package w1.app.easymoney.view;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 
 import android.util.Log;
@@ -36,6 +39,7 @@ public class ListSelector extends ListView implements AbsListView.OnScrollListen
         super.setAdapter(adapter);
 
         this.setOnScrollListener(this);
+        this.setDividerHeight(0);
     }
 
 
@@ -56,12 +60,17 @@ public class ListSelector extends ListView implements AbsListView.OnScrollListen
 //        }
 
         super.onLayout(changed, l, t, r, b);
+
+        if (!mDoOnce) {
+            final View firstView = this.getChildAt(0);
+            this.scrollListBy(this.getListSelectorAdapter().getUpperBlankCount() * firstView.getHeight() + firstView.getHeight() / 2 - this.getListSelectorAdapter().getTopOfSelectionLine());
+            this.mDoOnce = true;
+
+        }
     }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-        Log.i("scrollState", String.valueOf(scrollState));
         if (scrollState == OnScrollListener.SCROLL_STATE_IDLE){
             final View firstView = this.getChildAt(0);
             final int firstPosition = this.getFirstVisiblePosition();
@@ -69,17 +78,18 @@ public class ListSelector extends ListView implements AbsListView.OnScrollListen
             final int c = lineToFirst / firstView.getHeight();
             final int linePosition = firstPosition + c;
             final int offset;
+//            Log.i("linePosition",String.valueOf(linePosition));
             if (linePosition < this.getListSelectorAdapter().getUpperBlankCount()){
 
                 offset = (this.getListSelectorAdapter().getUpperBlankCount() - firstPosition) * firstView.getHeight() - lineToFirst + firstView.getHeight()/2;
                 Log.i("offset up", String.valueOf(offset));
             }else if (linePosition > this.getListSelectorAdapter().getCount() - this.getListSelectorAdapter().getLowerBlankCount() - 1){
-                offset = 0;
-//                offset = lineToFirst - (this.getListSelectorAdapter().getCount() - this.getListSelectorAdapter().getLowerBlankCount()) * firstView.getHeight() + firstView.getHeight()/2;
+//                offset = 0;
+                offset = - (lineToFirst - (this.getListSelectorAdapter().getCount() - this.getListSelectorAdapter().getLowerBlankCount() - firstPosition) * firstView.getHeight() + firstView.getHeight()/2);
                 Log.i("offset lower", String.valueOf(offset));
             }else {
-                offset = 0;
-//                offset = lineToFirst - ((linePosition - firstPosition) * firstView.getHeight() + firstView.getHeight() / 2 );
+//                offset = 0;
+                offset = - (lineToFirst - ((linePosition - firstPosition) * firstView.getHeight() + firstView.getHeight() / 2 ));
                 Log.i("offset in", String.valueOf(offset));
             }
 
@@ -87,7 +97,9 @@ public class ListSelector extends ListView implements AbsListView.OnScrollListen
             view2.post(new Runnable() {
                 @Override
                 public void run() {
-                    view2.smoothScrollBy(offset, 300);
+                    if (Math.abs(offset)>2){
+                        view2.smoothScrollBy(offset, 300);
+                    }
                 }
             });
 
@@ -116,6 +128,17 @@ public class ListSelector extends ListView implements AbsListView.OnScrollListen
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas){
+        super.onDraw(canvas);
+
+        Paint p = new Paint();
+        p.setColor(Color.RED);
+
+        canvas.drawLine(0f, 500f, (float)this.getWidth(), 500f, p);
 
     }
 }

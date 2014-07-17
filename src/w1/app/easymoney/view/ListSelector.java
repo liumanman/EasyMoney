@@ -97,9 +97,7 @@ public class ListSelector extends ListView implements AbsListView.OnScrollListen
             view2.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (Math.abs(offset)>2){
                         view2.smoothScrollBy(offset, 300);
-                    }
                 }
             });
 

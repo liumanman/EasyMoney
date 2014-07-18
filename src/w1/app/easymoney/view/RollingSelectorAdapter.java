@@ -1,23 +1,29 @@
 package w1.app.easymoney.view;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
+import w1.app.easymoney.R;
 
 import java.util.List;
 
 /**
  * Created by el17 on 7/15/2014.
  */
-public abstract class ListSelectorAdapter<T> extends BaseAdapter {
+public class RollingSelectorAdapter<T> extends BaseAdapter {
     private List<T> mDataList;
     private int mUpperBlankCount;
     private int mLowerBlankCount;
+    private Context mContext;
 
-    public ListSelectorAdapter(List<T> dataList){
+    public RollingSelectorAdapter(Context context, List<T> dataList, int upperBlankCount, int lowerBlankCount){
         this.mDataList = dataList;
-        this.mUpperBlankCount = this.getUpperBlankCount();
-        this.mLowerBlankCount = this.getLowerBlankCount();
+        this.mUpperBlankCount = upperBlankCount;
+        this.mLowerBlankCount = lowerBlankCount;
+        this.mContext = context;
     }
 
     @Override
@@ -50,13 +56,19 @@ public abstract class ListSelectorAdapter<T> extends BaseAdapter {
         }
     }
 
-    public abstract View getDataView(int position, View convertView, ViewGroup parent);
+    public  View getDataView(int position, View convertView, ViewGroup parent){
+        LayoutInflater inflater = LayoutInflater.from(this.mContext);
+        TextView v = (TextView)inflater.inflate(R.layout.view_listselector_child, null);
+        v.setText("Data");
 
-    public abstract View getBlankView(View convertView, ViewGroup parent);
+        return v;
+    }
 
-    public abstract int getTopOfSelectionLine();
+    public  View getBlankView(View convertView, ViewGroup parent){
+        LayoutInflater inflater = LayoutInflater.from(this.mContext);
+        TextView v = (TextView)inflater.inflate(R.layout.view_listselector_child, null);
+        v.setText("Blank");
 
-    public abstract int getUpperBlankCount();
-
-    public abstract int getLowerBlankCount();
+        return v;
+    }
 }

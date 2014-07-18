@@ -1,16 +1,13 @@
 package w1.app.easymoney.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.*;
+
 import w1.app.easymoney.R;
-import w1.app.easymoney.view.ListSelector;
-import w1.app.easymoney.view.ListSelectorAdapter;
-import w1.app.easymoney.view.PullRefreshListViewHeader;
+
+import w1.app.easymoney.view.RollingSelector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +16,15 @@ import java.util.List;
  * Created by el17 on 7/15/2014.
  */
 public class Test extends Activity {
-    private ListSelector mListview;
+    private RollingSelector mListview;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
 
-        mListview = (ListSelector) findViewById(R.id.test_listselector);
-        ListSelectorAdapter adapter = new MyAdapter(getData(), this);
-        mListview.setAdapter(adapter);
+        mListview = (RollingSelector) findViewById(R.id.test_listselector);
+        mListview.setDataList(getData());
+
 
         LayoutInflater inflater = LayoutInflater.from(this);
         View v = inflater.inflate(R.layout.view_tranlistview_popupwindow, null);
@@ -59,45 +56,5 @@ public class Test extends Activity {
         return data;
     }
 
-    private class MyAdapter extends ListSelectorAdapter<String>{
-        private Context mContext;
 
-        public MyAdapter(List<String> dataList, Context context) {
-            super(dataList);
-            this.mContext = context;
-        }
-
-        @Override
-        public View getDataView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = LayoutInflater.from(this.mContext);
-            TextView v = (TextView)inflater.inflate(R.layout.view_listselector_child, null);
-            v.setText("Data");
-
-            return v;
-        }
-
-        @Override
-        public View getBlankView(View convertView, ViewGroup parent) {
-            LayoutInflater inflater = LayoutInflater.from(this.mContext);
-            TextView v = (TextView)inflater.inflate(R.layout.view_listselector_child, null);
-            v.setText("Blank");
-
-            return v;
-        }
-
-        @Override
-        public int getTopOfSelectionLine() {
-            return 500;
-        }
-
-        @Override
-        public int getUpperBlankCount() {
-            return 6;
-        }
-
-        @Override
-        public int getLowerBlankCount() {
-            return 6;
-        }
-    }
 }

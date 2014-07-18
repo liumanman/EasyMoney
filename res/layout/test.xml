@@ -4,10 +4,10 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <w1.app.easymoney.view.ListSelector
+    <w1.app.easymoney.view.RollingSelector
             android:id="@+id/test_listselector"
             android:layout_width="match_parent"
                                         android:layout_height="wrap_content">
-    </w1.app.easymoney.view.ListSelector>
+    </w1.app.easymoney.view.RollingSelector>
 
 </LinearLayout>

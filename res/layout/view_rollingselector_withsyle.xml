@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+    <LinearLayout 
+            android:layout_width="match_parent" 
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+        <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#353535">
+        </LinearLayout>
+        <w1.app.easymoney.view.RollingSelector
+                android:layout_width="match_parent"
+                android:layout_height="1000px"
+                android:id="@+id/selector"
+                android:background="#FFFFFF">
+        </w1.app.easymoney.view.RollingSelector>
+        <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#353535">
+        </LinearLayout>
+    </LinearLayout>
+
+    <w1.app.easymoney.view.RollingSelectorMask
+            android:id="@+id/selector_mask_top"
+            android:layout_width="match_parent"
+            android:layout_height="500px"
+            android:gravity="top"
+            android:background="@android:color/transparent">
+     </w1.app.easymoney.view.RollingSelectorMask>
+    <!--<LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"></LinearLayout>-->
+    <!--<LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"></LinearLayout>-->
+
+</FrameLayout>

@@ -90,18 +90,15 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         if (scrollState == OnScrollListener.SCROLL_STATE_IDLE){
-            int topOfLine = this.mTopOfSelectionLine;
-            int upperCount = this.mUpperBlankCount;
-            int lowerCount = this.mLowerBlankCount;
             int totalCount = this.getAdapter().getCount();
 
 
-            final int linePosition = this.getLinePosition(topOfLine);
+            final int linePosition = this.getLinePosition(mTopOfSelectionLine);
             if (linePosition < this.mUpperBlankCount){
-                this.smoothScrollToBeSelected(upperCount);
-            }else if (linePosition > totalCount - lowerCount - 1){
+                this.smoothScrollToBeSelected(mUpperBlankCount);
+            }else if (linePosition > totalCount - mLowerBlankCount - 1){
 
-                this.smoothScrollToBeSelected(totalCount - lowerCount - 1);
+                this.smoothScrollToBeSelected(totalCount - mLowerBlankCount - 1);
             }else {
 
                 this.smoothScrollToBeSelected(linePosition);
@@ -117,15 +114,12 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
                 return;
             }
 
-            int topOfLine = this.mTopOfSelectionLine;
-            int upperCount = this.mUpperBlankCount;
-            int lowerCount = this.mLowerBlankCount;
             int totalCount = this.getAdapter().getCount();
 
-            final int linePosition = this.getLinePosition(topOfLine);
+            final int linePosition = this.getLinePosition(mTopOfSelectionLine);
 
-            if (linePosition > upperCount - 1 && linePosition < totalCount - lowerCount) {
-                int selectedPosition = linePosition - upperCount;
+            if (linePosition > mUpperBlankCount - 1 && linePosition < totalCount - mLowerBlankCount) {
+                int selectedPosition = linePosition - mUpperBlankCount;
                 if (selectedPosition != this.mSelectedPosition) {
                     if (this.mListener != null) {
                         this.mListener.onSelectedChanged(selectedPosition);

@@ -8,6 +8,7 @@ import android.view.View;
 import w1.app.easymoney.R;
 
 import w1.app.easymoney.view.RollingSelector;
+import w1.app.easymoney.view.RollingSelectorWithSyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +17,13 @@ import java.util.List;
  * Created by el17 on 7/15/2014.
  */
 public class Test extends Activity {
-    private RollingSelector mListview;
+    private RollingSelectorWithSyle mListview;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
 
-        mListview = (RollingSelector) findViewById(R.id.test_listselector);
+        mListview = (RollingSelectorWithSyle) findViewById(R.id.test_listselector);
         mListview.setDataList(getData());
 
 

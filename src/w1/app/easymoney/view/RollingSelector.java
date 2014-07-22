@@ -28,6 +28,8 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
     private int mUpperBlankCount = 6;
     private int mLowerBlankCount = 6;
     private int mTopOfSelectionLine = 500;
+    private boolean mIsScrolling = false;
+    private int mScrollingStatus;
 
 
     public RollingSelector(Context context) {
@@ -92,21 +94,20 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        if (scrollState == OnScrollListener.SCROLL_STATE_IDLE){
-            int totalCount = this.getAdapter().getCount();
+        this.mScrollingStatus = scrollState;
 
-
-            final int linePosition = this.getLinePosition(mTopOfSelectionLine);
-            if (linePosition < this.mUpperBlankCount){
-                this.smoothScrollToBeSelected(mUpperBlankCount);
-            }else if (linePosition > totalCount - mLowerBlankCount - 1){
-
-                this.smoothScrollToBeSelected(totalCount - mLowerBlankCount - 1);
-            }else {
-
-                this.smoothScrollToBeSelected(linePosition);
-            }
+        switch (scrollState){
+            case SCROLL_STATE_IDLE:
+                if (!this.mIsScrolling){
+                    this.smoothScrollToThePosition();
+                }
+                break;
+            case SCROLL_STATE_FLING:
+                this.mIsScrolling = false;
+                break;
+            default:
         }
+
 
     }
 
@@ -134,6 +135,22 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
             }
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private void smoothScrollToThePosition(){
+        int totalCount = this.getAdapter().getCount();
+
+
+        final int linePosition = this.getLinePosition(mTopOfSelectionLine);
+        if (linePosition < this.mUpperBlankCount){
+            this.smoothScrollToBeSelected(mUpperBlankCount);
+        }else if (linePosition > totalCount - mLowerBlankCount - 1){
+
+            this.smoothScrollToBeSelected(totalCount - mLowerBlankCount - 1);
+        }else {
+
+            this.smoothScrollToBeSelected(linePosition);
         }
     }
 
@@ -189,13 +206,63 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         ///////////////////////////////
 
 
+//
 //        Log.i("offset",String.valueOf(offset));
         this.post(new Runnable() {
             @Override
             public void run() {
-                smoothScrollBy(offset, 300);
+                smoothScrollBy(offset, 1000);
+//                smoothScrollBy(0, 0);
             }
         });
+//
+//        this.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                mIsScrolling = true;
+//                if (offset > 5){
+//                    int s = 0;
+//                    int i = offset/2;
+//
+//                    smoothScrollBy(i, 500);
+//                    smoothScrollBy(0,0);
+////                    try {
+////                        Thread.sleep(90);
+////                    } catch (InterruptedException e) {
+////                        e.printStackTrace();
+////                    }
+//                    s = s + i;
+//
+////                    smoothScrollBy(i, 100);
+////                    try {
+////                        Thread.sleep(90);
+////                    } catch (InterruptedException e) {
+////                        e.printStackTrace();
+////                    }
+//                    s = s + i;
+//
+////                    smoothScrollBy(i, 100);
+////                    try {
+////                        Thread.sleep(90);
+////                    } catch (InterruptedException e) {
+////                        e.printStackTrace();
+////                    }
+//                    s = s + i;
+//
+////                    smoothScrollBy(i, 100);
+////                    try {
+////                        Thread.sleep(90);
+////                    } catch (InterruptedException e) {
+////                        e.printStackTrace();
+////                    }
+//                    s = s + i;
+//
+////                    smoothScrollBy(offset - s, 100);
+//                }
+////                mIsScrolling = false;
+//            }
+//
+//        });
 
     }
 
@@ -207,8 +274,11 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
          int c = lineToFirst / firstView.getHeight();
          int linePosition = firstPosition + c;
 
+
         return linePosition;
     }
+
+
 
     @Override
     protected void onDraw(Canvas canvas){
@@ -219,15 +289,22 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
 
         canvas.drawLine(0f, 500f, (float)this.getWidth(), 500f, p);
 
+
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev){
+
+
         switch (ev.getAction())
         {
             case MotionEvent.ACTION_UP:
-                this.smoothScrollBy(10, 10);
-                this.setSmoothScrollbarEnabled(false);
+                if (this.mScrollingStatus == SCROLL_STATE_IDLE || this.mScrollingStatus == SCROLL_STATE_TOUCH_SCROLL){
+                    this.smoothScrollToThePosition();
+                }
+            case MotionEvent.ACTION_DOWN:
+                this.mIsScrolling = true;
+
                 break;
         }
 

@@ -40,7 +40,7 @@ public class RollingSelectorMask extends LinearLayout {
         int densityDpi = (int)(metrics.density * 160f);
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inDensity = densityDpi;
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.selector_mask1,o);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.arrow,o);
         int height = bitmap.getHeight();
         Log.i("height", String.valueOf(height));
         mAlpha = new ArrayList<Integer>(height);

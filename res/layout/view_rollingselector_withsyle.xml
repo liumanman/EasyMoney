@@ -14,7 +14,7 @@
         </LinearLayout>
         <w1.app.easymoney.view.RollingSelector
                 android:layout_width="match_parent"
-                android:layout_height="1000px"
+                android:layout_height="wrap_content"
                 android:id="@+id/selector"
                 android:background="#FFFFFF">
         </w1.app.easymoney.view.RollingSelector>
@@ -28,9 +28,10 @@
     <w1.app.easymoney.view.RollingSelectorMask
             android:id="@+id/selector_mask_top"
             android:layout_width="match_parent"
-            android:layout_height="500px"
+            android:layout_height="match_parent"
             android:gravity="top"
-            android:background="@android:color/transparent">
+            android:background="@android:color/transparent"
+            >
      </w1.app.easymoney.view.RollingSelectorMask>
     <!--<LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"></LinearLayout>-->
     <!--<LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"></LinearLayout>-->

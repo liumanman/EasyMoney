@@ -1,12 +1,15 @@
 package w1.app.easymoney.view;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
@@ -142,6 +145,50 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         int positionToFirst = (position - firstPosition) * height + height/2;;
 
         final int offset = positionToFirst - lineToFirst;
+
+
+        //////////////////////
+//        this.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                MotionEvent e = MotionEvent.obtain(SystemClock.uptimeMillis(),
+//                        SystemClock.uptimeMillis(),
+//                        MotionEvent.ACTION_DOWN,
+//                        v.getLeft() + 5, v.getTop() + 5, 0);
+//                v.dispatchTouchEvent(e);
+//
+//
+//                for(int i = 0; i < 100; i ++){
+//                    e = MotionEvent.obtain(SystemClock.uptimeMillis(),
+//                            SystemClock.uptimeMillis(),
+//                            MotionEvent.ACTION_MOVE,
+//                            v.getLeft() + 5, v.getTop() + i, 0);
+//                    v.dispatchTouchEvent(e);
+//                    try {
+//                        Thread.sleep(10);
+//                    } catch (InterruptedException e1) {
+//                        e1.printStackTrace();
+//                    }
+//                }
+//
+//
+//                e = MotionEvent.obtain(SystemClock.uptimeMillis(),
+//                        SystemClock.uptimeMillis(),
+//                        MotionEvent.ACTION_UP,
+//                        v.getLeft() + 5, v.getTop() + 26, 0);
+//                v.dispatchTouchEvent(e);
+//
+//
+//
+//                Log.i("tset","test");
+//            }
+//        });
+
+
+
+        ///////////////////////////////
+
+
 //        Log.i("offset",String.valueOf(offset));
         this.post(new Runnable() {
             @Override
@@ -172,6 +219,19 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
 
         canvas.drawLine(0f, 500f, (float)this.getWidth(), 500f, p);
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev){
+        switch (ev.getAction())
+        {
+            case MotionEvent.ACTION_UP:
+                this.smoothScrollBy(10, 10);
+                this.setSmoothScrollbarEnabled(false);
+                break;
+        }
+
+        return super.onTouchEvent(ev);
     }
 
     public interface OnSelectedChangedListener{

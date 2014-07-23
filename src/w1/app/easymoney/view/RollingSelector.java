@@ -21,15 +21,13 @@ import java.util.List;
  * Created by el17 on 7/15/2014.
  */
 public class RollingSelector extends ListView implements AbsListView.OnScrollListener {
-    private int mFrom;
-    private int mTo;
     private int mSelectedPosition = -1;
     private OnSelectedChangedListener mListener;
     private int mUpperBlankCount = 6;
     private int mLowerBlankCount = 6;
-    private int mTopOfSelectionLine = 500;
-    private boolean mIsScrolling = false;
-    private int mScrollingStatus;
+    private int mTopOfSelectionLine;
+    private boolean mIsTouchDown = false;
+    private int mSelectionMaskPosition;
 
 
     public RollingSelector(Context context) {
@@ -55,25 +53,17 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         this.setOnScrollListener(this);
         this.setDividerHeight(0);
         this.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        this.mSelectionMaskPosition = 2;
     }
 
-//    public <T> void setAdapter(RollingSelectorAdapter<T> adapter){
-//        super.setAdapter(adapter);
-//
-//        this.setOnScrollListener(this);
-//        this.setDividerHeight(0);
-//        this.setOverScrollMode(View.OVER_SCROLL_NEVER);
+//    public <T> void setDataList(List<T> dataList){
+//            RollingSelectorAdapter<T> adapter = new RollingSelectorAdapter<T>(this.getContext(), dataList, this.mUpperBlankCount, this.mLowerBlankCount);
+//            super.setAdapter(adapter);
 //    }
 
-    public <T> void setDataList(List<T> dataList){
-        RollingSelectorAdapter<T> adapter = new RollingSelectorAdapter<T>(this.getContext(), dataList, this.mUpperBlankCount, this.mLowerBlankCount);
-        super.setAdapter(adapter);
+    public void setSelectionMaskPosition(int position){
+        this.mSelectionMaskPosition = position;
     }
-
-
-//    public <T> RollingSelectorAdapter<T> getListSelectorAdapter(){
-//        return (RollingSelectorAdapter<T>)super.getAdapter();
-//    }
 
     public void setOnSelectedChangedListener(OnSelectedChangedListener listener){
         this.mListener = listener;
@@ -84,8 +74,10 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
     public void onLayout(boolean changed, int l, int t, int r, int b){
         super.onLayout(changed, l, t, r, b);
 
-        if (!mDoOnce) {
-            final View firstView = this.getChildAt(0);
+        final View firstView = this.getChildAt(0);
+
+        if (!mDoOnce && firstView != null) {
+            this.mTopOfSelectionLine = this.mSelectionMaskPosition  * firstView.getHeight() + firstView.getHeight()/2;
             this.scrollListBy(this.mUpperBlankCount * firstView.getHeight() + firstView.getHeight() / 2 - this.mTopOfSelectionLine);
             this.mDoOnce = true;
 
@@ -94,16 +86,15 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        this.mScrollingStatus = scrollState;
+
 
         switch (scrollState){
             case SCROLL_STATE_IDLE:
-                if (!this.mIsScrolling){
+                if (!this.mIsTouchDown){
                     this.smoothScrollToThePosition();
                 }
                 break;
             case SCROLL_STATE_FLING:
-                this.mIsScrolling = false;
                 break;
             default:
         }
@@ -126,11 +117,12 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
                 int selectedPosition = linePosition - mUpperBlankCount;
                 if (selectedPosition != this.mSelectedPosition) {
                     if (this.mListener != null) {
-                        this.mListener.onSelectedChanged(selectedPosition);
+                        this.mListener.onSelectedChanged(this, selectedPosition);
+//                        Log.i("selectedPosition", String.valueOf(selectedPosition));
                     }
                     this.mSelectedPosition = selectedPosition;
 
-                    Log.i("selectedPosition", String.valueOf(selectedPosition));
+//
                 }
             }
         }catch (Exception e){
@@ -154,7 +146,7 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         }
     }
 
-    private void smoothScrollToBeSelected(int position){
+    private void smoothScrollToBeSelected(int position, boolean isSmooth){
         View firstView = this.getChildAt(0);
         int height = firstView.getHeight();
         int firstPosition = this.getFirstVisiblePosition();
@@ -163,107 +155,20 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
 
         final int offset = positionToFirst - lineToFirst;
 
+        if (isSmooth) {
+            this.post(new Runnable() {
+                @Override
+                public void run() {
+                    smoothScrollBy(offset, 300);
+                }
+            });
+        }else {
+            this.scrollListBy(offset);
+        }
+    }
 
-        //////////////////////
-//        this.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                MotionEvent e = MotionEvent.obtain(SystemClock.uptimeMillis(),
-//                        SystemClock.uptimeMillis(),
-//                        MotionEvent.ACTION_DOWN,
-//                        v.getLeft() + 5, v.getTop() + 5, 0);
-//                v.dispatchTouchEvent(e);
-//
-//
-//                for(int i = 0; i < 100; i ++){
-//                    e = MotionEvent.obtain(SystemClock.uptimeMillis(),
-//                            SystemClock.uptimeMillis(),
-//                            MotionEvent.ACTION_MOVE,
-//                            v.getLeft() + 5, v.getTop() + i, 0);
-//                    v.dispatchTouchEvent(e);
-//                    try {
-//                        Thread.sleep(10);
-//                    } catch (InterruptedException e1) {
-//                        e1.printStackTrace();
-//                    }
-//                }
-//
-//
-//                e = MotionEvent.obtain(SystemClock.uptimeMillis(),
-//                        SystemClock.uptimeMillis(),
-//                        MotionEvent.ACTION_UP,
-//                        v.getLeft() + 5, v.getTop() + 26, 0);
-//                v.dispatchTouchEvent(e);
-//
-//
-//
-//                Log.i("tset","test");
-//            }
-//        });
-
-
-
-        ///////////////////////////////
-
-
-//
-//        Log.i("offset",String.valueOf(offset));
-        this.post(new Runnable() {
-            @Override
-            public void run() {
-                smoothScrollBy(offset, 1000);
-//                smoothScrollBy(0, 0);
-            }
-        });
-//
-//        this.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                mIsScrolling = true;
-//                if (offset > 5){
-//                    int s = 0;
-//                    int i = offset/2;
-//
-//                    smoothScrollBy(i, 500);
-//                    smoothScrollBy(0,0);
-////                    try {
-////                        Thread.sleep(90);
-////                    } catch (InterruptedException e) {
-////                        e.printStackTrace();
-////                    }
-//                    s = s + i;
-//
-////                    smoothScrollBy(i, 100);
-////                    try {
-////                        Thread.sleep(90);
-////                    } catch (InterruptedException e) {
-////                        e.printStackTrace();
-////                    }
-//                    s = s + i;
-//
-////                    smoothScrollBy(i, 100);
-////                    try {
-////                        Thread.sleep(90);
-////                    } catch (InterruptedException e) {
-////                        e.printStackTrace();
-////                    }
-//                    s = s + i;
-//
-////                    smoothScrollBy(i, 100);
-////                    try {
-////                        Thread.sleep(90);
-////                    } catch (InterruptedException e) {
-////                        e.printStackTrace();
-////                    }
-//                    s = s + i;
-//
-////                    smoothScrollBy(offset - s, 100);
-//                }
-////                mIsScrolling = false;
-//            }
-//
-//        });
-
+    private void smoothScrollToBeSelected(int position){
+        this.smoothScrollToBeSelected(position, true);
     }
 
     private int getLinePosition(int topOfLine){
@@ -278,7 +183,12 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         return linePosition;
     }
 
+    public void resetPosition(){
+        smoothScrollToBeSelected(this.mSelectionMaskPosition, false);
+        smoothScrollToBeSelected(this.mUpperBlankCount, false);
+//        smoothScrollToBeSelected(this.mUpperBlankCount);
 
+    }
 
     @Override
     protected void onDraw(Canvas canvas){
@@ -287,24 +197,20 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         Paint p = new Paint();
         p.setColor(Color.RED);
 
-        canvas.drawLine(0f, 500f, (float)this.getWidth(), 500f, p);
+        canvas.drawLine(0f, mTopOfSelectionLine, (float)this.getWidth(), mTopOfSelectionLine, p);
 
 
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev){
-
-
         switch (ev.getAction())
         {
             case MotionEvent.ACTION_UP:
-                if (this.mScrollingStatus == SCROLL_STATE_IDLE || this.mScrollingStatus == SCROLL_STATE_TOUCH_SCROLL){
-                    this.smoothScrollToThePosition();
-                }
+                this.mIsTouchDown = false;
+                break;
             case MotionEvent.ACTION_DOWN:
-                this.mIsScrolling = true;
-
+                this.mIsTouchDown = true;
                 break;
         }
 
@@ -312,6 +218,6 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
     }
 
     public interface OnSelectedChangedListener{
-        public void onSelectedChanged(int selectedPosition);
+        public void onSelectedChanged(View view,  int selectedPosition);
     }
 }

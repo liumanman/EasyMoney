@@ -8,27 +8,42 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import w1.app.easymoney.R;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by el17 on 7/15/2014.
  */
 public class RollingSelectorAdapter<T> extends BaseAdapter {
+    private Map<String, List<T>>  mDataMap;
     private List<T> mDataList;
     private int mUpperBlankCount;
     private int mLowerBlankCount;
     private Context mContext;
+    private String mGroup;
 
-    public RollingSelectorAdapter(Context context, List<T> dataList, int upperBlankCount, int lowerBlankCount){
-        this.mDataList = dataList;
+    public RollingSelectorAdapter(Context context, Map<String, List<T>> dataMap, int upperBlankCount, int lowerBlankCount){
+        this.mDataMap = dataMap;
         this.mUpperBlankCount = upperBlankCount;
         this.mLowerBlankCount = lowerBlankCount;
         this.mContext = context;
+
+
+    }
+
+    public void setGroup(String group){
+        this.mGroup = group;
+        mDataList = mDataMap.get(group);
     }
 
     @Override
     public int getCount() {
-        return this.mDataList.size() + this.mUpperBlankCount + this.mLowerBlankCount;
+        if (this.mDataList == null){
+            return 0;
+        }else {
+            return this.mDataList.size() + this.mUpperBlankCount + this.mLowerBlankCount;
+        }
     }
 
     @Override
@@ -58,16 +73,18 @@ public class RollingSelectorAdapter<T> extends BaseAdapter {
 
     public  View getDataView(int position, View convertView, ViewGroup parent){
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
-        TextView v = (TextView)inflater.inflate(R.layout.view_listselector_child, null);
-        v.setText("Data");
+        View v = inflater.inflate(R.layout.view_listselector_child, null);
+        TextView tv = (TextView) v.findViewById(R.id.selector_child_tb);
+        tv.setText(String.valueOf(mDataList.get(position)));
 
         return v;
     }
 
     public  View getBlankView(View convertView, ViewGroup parent){
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
-        TextView v = (TextView)inflater.inflate(R.layout.view_listselector_child, null);
-        v.setText("Blank");
+        View v = inflater.inflate(R.layout.view_listselector_child, null);
+        TextView tv = (TextView) v.findViewById(R.id.selector_child_tb);
+        tv.setText("");
 
         return v;
     }

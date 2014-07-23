@@ -2,7 +2,6 @@ package w1.app.easymoney.view;
 
 import android.content.Context;
 import android.graphics.*;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -40,7 +39,7 @@ public class RollingSelectorMask extends LinearLayout {
         int densityDpi = (int)(metrics.density * 160f);
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inDensity = densityDpi;
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.arrow,o);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.selector_mask1,o);
         int height = bitmap.getHeight();
         Log.i("height", String.valueOf(height));
         mAlpha = new ArrayList<Integer>(height);
@@ -62,9 +61,10 @@ public class RollingSelectorMask extends LinearLayout {
 
         for(int i = 0; i < mAlpha.size(); i ++){
             Log.i("alpha", String.valueOf(mAlpha.get(i)));
-            p.setColor(Color.argb(mAlpha.get(i), 16 ,16, 16));
+            p.setColor(Color.argb(mAlpha.get(i), 8 ,8, 8));
 
             canvas.drawLine(0, i, this.getWidth() - 1, i, p);
+            canvas.drawLine(0, this.getHeight() - 1 - i, this.getWidth() - 1, this.getHeight() - 1 - i, p);
         }
     }
 }

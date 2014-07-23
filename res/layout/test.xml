@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <w1.app.easymoney.view.RollingSelectorWithSyle
             android:id="@+id/test_listselector"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_height="250dp"
             android:background="@color/RollingSelector_bg"
             android:cacheColorHint="@android:color/transparent"
             >
     </w1.app.easymoney.view.RollingSelectorWithSyle>
-
+    <w1.app.easymoney.view.RollingSelectorWithSyle
+            android:id="@+id/test_listselector2"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="250dp"
+            android:background="@color/RollingSelector_bg"
+            android:cacheColorHint="@android:color/transparent"
+            >
+    </w1.app.easymoney.view.RollingSelectorWithSyle>
 </LinearLayout>

@@ -33,6 +33,10 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
     private int mScrollStatusWhenTouchDown = SCROLL_STATE_IDLE;
     private int mScrollStatusWhenTouchUp = SCROLL_STATE_IDLE;
 
+    private float mLastY;
+    private float mRememberY = 99999999f;
+    private boolean mIsLastFullBlank = false;
+
 
     public RollingSelector(Context context) {
         super(context);
@@ -241,8 +245,19 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
 
     }
 
+
     @Override
     public boolean onTouchEvent(MotionEvent ev){
+        boolean isIntercept = false;
+        int first = this.getFirstVisiblePosition();
+        boolean isFullBlank;
+        if (first >= this.getAdapter().getCount() - mRollingAdapter.getLowerBlankSize()){
+            isFullBlank = true;
+        }else {
+            isFullBlank = false;
+        }
+        float newY = ev.getY();
+
         switch (ev.getAction())
         {
             case MotionEvent.ACTION_UP:
@@ -256,17 +271,85 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
                 }
 
                 this.mIsTouchDown = false;
+                this.mRememberY = 99999999f;
                 break;
             case MotionEvent.ACTION_DOWN:
                 this.mIsTouchDown = true;
                 this.mScrollStatusWhenTouchDown = mScrollStatus;
 
                 break;
+            case MotionEvent.ACTION_MOVE:
+
+                if (isFullBlank && !mIsLastFullBlank){
+                    mRememberY = ev.getY();
+                    Log.i("mRememberY2",String.valueOf(mRememberY));
+                    if (mLastY >= ev.getY()){
+                        isIntercept = true;
+                        Log.i("mRememberY","1");
+                    }else {
+                        //do nothing
+                        Log.i("mRememberY","2");
+                    }
+                }else {
+                    if (isFullBlank && mIsLastFullBlank){
+                        if (mLastY >= ev.getY()){
+                            isIntercept = true;
+                            Log.i("mRememberY","3");
+                        }else {
+                            if (mRememberY < 9999999){
+//                                Log.i("mRememberY2",String.valueOf(ev.getY()));
+//                                ev.offsetLocation(0,  mRememberY - ev.getY());
+                                newY = mRememberY + ev.getY() - mLastY;
+                                Log.i("mRememberY2",String.valueOf(newY));
+                                Log.i("mRememberY","4");
+                            }else {
+                                Log.e("mRememberY","5 - mRemeberY is not setup yet.");
+                            }
+                        }
+                    }else {
+                        if (!isFullBlank && !mIsLastFullBlank){
+                            if (mRememberY < 9999999){
+//                                ev.offsetLocation(0, mRememberY - ev.getY());
+                                newY = mRememberY + ev.getY() - mLastY;
+
+                                Log.i("mRememberY2",String.valueOf(newY));
+                                Log.i("mRememberY","6");
+                            }else {
+                                //do nothing
+                                Log.i("mRememberY","7");
+                            }
+                        }else {
+                            if (mRememberY < 9999999){
+//                                ev.offsetLocation(0, mRememberY - ev.getY());
+                                newY = mRememberY + ev.getY() - mLastY;
+
+                                Log.i("mRememberY2",String.valueOf(newY));
+                                Log.i("mRememberY","8");
+                            }else {
+                                //do nothing
+                                Log.i("mRememberY","9");
+                            }
+                        }
+                    }
+                }
             default:
 
         }
 
-        return super.onTouchEvent(ev);
+        mLastY = ev.getY();
+        if (first >= this.getAdapter().getCount() - mRollingAdapter.getLowerBlankSize()){
+            mIsLastFullBlank = true;
+        }else {
+            mIsLastFullBlank = false;
+        }
+
+        if (isIntercept){
+            return true;
+        }else {
+            ev.setLocation(ev.getX(), newY);
+//            Log.i("newY", String.valueOf(newY));
+            return super.onTouchEvent(ev);
+        }
     }
 
 

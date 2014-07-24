@@ -97,7 +97,7 @@ public class RollingSelectorAdapter<T> extends BaseAdapter implements RollingSel
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
         View v = inflater.inflate(R.layout.view_listselector_child, null);
         TextView tv = (TextView) v.findViewById(R.id.selector_child_tb);
-        tv.setText("");
+        tv.setText("blank");
 
         return v;
     }

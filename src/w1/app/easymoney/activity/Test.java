@@ -35,7 +35,7 @@ public class Test extends Activity {
         map.put("1", getData(-1));
         RollingSelectorAdapter adapter1 = new RollingSelectorAdapter(this, map, 6, 6);
         adapter1.setGroup("1");
-        mListview.setAdapter(adapter1);
+        mListview.setAdapter(adapter1,adapter1);
         mListview.setOnSelectedChangedListener(new RollingSelector.OnSelectedChangedListener() {
             @Override
             public void onSelectedChanged(View view, int selectedPosition) {
@@ -52,7 +52,7 @@ public class Test extends Activity {
         }
         mAdapter2 = new RollingSelectorAdapter(this, map2, 6, 6);
         mAdapter2.setGroup("0");
-        mListview2.setAdapter(mAdapter2);
+        mListview2.setAdapter(mAdapter2,mAdapter2);
     }
 
     private List<String> getData(int i){

@@ -56,8 +56,9 @@ public class RollingSelectorWithSyle extends LinearLayout{
 //    public <T> void setDataList(List<T> dataList){
 //        mSelector.setDataList(dataList);
 //    }
-    public void setAdapter(BaseAdapter adapter){
-        this.mSelector.setAdapter(adapter);
+    public void setAdapter(BaseAdapter adapter1, RollingSelector.RollingAdapter adapter2){
+        this.mSelector.setAdapter(adapter1);
+        this.mSelector.setRollingAdapter(adapter2);
     }
 
     public void setOnSelectedChangedListener(RollingSelector.OnSelectedChangedListener listener){
@@ -87,8 +88,6 @@ public class RollingSelectorWithSyle extends LinearLayout{
             lp.height = v.getHeight();
 
             this.mDoOnce = true;
-
-            Log.i("onLayout",String.valueOf(v.getHeight()));
         }
     }
 }

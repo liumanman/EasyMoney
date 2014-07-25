@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by el17 on 7/15/2014.
  */
 public class RollingSelectorAdapter<T> extends BaseAdapter implements RollingSelector.RollingAdapter {
-    private Map<String, List<T>>  mDataMap;
+    private Map<String, List<T>> mDataMap;
     private List<T> mDataList;
     private int mUpperBlankCount;
     private int mLowerBlankCount;
@@ -25,47 +25,39 @@ public class RollingSelectorAdapter<T> extends BaseAdapter implements RollingSel
     private String mGroup;
     private int mMaxSize;
 
-    public RollingSelectorAdapter(Context context, Map<String, List<T>> dataMap, int upperBlankCount, int lowerBlankCount){
+    public RollingSelectorAdapter(Context context, Map<String, List<T>> dataMap, int upperBlankCount, int lowerBlankCount) {
         this.mDataMap = dataMap;
         this.mUpperBlankCount = upperBlankCount;
         this.mLowerBlankCount = lowerBlankCount;
         this.mContext = context;
 
         mMaxSize = 0;
-        Iterator<List<T>> iter =  dataMap.values().iterator();
-        while (iter.hasNext()){
+        Iterator<List<T>> iter = dataMap.values().iterator();
+        while (iter.hasNext()) {
             List<T> list = iter.next();
-            if (mMaxSize < list.size()){
+            if (mMaxSize < list.size()) {
                 mMaxSize = list.size();
             }
         }
-
-
     }
 
-    public void setGroup(String group){
+    public void setGroup(String group) {
         this.mGroup = group;
         mDataList = mDataMap.get(group);
     }
 
     @Override
     public int getCount() {
-//        if (this.mDataList == null){
-//            return 0;
-//        }else {
-//            return this.mDataList.size() + this.mUpperBlankCount + this.mLowerBlankCount;
-//        }
-
         return mUpperBlankCount + mMaxSize + mLowerBlankCount;
     }
 
     @Override
     public Object getItem(int position) {
-        if (position < this.mUpperBlankCount){
+        if (position < this.mUpperBlankCount) {
             return null;
-        }else if (position > (this.mDataList.size() + this.mUpperBlankCount - 1)) {
+        } else if (position > (this.mDataList.size() + this.mUpperBlankCount - 1)) {
             return null;
-        }else {
+        } else {
             return this.mDataList.get(position - this.mUpperBlankCount);
         }
     }
@@ -77,29 +69,57 @@ public class RollingSelectorAdapter<T> extends BaseAdapter implements RollingSel
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (position < this.mUpperBlankCount || position > (this.mDataList.size() + this.mUpperBlankCount - 1)){
-            return this.getBlankView(position,convertView, parent);
-        }else {
+        if (position < this.mUpperBlankCount || position > (this.mDataList.size() + this.mUpperBlankCount - 1)) {
+            return this.getBlankView(convertView, parent);
+        } else {
             return this.getDataView(position - this.mUpperBlankCount, convertView, parent);
         }
     }
 
-    public  View getDataView(int position, View convertView, ViewGroup parent){
-        LayoutInflater inflater = LayoutInflater.from(this.mContext);
-        View v = inflater.inflate(R.layout.view_listselector_child, null);
-        TextView tv = (TextView) v.findViewById(R.id.selector_child_tb);
-        tv.setText(String.valueOf(mDataList.get(position)));
+    @Override
+    public void updateView(int position, View view) {
+        if (position < this.mUpperBlankCount || position > (this.mDataList.size() + this.mUpperBlankCount - 1)) {
+            TextView tv = (TextView) view.findViewById(R.id.selector_child_tb);
+            tv.setText("");
 
-        return v;
+        } else {
+            TextView tv = (TextView) view.findViewById(R.id.selector_child_tb);
+            tv.setText(String.valueOf(mDataList.get(position - this.mUpperBlankCount)));
+        }
     }
 
-    public  View getBlankView(int position , View convertView, ViewGroup parent){
-        LayoutInflater inflater = LayoutInflater.from(this.mContext);
-        View v = inflater.inflate(R.layout.view_listselector_child, null);
-        TextView tv = (TextView) v.findViewById(R.id.selector_child_tb);
-        tv.setText("blank" + String.valueOf(position));
+    private View getDataView(int position, View convertView, ViewGroup parent) {
+        TextView tv;
+        if (convertView != null && convertView.getTag() != null) {
+            tv = (TextView) convertView.getTag();
+        } else {
+            LayoutInflater inflater = LayoutInflater.from(this.mContext);
+            convertView = inflater.inflate(R.layout.view_listselector_child, null);
+            tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
 
-        return v;
+            convertView.setTag(tv);
+        }
+
+        tv.setText(String.valueOf(mDataList.get(position)));
+
+        return convertView;
+    }
+
+    private View getBlankView(View convertView, ViewGroup parent) {
+        TextView tv;
+        if (convertView != null && convertView.getTag() != null) {
+            tv = (TextView) convertView.getTag();
+        } else {
+            LayoutInflater inflater = LayoutInflater.from(this.mContext);
+            convertView = inflater.inflate(R.layout.view_listselector_child, null);
+            tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
+
+            convertView.setTag(tv);
+        }
+
+        tv.setText("");
+
+        return convertView;
     }
 
     @Override

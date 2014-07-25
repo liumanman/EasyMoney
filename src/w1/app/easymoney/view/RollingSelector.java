@@ -130,10 +130,11 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
 
             int totalCount = this.getAdapter().getCount();
 
-//            if (firstVisibleItem >= totalCount -  mRollingAdapter.getLowerBlankSize()){
-//                this.smoothScrollBy(0, 0);
-//                return;
-//            }
+            if (firstVisibleItem >= totalCount -  mRollingAdapter.getLowerBlankSize() && !this.mIsTouchDown){
+                Log.i("onScroll","stop");
+                this.smoothScrollBy(0, 0);
+                return;
+            }
 
             final int linePosition = this.getPositionByY(mTopOfSelectionLine);
 
@@ -266,11 +267,17 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
                 if (mScrollStatusWhenTouchDown == SCROLL_STATE_IDLE && mScrollStatusWhenTouchUp == SCROLL_STATE_IDLE) {
                     Log.i("ev.getY()",String.valueOf(ev.getY()));
                     int position = getPositionByY((int) ev.getY());
-                    Log.i("Position", String.valueOf(position));
-                    this.smoothScrollToBeSelected(position);
+
+
+//                    this.smoothScrollToBeSelected(position);
                 }
 
                 this.mIsTouchDown = false;
+
+                if (mRememberY < 9999999){
+//                    isIntercept = true;
+                    newY = mRememberY;
+                }
                 this.mRememberY = 99999999f;
                 break;
             case MotionEvent.ACTION_DOWN:
@@ -281,7 +288,9 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
             case MotionEvent.ACTION_MOVE:
 
                 if (isFullBlank && !mIsLastFullBlank){
-                    mRememberY = ev.getY();
+                    if (mRememberY >= 9999999) {
+                        mRememberY = ev.getY();
+                    }else {
                     Log.i("mRememberY2",String.valueOf(mRememberY));
                     if (mLastY >= ev.getY()){
                         isIntercept = true;
@@ -289,6 +298,7 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
                     }else {
                         //do nothing
                         Log.i("mRememberY","2");
+                    }
                     }
                 }else {
                     if (isFullBlank && mIsLastFullBlank){
@@ -299,7 +309,7 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
                             if (mRememberY < 9999999){
 //                                Log.i("mRememberY2",String.valueOf(ev.getY()));
 //                                ev.offsetLocation(0,  mRememberY - ev.getY());
-                                newY = mRememberY + ev.getY() - mLastY;
+                                mRememberY=newY = mRememberY + ev.getY() - mLastY;
                                 Log.i("mRememberY2",String.valueOf(newY));
                                 Log.i("mRememberY","4");
                             }else {
@@ -310,7 +320,7 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
                         if (!isFullBlank && !mIsLastFullBlank){
                             if (mRememberY < 9999999){
 //                                ev.offsetLocation(0, mRememberY - ev.getY());
-                                newY = mRememberY + ev.getY() - mLastY;
+                                mRememberY=newY = mRememberY + ev.getY() - mLastY;
 
                                 Log.i("mRememberY2",String.valueOf(newY));
                                 Log.i("mRememberY","6");
@@ -321,7 +331,7 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
                         }else {
                             if (mRememberY < 9999999){
 //                                ev.offsetLocation(0, mRememberY - ev.getY());
-                                newY = mRememberY + ev.getY() - mLastY;
+                                mRememberY=newY = mRememberY + ev.getY() - mLastY;
 
                                 Log.i("mRememberY2",String.valueOf(newY));
                                 Log.i("mRememberY","8");
@@ -347,7 +357,7 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
             return true;
         }else {
             ev.setLocation(ev.getX(), newY);
-//            Log.i("newY", String.valueOf(newY));
+            Log.i("newY", String.valueOf(ev.getY()));
             return super.onTouchEvent(ev);
         }
     }

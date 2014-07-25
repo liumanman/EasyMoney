@@ -78,7 +78,7 @@ public class RollingSelectorAdapter<T> extends BaseAdapter implements RollingSel
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (position < this.mUpperBlankCount || position > (this.mDataList.size() + this.mUpperBlankCount - 1)){
-            return this.getBlankView(convertView, parent);
+            return this.getBlankView(position,convertView, parent);
         }else {
             return this.getDataView(position - this.mUpperBlankCount, convertView, parent);
         }
@@ -93,11 +93,11 @@ public class RollingSelectorAdapter<T> extends BaseAdapter implements RollingSel
         return v;
     }
 
-    public  View getBlankView(View convertView, ViewGroup parent){
+    public  View getBlankView(int position , View convertView, ViewGroup parent){
         LayoutInflater inflater = LayoutInflater.from(this.mContext);
         View v = inflater.inflate(R.layout.view_listselector_child, null);
         TextView tv = (TextView) v.findViewById(R.id.selector_child_tb);
-        tv.setText("blank");
+        tv.setText("blank" + String.valueOf(position));
 
         return v;
     }

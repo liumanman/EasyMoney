@@ -2,15 +2,12 @@ package w1.app.easymoney.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import w1.app.easymoney.R;
-
-import java.util.List;
 
 /**
  * Created by el17 on 7/18/2014.
@@ -53,9 +50,6 @@ public class RollingSelectorWithSyle extends LinearLayout{
         mPositionMask = mContent.findViewById(R.id.selector_mask_position);
     }
 
-//    public <T> void setDataList(List<T> dataList){
-//        mSelector.setDataList(dataList);
-//    }
     public void setAdapter(BaseAdapter adapter1, RollingSelector.RollingAdapter adapter2){
         this.mSelector.setAdapter(adapter1);
         this.mSelector.setRollingAdapter(adapter2);
@@ -63,12 +57,6 @@ public class RollingSelectorWithSyle extends LinearLayout{
 
     public void setOnSelectedChangedListener(RollingSelector.OnSelectedChangedListener listener){
         mSelector.setOnSelectedChangedListener(listener);
-    }
-
-    public void notifyDataSetChanged()
-    {
-        BaseAdapter adapter = (BaseAdapter)mSelector.getAdapter();
-        adapter.notifyDataSetChanged();
     }
 
     public void resetPosition(){

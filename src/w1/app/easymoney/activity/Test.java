@@ -1,13 +1,17 @@
 package w1.app.easymoney.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 import w1.app.easymoney.R;
 
+import w1.app.easymoney.view.LoopSelector;
 import w1.app.easymoney.view.RollingSelector;
 import w1.app.easymoney.view.RollingSelectorAdapter;
 import w1.app.easymoney.view.RollingSelectorWithSyle;
@@ -23,8 +27,9 @@ import java.util.Map;
 public class Test extends Activity {
     private RollingSelectorWithSyle mListview;
     private RollingSelectorWithSyle mListview2;
-    private List<String> mDataList2;
     private RollingSelectorAdapter mAdapter2;
+
+    private LoopSelector mLoopSelector;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +58,10 @@ public class Test extends Activity {
         mAdapter2 = new RollingSelectorAdapter(this, map2, 6, 6);
         mAdapter2.setGroup("0");
         mListview2.setAdapter(mAdapter2,mAdapter2);
+
+        mLoopSelector = (LoopSelector)findViewById(R.id.test_loopselector);
+        mLoopSelector.setAdapter(new MyLoopAdapter(this, getData(-1)));
+
     }
 
     private List<String> getData(int i){
@@ -73,15 +82,45 @@ public class Test extends Activity {
         return data;
     }
 
-    private void updateDate(int i){
+    private class MyLoopAdapter extends BaseAdapter{
+        private List<String> mDataList;
+        private Context mContext;
+        public MyLoopAdapter(Context context, List<String> dataList){
+            mDataList = dataList;
+            mContext = context;
+        }
 
-//        this.mDataList2.clear();
-//        mDataList2.add(String.valueOf(i) + "-"+ "数据1");
-//        mDataList2.add(String.valueOf(i) + "-"+"数据2");
-//        mDataList2.add(String.valueOf(i) + "-"+"数据3");
-//        mDataList2.add(String.valueOf(i) + "-"+"数据4");
-//        mDataList2.add(String.valueOf(i) + "-"+"数据5");
-//        mDataList2.add(String.valueOf(i) + "-" + "数据6");
-//        mDataList2.add(String.valueOf(i) + "-"+"数据7");
+        @Override
+        public int getCount() {
+            return mDataList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mDataList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView tv;
+            if (convertView != null && convertView.getTag() != null) {
+                tv = (TextView) convertView.getTag();
+            } else {
+                LayoutInflater inflater = LayoutInflater.from(this.mContext);
+                convertView = inflater.inflate(R.layout.view_listselector_child, null);
+                tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
+
+                convertView.setTag(tv);
+            }
+
+            tv.setText(String.valueOf(mDataList.get(position)));
+
+            return convertView;
+        }
     }
 }

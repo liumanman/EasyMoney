@@ -22,7 +22,6 @@ public class RollingSelectorAdapter<T> extends BaseAdapter implements RollingSel
     private int mUpperBlankCount;
     private int mLowerBlankCount;
     private Context mContext;
-    private String mGroup;
     private int mMaxSize;
 
     public RollingSelectorAdapter(Context context, Map<String, List<T>> dataMap, int upperBlankCount, int lowerBlankCount) {
@@ -42,7 +41,6 @@ public class RollingSelectorAdapter<T> extends BaseAdapter implements RollingSel
     }
 
     public void setGroup(String group) {
-        this.mGroup = group;
         mDataList = mDataMap.get(group);
     }
 

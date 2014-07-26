@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+        <LinearLayout
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="#353535">
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="11px"
+                android:layout_height="match_parent"
+                android:background="#e8e8e8">
+        </LinearLayout>
+        <LinearLayout
+                android:id="@+id/sc_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#FFFFFF"
+                >
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="11px"
+                android:layout_height="match_parent"
+                android:background="#e8e8e8">
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="#353535">
+        </LinearLayout>
+    </LinearLayout>
+
+    <w1.app.easymoney.view.RollingSelectorMask
+            android:id="@+id/selector_mask_top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:background="@android:color/transparent"
+            >
+    </w1.app.easymoney.view.RollingSelectorMask>
+    <LinearLayout
+            android:id="@+id/selector_mask_position"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80f9eaa6"
+            ></LinearLayout>
+
+</FrameLayout>

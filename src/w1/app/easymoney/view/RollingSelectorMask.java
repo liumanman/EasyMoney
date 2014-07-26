@@ -16,8 +16,6 @@ import java.util.List;
  */
 public class RollingSelectorMask extends LinearLayout {
     private List<Integer> mAlpha;
-    private int[] mIncrement1 = {1,2,2,3};
-    private int[] mIncrement2 = {0,0,1};
 
     public RollingSelectorMask(Context context) {
         super(context);
@@ -41,11 +39,9 @@ public class RollingSelectorMask extends LinearLayout {
         o.inDensity = densityDpi;
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.selector_mask1,o);
         int height = bitmap.getHeight();
-//        Log.i("height", String.valueOf(height));
         mAlpha = new ArrayList<Integer>(height);
         for(int i = 0; i < height; i ++){
             int color = Color.red(bitmap.getPixel(0, i)) ;
-//            Log.i("Color", String.valueOf(color));
             mAlpha.add(255 - color);
             if (color == 255){
                 break;
@@ -60,7 +56,6 @@ public class RollingSelectorMask extends LinearLayout {
         Paint p = new Paint();
 
         for(int i = 0; i < mAlpha.size(); i ++){
-//            Log.i("alpha", String.valueOf(mAlpha.get(i)));
             p.setColor(Color.argb(mAlpha.get(i), 8 ,8, 8));
 
             canvas.drawLine(0, i, this.getWidth() - 1, i, p);

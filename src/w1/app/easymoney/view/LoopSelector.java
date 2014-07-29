@@ -14,6 +14,8 @@ import android.widget.ListView;
  */
 public class LoopSelector extends ListView implements AbsListView.OnScrollListener {
 //    private List<Integer> mAlpha;
+    private OnSelectedChangedListener mSelectedChangedListener;
+    private int mSelectionMaskPosition = 2;
 
     public LoopSelector(Context context) {
         super(context);
@@ -34,27 +36,16 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
         this.setOnScrollListener(this);
         this.setVerticalScrollBarEnabled(false);
         this.setDividerHeight(0);
-
-//        DisplayMetrics metrics = getResources().getDisplayMetrics();
-//        int densityDpi = (int)(metrics.density * 160f);
-//        BitmapFactory.Options o = new BitmapFactory.Options();
-//        o.inDensity = densityDpi;
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.selector_mask1,o);
-//        int height = bitmap.getHeight();
-//        mAlpha = new ArrayList<Integer>(height);
-//        for(int i = 0; i < height; i ++){
-//            int color = Color.red(bitmap.getPixel(0, i)) ;
-//            mAlpha.add(255 - color);
-//            if (color == 255){
-//                break;
-//            }
-//        }
     }
 
     public void setAdapter(BaseAdapter adapter){
         LoopSelectorAdapter loopAdapter = new LoopSelectorAdapter();
         loopAdapter.setOriginalAdapter(adapter);
         super.setAdapter(loopAdapter);
+    }
+
+    public void setOnSelectedChangedListener(OnSelectedChangedListener listener){
+        this.mSelectedChangedListener = listener;
     }
 
 
@@ -72,6 +63,8 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
                 this.setSelection(firstVisibleItem - this.getAdapter().getCount() / 3 + 1);
             }
         }
+
+
     }
 
 //    @Override
@@ -87,6 +80,10 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
 //            canvas.drawLine(0, this.getHeight() - 1 - i, this.getWidth() - 1, this.getHeight() - 1 - i, p);
 //        }
 //    }
+
+    public interface OnSelectedChangedListener{
+        public void onSelectedChanged(View view, int selectedPosition);
+    }
 
     private  class LoopSelectorAdapter extends BaseAdapter{
         private ListAdapter mAdapter;

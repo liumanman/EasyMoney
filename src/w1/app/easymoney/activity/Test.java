@@ -11,10 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import w1.app.easymoney.R;
 
-import w1.app.easymoney.view.LoopSelector;
-import w1.app.easymoney.view.RollingSelector;
-import w1.app.easymoney.view.RollingSelectorAdapter;
-import w1.app.easymoney.view.RollingSelectorWithSyle;
+import w1.app.easymoney.view.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,9 +22,10 @@ import java.util.Map;
  * Created by el17 on 7/15/2014.
  */
 public class Test extends Activity {
-    private RollingSelectorWithSyle mListview;
-    private RollingSelectorWithSyle mListview2;
-    private RollingSelectorAdapter mAdapter2;
+    private RollingSelectorWithStyle mListview;
+    private RollingSelectorWithStyle mListview2;
+    private MySelectorAdapter mAdapter2;
+    private SelectorContainer mContainer;
 
     private LoopSelector mLoopSelector;
 
@@ -35,10 +33,10 @@ public class Test extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
 
-        mListview = (RollingSelectorWithSyle) findViewById(R.id.test_listselector);
+        mListview = (RollingSelectorWithStyle) findViewById(R.id.test_listselector);
         Map<String, List<String>> map = new HashMap<String, List<String>>(1);
         map.put("1", getData(-1));
-        RollingSelectorAdapter adapter1 = new RollingSelectorAdapter(this, map, 6, 6);
+        MySelectorAdapter adapter1 = new MySelectorAdapter(this, map);
         adapter1.setGroup("1");
         mListview.setAdapter(adapter1,adapter1);
         mListview.setOnSelectedChangedListener(new RollingSelector.OnSelectedChangedListener() {
@@ -50,18 +48,29 @@ public class Test extends Activity {
         });
 
 
-        mListview2 = (RollingSelectorWithSyle) findViewById(R.id.test_listselector2);
+        mListview2 = (RollingSelectorWithStyle) findViewById(R.id.test_listselector2);
         Map<String, List<String>> map2 = new HashMap<String, List<String>>(map.get("1").size());
         for(int i = 0; i < map.get("1").size(); i ++ ){
             map2.put(String.valueOf(i), getData(i));
         }
-        mAdapter2 = new RollingSelectorAdapter(this, map2, 6, 6);
+        mAdapter2 = new MySelectorAdapter(this, map2);
         mAdapter2.setGroup("0");
         mListview2.setAdapter(mAdapter2,mAdapter2);
 
         mLoopSelector = (LoopSelector)findViewById(R.id.test_loopselector);
         mLoopSelector.setAdapter(new MyLoopAdapter(this, getData(-1)));
 
+        mContainer = (SelectorContainer)findViewById(R.id.test_container);
+        RollingSelector selector = new RollingSelector(this);
+        selector.setVerticalScrollBarEnabled(false);
+        Map<String, List<String>> map3 = new HashMap<String, List<String>>(1);
+        map3.put("1", getData(-1));
+        MySelectorAdapter adapter3 = new MySelectorAdapter(this, map3);
+        adapter3.setGroup("1");
+        selector.setRollingAdapter(adapter3);
+        selector.setAdapter(adapter3);
+        mContainer.setSelector(selector);
+//        mContainer.setSelectorManager(selector);
     }
 
     private List<String> getData(int i){
@@ -121,6 +130,68 @@ public class Test extends Activity {
             tv.setText(String.valueOf(mDataList.get(position)));
 
             return convertView;
+        }
+    }
+
+    private class MySelectorAdapter extends BaseRollingSelectorSelectorAdapter<String> {
+        private Context mContext;
+        public MySelectorAdapter(Context context, Map<String, List<String>> dataMap) {
+            super(context, dataMap);
+
+            this.mContext = context;
+        }
+
+        @Override
+        protected View getDataView(View convertView, ViewGroup parent, String data) {
+                    TextView tv;
+        if (convertView != null && convertView.getTag() != null) {
+            tv = (TextView) convertView.getTag();
+        } else {
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            convertView = inflater.inflate(R.layout.view_listselector_child, null);
+            tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
+
+            convertView.setTag(tv);
+        }
+
+        tv.setText(data);
+
+        return convertView;
+        }
+
+        @Override
+        protected View getBlankView(View convertView, ViewGroup parent) {
+                    TextView tv;
+        if (convertView != null && convertView.getTag() != null) {
+            tv = (TextView) convertView.getTag();
+        } else {
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            convertView = inflater.inflate(R.layout.view_listselector_child, null);
+            tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
+
+            convertView.setTag(tv);
+        }
+
+        tv.setText("");
+
+        return convertView;
+        }
+
+        @Override
+        protected void updateDataView(View view, String data) {
+            TextView tv = (TextView)view.getTag();
+            tv.setText(data);
+        }
+
+        @Override
+        protected void updateBlankView(View view) {
+            TextView tv = (TextView)view.getTag();
+            tv.setText("");
+        }
+
+        @Override
+        protected int getBasicBlankSize() {
+            return 5;
         }
     }
 }

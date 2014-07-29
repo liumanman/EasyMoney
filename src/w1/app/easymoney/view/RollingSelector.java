@@ -14,16 +14,19 @@ import android.widget.ListView;
 /**
  * Created by el17 on 7/15/2014.
  */
-public class RollingSelector extends ListView implements AbsListView.OnScrollListener {
+public class RollingSelector extends ListView implements AbsListView.OnScrollListener, SelectorContainer.SelectorManager {
     private int mSelectedPosition = -1;
     private OnSelectedChangedListener mListener;
     private int mTopOfSelectionLine;
     private boolean mIsTouchDown = false;
     private int mSelectionMaskPosition;
-    private RollingAdapter mRollingAdapter;
+    private RollingSelectorAdapter mRollingSelectorAdapter;
     private int mScrollStatus = SCROLL_STATE_IDLE;
     private int mScrollStatusWhenTouchDown = SCROLL_STATE_IDLE;
     private int mScrollStatusWhenTouchUp = SCROLL_STATE_IDLE;
+
+    private int mTopOfSelectionMask = -1;
+    private int mSelectionMaskHeight = -1;
 
     private float mLastY;
     private float mLogicY = 99999999f;
@@ -60,11 +63,11 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         this.mListener = listener;
     }
 
-    public void setRollingAdapter(RollingAdapter adapter) {
-        this.mRollingAdapter = adapter;
+    public void setRollingAdapter(RollingSelectorAdapter adapter) {
+        this.mRollingSelectorAdapter = adapter;
 
-//        this.mUpperBlankCount = mRollingAdapter.getUpperBlankSize();
-//        this.mLowerBlankCount = mRollingAdapter.getLowerBlankSize();
+//        this.mUpperBlankCount = mRollingSelectorAdapter.getUpperBlankSize();
+//        this.mLowerBlankCount = mRollingSelectorAdapter.getLowerBlankSize();
     }
 
 
@@ -76,11 +79,15 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
 
         final View firstView = this.getChildAt(0);
 
-        if (!mDoOnce && firstView != null) {
+        if (changed && firstView != null) {
             this.mTopOfSelectionLine = this.mSelectionMaskPosition * firstView.getHeight() + firstView.getHeight() / 2;
-            this.scrollListBy(mRollingAdapter.getUpperBlankSize() * firstView.getHeight() + firstView.getHeight() / 2 - this.mTopOfSelectionLine);
+//
+            this.mTopOfSelectionMask = this.mSelectionMaskPosition * firstView.getHeight();
+            this.mSelectionMaskHeight = firstView.getHeight();
+//
+//            this.scrollListBy(mRollingSelectorAdapter.getUpperBlankSize() * firstView.getHeight() + firstView.getHeight() / 2 - this.mTopOfSelectionLine);
+            this.setSelection(mRollingSelectorAdapter.getUpperBlankSize() - this.mSelectionMaskPosition);
             this.mDoOnce = true;
-
         }
     }
 
@@ -114,15 +121,15 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
 
             int totalCount = this.getAdapter().getCount();
 
-            if (firstVisibleItem >= totalCount - mRollingAdapter.getLowerBlankSize() && !this.mIsTouchDown) {
+            if (firstVisibleItem >= totalCount - mRollingSelectorAdapter.getLowerBlankSize() && !this.mIsTouchDown) {
                 this.smoothScrollBy(0, 0);
                 return;
             }
 
             final int linePosition = this.getPositionByY(mTopOfSelectionLine);
 
-            if (linePosition > mRollingAdapter.getUpperBlankSize() - 1 && linePosition < totalCount - mRollingAdapter.getLowerBlankSize()) {
-                int selectedPosition = linePosition - mRollingAdapter.getUpperBlankSize();
+            if (linePosition > mRollingSelectorAdapter.getUpperBlankSize() - 1 && linePosition < totalCount - mRollingSelectorAdapter.getLowerBlankSize()) {
+                int selectedPosition = linePosition - mRollingSelectorAdapter.getUpperBlankSize();
                 if (selectedPosition != this.mSelectedPosition) {
                     if (this.mListener != null) {
                         this.mListener.onSelectedChanged(this, selectedPosition);
@@ -140,11 +147,11 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
 
 
         final int linePosition = this.getPositionByY(mTopOfSelectionLine);
-        if (linePosition < mRollingAdapter.getUpperBlankSize()) {
-            this.smoothScrollToBeSelected(mRollingAdapter.getUpperBlankSize());
-        } else if (linePosition > totalCount - mRollingAdapter.getLowerBlankSize() - 1) {
+        if (linePosition < mRollingSelectorAdapter.getUpperBlankSize()) {
+            this.smoothScrollToBeSelected(mRollingSelectorAdapter.getUpperBlankSize());
+        } else if (linePosition > totalCount - mRollingSelectorAdapter.getLowerBlankSize() - 1) {
 
-            this.smoothScrollToBeSelected(totalCount - mRollingAdapter.getLowerBlankSize() - 1);
+            this.smoothScrollToBeSelected(totalCount - mRollingSelectorAdapter.getLowerBlankSize() - 1);
         } else {
 
             this.smoothScrollToBeSelected(linePosition);
@@ -190,11 +197,11 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
     }
 
     public void resetPosition() {
-        smoothScrollToBeSelected(this.mRollingAdapter.getUpperBlankSize(), false);
+        smoothScrollToBeSelected(this.mRollingSelectorAdapter.getUpperBlankSize(), false);
         int first = this.getFirstVisiblePosition();
         int last = this.getLastVisiblePosition();
         for (int i = first; i <= last; i++) {
-            mRollingAdapter.updateView(i, this.getChildAt(i - first));
+            mRollingSelectorAdapter.updateView(i, this.getChildAt(i - first));
         }
     }
 
@@ -216,7 +223,7 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         boolean isIntercept = false;
         int first = this.getFirstVisiblePosition();
         boolean isFullBlank;
-        if (first >= this.getAdapter().getCount() - mRollingAdapter.getLowerBlankSize()) {
+        if (first >= this.getAdapter().getCount() - mRollingSelectorAdapter.getLowerBlankSize()) {
             isFullBlank = true;
         } else {
             isFullBlank = false;
@@ -293,7 +300,7 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         }
 
         mLastY = ev.getY();
-        if (first >= this.getAdapter().getCount() - mRollingAdapter.getLowerBlankSize()) {
+        if (first >= this.getAdapter().getCount() - mRollingSelectorAdapter.getLowerBlankSize()) {
             mIsLastFullBlank = true;
         } else {
             mIsLastFullBlank = false;
@@ -307,12 +314,22 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         }
     }
 
+    @Override
+    public int getSelectionMaskTop() {
+        return mTopOfSelectionMask;
+    }
+
+    @Override
+    public int getSelectionMaskHeight() {
+        return mSelectionMaskHeight;
+    }
+
 
     public interface OnSelectedChangedListener {
         public void onSelectedChanged(View view, int selectedPosition);
     }
 
-    public interface RollingAdapter {
+    public interface RollingSelectorAdapter {
         public int getUpperBlankSize();
 
         public int getLowerBlankSize();

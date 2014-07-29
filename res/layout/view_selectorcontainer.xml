@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#FFFFFF"
+                android:background="#000000"
                 >
         </LinearLayout>
         <LinearLayout
@@ -38,7 +38,7 @@
     </LinearLayout>
 
     <w1.app.easymoney.view.RollingSelectorMask
-            android:id="@+id/selector_mask_top"
+            android:id="@+id/selector_mask_style"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="top"
@@ -46,7 +46,7 @@
             >
     </w1.app.easymoney.view.RollingSelectorMask>
     <LinearLayout
-            android:id="@+id/selector_mask_position"
+            android:id="@+id/selector_mask_selection"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#80f9eaa6"

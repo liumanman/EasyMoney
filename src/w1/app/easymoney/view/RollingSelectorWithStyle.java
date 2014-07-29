@@ -12,26 +12,26 @@ import w1.app.easymoney.R;
 /**
  * Created by el17 on 7/18/2014.
  */
-public class RollingSelectorWithSyle extends LinearLayout{
+public class RollingSelectorWithStyle extends LinearLayout{
     private FrameLayout mContent;
     private RollingSelector mSelector;
-    private View mTopMask;
+//    private View mTopMask;
     private View mPositionMask;
     private static final int SELECTION_MASK_POSITION = 2;
 
-    public RollingSelectorWithSyle(Context context) {
+    public RollingSelectorWithStyle(Context context) {
         super(context);
 
         this.init(context);
     }
 
-    public RollingSelectorWithSyle(Context context, AttributeSet attrs) {
+    public RollingSelectorWithStyle(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         this.init(context);
     }
 
-    public RollingSelectorWithSyle(Context context, AttributeSet attrs, int defStyle) {
+    public RollingSelectorWithStyle(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         this.init(context);
@@ -39,18 +39,18 @@ public class RollingSelectorWithSyle extends LinearLayout{
 
     private void init(Context context){
         LayoutInflater inflater = LayoutInflater.from(context);
-        mContent = (FrameLayout)inflater.inflate(R.layout.view_rollingselector_withsyle, null);
+        mContent = (FrameLayout)inflater.inflate(R.layout.view_rollingselector_withstyle, null);
         this.addView(mContent);
 
         mSelector = (RollingSelector)mContent.findViewById(R.id.selector);
         mSelector.setVerticalScrollBarEnabled(false);
         mSelector.setSelectionMaskPosition(SELECTION_MASK_POSITION);
 
-        mTopMask = mContent.findViewById(R.id.selector_mask_top);
+//        mTopMask = mContent.findViewById(R.id.selector_mask_top);
         mPositionMask = mContent.findViewById(R.id.selector_mask_position);
     }
 
-    public void setAdapter(BaseAdapter adapter1, RollingSelector.RollingAdapter adapter2){
+    public void setAdapter(BaseAdapter adapter1, RollingSelector.RollingSelectorAdapter adapter2){
         this.mSelector.setAdapter(adapter1);
         this.mSelector.setRollingAdapter(adapter2);
     }

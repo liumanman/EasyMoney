@@ -3,6 +3,7 @@ package w1.app.easymoney.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -38,7 +39,7 @@ public class Test extends Activity {
         map.put("1", getData(-1));
         MySelectorAdapter adapter1 = new MySelectorAdapter(this, map);
         adapter1.setGroup("1");
-        mListview.setAdapter(adapter1,adapter1);
+        mListview.setAdapter(adapter1, adapter1);
         mListview.setOnSelectedChangedListener(new RollingSelector.OnSelectedChangedListener() {
             @Override
             public void onSelectedChanged(View view, int selectedPosition) {
@@ -50,17 +51,25 @@ public class Test extends Activity {
 
         mListview2 = (RollingSelectorWithStyle) findViewById(R.id.test_listselector2);
         Map<String, List<String>> map2 = new HashMap<String, List<String>>(map.get("1").size());
-        for(int i = 0; i < map.get("1").size(); i ++ ){
+        for (int i = 0; i < map.get("1").size(); i++) {
             map2.put(String.valueOf(i), getData(i));
         }
         mAdapter2 = new MySelectorAdapter(this, map2);
         mAdapter2.setGroup("0");
-        mListview2.setAdapter(mAdapter2,mAdapter2);
+        mListview2.setAdapter(mAdapter2, mAdapter2);
 
-        mLoopSelector = (LoopSelector)findViewById(R.id.test_loopselector);
+        mLoopSelector = new LoopSelector(this);
         mLoopSelector.setAdapter(new MyLoopAdapter(this, getData(-1)));
+        mLoopSelector.setOnSelectedChangedListener(new LoopSelector.OnSelectedChangedListener() {
+            @Override
+            public void onSelectedChanged(View view, int selectedPosition) {
+                Log.i("LoopSelector", String.valueOf(selectedPosition));
+            }
+        });
+        SelectorContainer loopContainer = (SelectorContainer) findViewById(R.id.test_loopselector);
+        loopContainer.setSelector(mLoopSelector);
 
-        mContainer = (SelectorContainer)findViewById(R.id.test_container);
+        mContainer = (SelectorContainer) findViewById(R.id.test_container);
         RollingSelector selector = new RollingSelector(this);
         selector.setVerticalScrollBarEnabled(false);
         Map<String, List<String>> map3 = new HashMap<String, List<String>>(1);
@@ -73,7 +82,7 @@ public class Test extends Activity {
 //        mContainer.setSelectorManager(selector);
     }
 
-    private List<String> getData(int i){
+    private List<String> getData(int i) {
 
         List<String> data = new ArrayList<String>();
         if (i % 2 != 0) {
@@ -84,38 +93,32 @@ public class Test extends Activity {
             data.add(String.valueOf(i) + "-" + "数据5");
             data.add(String.valueOf(i) + "-" + "数据6");
             data.add(String.valueOf(i) + "-" + "数据7");
-        }else {
+        } else {
             data.add(String.valueOf(i) + "-" + "数据1");
             data.add(String.valueOf(i) + "-" + "数据2");
         }
         return data;
     }
 
-    private class MyLoopAdapter extends BaseAdapter{
+    private class MyLoopAdapter extends LoopSelector.BaseLoopSelectorAdapter {
         private List<String> mDataList;
         private Context mContext;
-        public MyLoopAdapter(Context context, List<String> dataList){
+
+        public MyLoopAdapter(Context context, List<String> dataList, int maxCount) {
+            super(maxCount);
+
             mDataList = dataList;
             mContext = context;
         }
 
-        @Override
-        public int getCount() {
-            return mDataList.size();
-        }
 
         @Override
-        public Object getItem(int position) {
-            return mDataList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
+        public int getActualCount() {
             return 0;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, ViewGroup parent, int convertPosition) {
             TextView tv;
             if (convertView != null && convertView.getTag() != null) {
                 tv = (TextView) convertView.getTag();
@@ -127,14 +130,20 @@ public class Test extends Activity {
                 convertView.setTag(tv);
             }
 
-            tv.setText(String.valueOf(mDataList.get(position)));
+            tv.setText(String.valueOf(position) +":" + String.valueOf(mDataList.get(position)));
 
             return convertView;
+        }
+
+        @Override
+        public void updateView(int position, View convertView, ViewGroup parent, int convertPosition) {
+
         }
     }
 
     private class MySelectorAdapter extends BaseRollingSelectorSelectorAdapter<String> {
         private Context mContext;
+
         public MySelectorAdapter(Context context, Map<String, List<String>> dataMap) {
             super(context, dataMap);
 
@@ -143,49 +152,49 @@ public class Test extends Activity {
 
         @Override
         protected View getDataView(View convertView, ViewGroup parent, String data) {
-                    TextView tv;
-        if (convertView != null && convertView.getTag() != null) {
-            tv = (TextView) convertView.getTag();
-        } else {
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.view_listselector_child, null);
-            tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
+            TextView tv;
+            if (convertView != null && convertView.getTag() != null) {
+                tv = (TextView) convertView.getTag();
+            } else {
+                LayoutInflater inflater = LayoutInflater.from(mContext);
+                convertView = inflater.inflate(R.layout.view_listselector_child, null);
+                tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
 
-            convertView.setTag(tv);
-        }
+                convertView.setTag(tv);
+            }
 
-        tv.setText(data);
+            tv.setText(data);
 
-        return convertView;
+            return convertView;
         }
 
         @Override
         protected View getBlankView(View convertView, ViewGroup parent) {
-                    TextView tv;
-        if (convertView != null && convertView.getTag() != null) {
-            tv = (TextView) convertView.getTag();
-        } else {
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.view_listselector_child, null);
-            tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
+            TextView tv;
+            if (convertView != null && convertView.getTag() != null) {
+                tv = (TextView) convertView.getTag();
+            } else {
+                LayoutInflater inflater = LayoutInflater.from(mContext);
+                convertView = inflater.inflate(R.layout.view_listselector_child, null);
+                tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
 
-            convertView.setTag(tv);
-        }
+                convertView.setTag(tv);
+            }
 
-        tv.setText("");
+            tv.setText("");
 
-        return convertView;
+            return convertView;
         }
 
         @Override
         protected void updateDataView(View view, String data) {
-            TextView tv = (TextView)view.getTag();
+            TextView tv = (TextView) view.getTag();
             tv.setText(data);
         }
 
         @Override
         protected void updateBlankView(View view) {
-            TextView tv = (TextView)view.getTag();
+            TextView tv = (TextView) view.getTag();
             tv.setText("");
         }
 

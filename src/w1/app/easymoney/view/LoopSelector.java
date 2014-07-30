@@ -2,6 +2,8 @@ package w1.app.easymoney.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -12,10 +14,17 @@ import android.widget.ListView;
 /**
  * Created by el17 on 7/25/2014.
  */
-public class LoopSelector extends ListView implements AbsListView.OnScrollListener {
-//    private List<Integer> mAlpha;
+public class LoopSelector extends ListView implements AbsListView.OnScrollListener,SelectorContainer.SelectorManager {
     private OnSelectedChangedListener mSelectedChangedListener;
-    private int mSelectionMaskPosition = 2;
+    private int mTopOfSelectionMask = -1;
+    private int mSelectionMaskHeight = -1;
+    private boolean mIsTouchDown = false;
+    private int mScrollStatus = SCROLL_STATE_IDLE;
+    private int mScrollStatusWhenTouchDown = SCROLL_STATE_IDLE;
+    private int mScrollStatusWhenTouchUp = SCROLL_STATE_IDLE;
+    private int mSelectedPosition = -1;
+    private BaseLoopSelectorAdapter mAdapter;
+
 
     public LoopSelector(Context context) {
         super(context);
@@ -38,33 +47,124 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
         this.setDividerHeight(0);
     }
 
-    public void setAdapter(BaseAdapter adapter){
-        LoopSelectorAdapter loopAdapter = new LoopSelectorAdapter();
-        loopAdapter.setOriginalAdapter(adapter);
-        super.setAdapter(loopAdapter);
+    public void setAdapter(BaseLoopSelectorAdapter adapter){
+        super.setAdapter(mAdapter);
+        mAdapter = adapter;
     }
 
     public void setOnSelectedChangedListener(OnSelectedChangedListener listener){
         this.mSelectedChangedListener = listener;
     }
 
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+
+        View firstView = getChildAt(0);
+        if (changed && firstView != null){
+            mTopOfSelectionMask = (this.getHeight() - firstView.getHeight())/2;
+            mSelectionMaskHeight = firstView.getHeight();
+        }
+    }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
+        this.mScrollStatus = scrollState;
 
+        if (scrollState == SCROLL_STATE_IDLE && !mIsTouchDown){
+            this.post(new Runnable() {
+                @Override
+                public void run() {
+                    smoothScrollToThePosition();
+                }
+            });
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                this.mScrollStatusWhenTouchDown = mScrollStatus;
+
+                mIsTouchDown = true;
+                break;
+            case MotionEvent.ACTION_UP:
+                this.mScrollStatusWhenTouchUp = this.mScrollStatus;
+
+                if (mScrollStatusWhenTouchDown == SCROLL_STATE_IDLE && mScrollStatusWhenTouchUp == SCROLL_STATE_IDLE) {
+                    int position = getPositionByY((int) ev.getY());
+//                    this.smoothScrollToBeSelected(position, true);
+                }
+
+                mIsTouchDown = false;
+                break;
+            default:
+        }
+
+        return super.onTouchEvent(ev);
     }
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (this.getAdapter() != null) {
             if (firstVisibleItem <= 2) {
-                this.setSelection(this.getAdapter().getCount() / 3 + 2);
-            } else if (firstVisibleItem + visibleItemCount > this.getAdapter().getCount() - 2) {
-                this.setSelection(firstVisibleItem - this.getAdapter().getCount() / 3 + 1);
+                this.setSelection(mAdapter.getActualCount() / 3 + 3 );
+            } else if (firstVisibleItem + visibleItemCount > mAdapter.getActualCount() - 2) {
+                this.setSelection(firstVisibleItem - mAdapter.getActualCount() / 3 );
+            }
+
+            final int linePosition = this.getPositionByY(mTopOfSelectionMask + mSelectionMaskHeight / 2);
+            int actualPosition = linePosition % (mAdapter.getActualCount() / 3);
+            if (actualPosition != mSelectedPosition){
+                if (mSelectedChangedListener != null){
+                    this.mSelectedChangedListener.onSelectedChanged(this, actualPosition);
+                }
+
+                mSelectedPosition = actualPosition;
             }
         }
+    }
 
+    private void smoothScrollToBeSelected(int position, boolean isSmooth){
+        View firstView = getChildAt(0);
+        int height = firstView.getHeight();
+        int firstPosition = getFirstVisiblePosition();
+        int lineToFirst = mTopOfSelectionMask - firstView.getTop();
+        int positionToFirst = (position - firstPosition) * height;
 
+        final int offset = positionToFirst - lineToFirst;
+        if (isSmooth){
+            this.smoothScrollBy(offset, 300);
+        }else {
+            this.scrollListBy(offset);
+        }
+
+    }
+
+    private void smoothScrollToThePosition(){
+        int thePosition = getPositionByY(mTopOfSelectionMask + mSelectionMaskHeight / 2);
+        smoothScrollToBeSelected(thePosition, true);
+    }
+
+    private int getPositionByY(int y){
+        View firstView = this.getChildAt(0);
+        int firstPosition = this.getFirstVisiblePosition();
+
+        int yToFirst = y - firstView.getTop();
+        int c = yToFirst / firstView.getHeight();
+
+        return firstPosition + c;
+    }
+
+    @Override
+    public int getSelectionMaskTop() {
+        return mTopOfSelectionMask;
+    }
+
+    @Override
+    public int getSelectionMaskHeight() {
+        return mSelectionMaskHeight;
     }
 
 //    @Override
@@ -85,31 +185,37 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
         public void onSelectedChanged(View view, int selectedPosition);
     }
 
-    private  class LoopSelectorAdapter extends BaseAdapter{
-        private ListAdapter mAdapter;
+    public abstract   class BaseLoopSelectorAdapter extends BaseAdapter{
+        private int mMaxCount;
+
+        public BaseLoopSelectorAdapter(int maxCount){
+            this.mMaxCount = maxCount;
+        }
 
         @Override
         public int getCount() {
-            return mAdapter.getCount() * 3;
+//            return mAdapter.getCount() * 3;
+            return mMaxCount * 3;
         }
 
         @Override
         public Object getItem(int position) {
-            return mAdapter.getItem(position % 3);
+            return null;
         }
 
         @Override
         public long getItemId(int position) {
-            return mAdapter.getItemId(position % 3);
+            return 0;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return mAdapter.getView(position % 3, convertView, parent);
+            return getView(position % getActualCount(), convertView, parent, position );
         }
 
-        public void setOriginalAdapter(ListAdapter adapter){
-            mAdapter = adapter;
-        }
+        public abstract int getActualCount();
+        public abstract View getView(int position, View convertView, ViewGroup parent, int convertPosition);
+        public abstract void updateView(int position, View convertView, ViewGroup parent, int convertPosition);
+
     }
 }

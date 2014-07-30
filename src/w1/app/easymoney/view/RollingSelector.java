@@ -167,7 +167,6 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         int positionToFirst = (position - firstPosition) * height + height / 2;
 
         final int offset = positionToFirst - lineToFirst;
-        final ListView lv = this;
         if (isSmooth) {
 //            this.post(new Runnable() {
 //                @Override

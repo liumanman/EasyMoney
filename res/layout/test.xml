@@ -22,12 +22,12 @@
             android:cacheColorHint="@android:color/transparent"
             >
     </w1.app.easymoney.view.RollingSelectorWithStyle>
-    <w1.app.easymoney.view.LoopSelector
+    <w1.app.easymoney.view.SelectorContainer
             android:id="@+id/test_loopselector"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="250dp">
-    </w1.app.easymoney.view.LoopSelector>
+    </w1.app.easymoney.view.SelectorContainer>
     <w1.app.easymoney.view.SelectorContainer
             android:orientation="horizontal"
             android:id="@+id/test_container"

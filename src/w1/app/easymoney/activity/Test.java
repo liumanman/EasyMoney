@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 import w1.app.easymoney.R;
 
@@ -59,7 +58,7 @@ public class Test extends Activity {
         mListview2.setAdapter(mAdapter2, mAdapter2);
 
         mLoopSelector = new LoopSelector(this);
-        mLoopSelector.setAdapter(new MyLoopAdapter(this, getData(-1)));
+        mLoopSelector.setAdapter(new MyLoopAdapter(this, getData(-1), 10));
         mLoopSelector.setOnSelectedChangedListener(new LoopSelector.OnSelectedChangedListener() {
             @Override
             public void onSelectedChanged(View view, int selectedPosition) {
@@ -114,7 +113,7 @@ public class Test extends Activity {
 
         @Override
         public int getActualCount() {
-            return 0;
+            return mDataList.size();
         }
 
         @Override
@@ -138,6 +137,10 @@ public class Test extends Activity {
         @Override
         public void updateView(int position, View convertView, ViewGroup parent, int convertPosition) {
 
+        }
+
+        public void changeData(List<String> dataList){
+            this.mDataList = dataList;
         }
     }
 

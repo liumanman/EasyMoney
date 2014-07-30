@@ -185,7 +185,7 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
         public void onSelectedChanged(View view, int selectedPosition);
     }
 
-    public abstract   class BaseLoopSelectorAdapter extends BaseAdapter{
+    public static abstract class BaseLoopSelectorAdapter extends BaseAdapter{
         private int mMaxCount;
 
         public BaseLoopSelectorAdapter(int maxCount){

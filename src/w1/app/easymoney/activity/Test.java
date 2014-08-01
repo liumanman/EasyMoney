@@ -28,6 +28,7 @@ public class Test extends Activity {
     private SelectorContainer mContainer;
 
     private LoopSelector mLoopSelector;
+    private MyLoopAdapter mLoopAdapter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +45,8 @@ public class Test extends Activity {
             public void onSelectedChanged(View view, int selectedPosition) {
                 mAdapter2.setGroup(String.valueOf(selectedPosition));
                 mListview2.resetPosition();
+
+//                mLoopAdapter.changeData(getData(selectedPosition));
             }
         });
 
@@ -58,11 +61,12 @@ public class Test extends Activity {
         mListview2.setAdapter(mAdapter2, mAdapter2);
 
         mLoopSelector = new LoopSelector(this);
-        mLoopSelector.setAdapter(new MyLoopAdapter(this, getData(-1), 10));
+        mLoopAdapter = new MyLoopAdapter(this, getData(-1), 10);
+        mLoopSelector.setAdapter(mLoopAdapter);
         mLoopSelector.setOnSelectedChangedListener(new LoopSelector.OnSelectedChangedListener() {
             @Override
             public void onSelectedChanged(View view, int selectedPosition) {
-                Log.i("LoopSelector", String.valueOf(selectedPosition));
+//                Log.i("LoopSelector", String.valueOf(selectedPosition));
             }
         });
         SelectorContainer loopContainer = (SelectorContainer) findViewById(R.id.test_loopselector);
@@ -112,7 +116,7 @@ public class Test extends Activity {
 
 
         @Override
-        public int getActualCount() {
+        public int getItemCount() {
             return mDataList.size();
         }
 

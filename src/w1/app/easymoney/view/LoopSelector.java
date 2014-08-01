@@ -48,12 +48,16 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
     }
 
     public void setAdapter(BaseLoopSelectorAdapter adapter){
-        super.setAdapter(mAdapter);
+        super.setAdapter(adapter);
         mAdapter = adapter;
     }
 
     public void setOnSelectedChangedListener(OnSelectedChangedListener listener){
         this.mSelectedChangedListener = listener;
+    }
+
+    public void notifyDataChanged(){
+
     }
 
     @Override
@@ -108,14 +112,20 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (this.getAdapter() != null) {
+//            if (firstVisibleItem <= 2) {
+//                this.setSelection(mAdapter.getItemCount() / 3 + 3 );
+//            } else if (firstVisibleItem + visibleItemCount > mAdapter.getItemCount() - 2) {
+//                this.setSelection(firstVisibleItem - mAdapter.getItemCount() / 3 );
+//            }
+
             if (firstVisibleItem <= 2) {
-                this.setSelection(mAdapter.getActualCount() / 3 + 3 );
-            } else if (firstVisibleItem + visibleItemCount > mAdapter.getActualCount() - 2) {
-                this.setSelection(firstVisibleItem - mAdapter.getActualCount() / 3 );
+                this.setSelection(mAdapter.getItemCount()  + 3);
+            } else if (firstVisibleItem + visibleItemCount > mAdapter.getItemCount() * 3 - 2) {
+                this.setSelection(firstVisibleItem - mAdapter.getItemCount());
             }
 
             final int linePosition = this.getPositionByY(mTopOfSelectionMask + mSelectionMaskHeight / 2);
-            int actualPosition = linePosition % (mAdapter.getActualCount() / 3);
+            int actualPosition = linePosition % mAdapter.getItemCount();
             if (actualPosition != mSelectedPosition){
                 if (mSelectedChangedListener != null){
                     this.mSelectedChangedListener.onSelectedChanged(this, actualPosition);
@@ -210,10 +220,10 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return getView(position % getActualCount(), convertView, parent, position );
+            return getView(position % getItemCount(), convertView, parent, position );
         }
 
-        public abstract int getActualCount();
+        public abstract int getItemCount();
         public abstract View getView(int position, View convertView, ViewGroup parent, int convertPosition);
         public abstract void updateView(int position, View convertView, ViewGroup parent, int convertPosition);
 

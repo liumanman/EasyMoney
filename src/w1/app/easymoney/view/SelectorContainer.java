@@ -54,8 +54,6 @@ public class SelectorContainer extends LinearLayout {
         if (view instanceof SelectorManager){
             this.setSelectorManager((SelectorManager)view);
         }
-//        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        view.setLayoutParams(lp);
     }
 
     public void setSelectorManager(SelectorManager manager){

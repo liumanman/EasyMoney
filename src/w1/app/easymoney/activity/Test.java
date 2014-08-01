@@ -46,7 +46,8 @@ public class Test extends Activity {
                 mAdapter2.setGroup(String.valueOf(selectedPosition));
                 mListview2.resetPosition();
 
-//                mLoopAdapter.changeData(getData(selectedPosition));
+                mLoopAdapter.changeData(getData(selectedPosition));
+                mLoopAdapter.notifyDataSetChanged();
             }
         });
 
@@ -61,7 +62,7 @@ public class Test extends Activity {
         mListview2.setAdapter(mAdapter2, mAdapter2);
 
         mLoopSelector = new LoopSelector(this);
-        mLoopAdapter = new MyLoopAdapter(this, getData(-1), 10);
+        mLoopAdapter = new MyLoopAdapter(this, getData(0), 10);
         mLoopSelector.setAdapter(mLoopAdapter);
         mLoopSelector.setOnSelectedChangedListener(new LoopSelector.OnSelectedChangedListener() {
             @Override
@@ -133,7 +134,7 @@ public class Test extends Activity {
                 convertView.setTag(tv);
             }
 
-            tv.setText(String.valueOf(position) +":" + String.valueOf(mDataList.get(position)));
+            tv.setText(String.valueOf(convertPosition) +":" + String.valueOf(mDataList.get(position)));
 
             return convertView;
         }

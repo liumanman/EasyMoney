@@ -57,17 +57,13 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
     }
 
     public void notifyDataChanged(){
-        int oldCount = mAdapter.mActualCount;
-        int newCount = mAdapter.getItemCount();
+//        int oldCount = mAdapter.mActualCount;
+//        int newCount = mAdapter.getItemCount();
 
         int first = getFirstVisiblePosition();
         int last = getLastVisiblePosition();
-        if (oldCount <= newCount){
-            for(int i = first; i <= last; i ++){
-
-            }
-        }else {
-
+        for(int i = 0; first + i <= last; i ++){
+            mAdapter.updateView((first + i) % mAdapter.getItemCount(), getChildAt(i), null, first + i);
         }
     }
 
@@ -79,6 +75,12 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
         if (changed && firstView != null){
             mTopOfSelectionMask = (this.getHeight() - firstView.getHeight())/2;
             mSelectionMaskHeight = firstView.getHeight();
+
+//            int c1 = mAdapter.getCount();
+//            int c2 = mAdapter.getItemCount();
+//            int t2 = c1 / c2;
+//            t2 = t2 / 2;
+//            smoothScrollToBeSelected(t2 * mAdapter.getItemCount() , false);
         }
     }
 
@@ -124,19 +126,38 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (this.getAdapter() != null) {
 //            if (firstVisibleItem <= 2) {
-//                this.setSelection(mAdapter.getItemCount() / 3 + 3 );
-//            } else if (firstVisibleItem + visibleItemCount > mAdapter.getItemCount() - 2) {
-//                this.setSelection(firstVisibleItem - mAdapter.getItemCount() / 3 );
+//                this.setSelection(mAdapter.getItemCount()  + 3);
+//            } else if (firstVisibleItem + visibleItemCount > mAdapter.getItemCount() * 3 - 2) {
+//                this.setSelection(firstVisibleItem - mAdapter.getItemCount());
 //            }
 
+            if (firstVisibleItem == 0){
+                int c1 = mAdapter.getCount();
+            int c2 = mAdapter.getItemCount();
+            int t2 = c1 / c2;
+            t2 = t2 / 2;
+            smoothScrollToBeSelected(t2 * c2, false);
+            }
+//
+            int count = mAdapter.getItemCount();
+            int t = mAdapter.getCount() / count;
             if (firstVisibleItem <= 2) {
-                this.setSelection(mAdapter.getItemCount()  + 3);
-            } else if (firstVisibleItem + visibleItemCount > mAdapter.getItemCount() * 3 - 2) {
-                this.setSelection(firstVisibleItem - mAdapter.getItemCount());
+                this.setSelection(count  + 3);
+            } else if (firstVisibleItem + visibleItemCount > count * t - 2) {
+                this.setSelection(firstVisibleItem - count);
             }
 
+
+//
+//            if (firstVisibleItem % count <= 2 ) {
+//                this.setSelection(count  + 3);
+//            } else if ((firstVisibleItem  + visibleItemCount) % count > count - 2) {
+//                this.setSelection(firstVisibleItem - count);
+//            }
+
+
             final int linePosition = this.getPositionByY(mTopOfSelectionMask + mSelectionMaskHeight / 2);
-            int actualPosition = linePosition % mAdapter.getItemCount();
+            int actualPosition = linePosition % count;
             if (actualPosition != mSelectedPosition){
                 if (mSelectedChangedListener != null){
                     this.mSelectedChangedListener.onSelectedChanged(this, actualPosition);

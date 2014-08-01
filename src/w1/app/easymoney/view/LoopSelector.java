@@ -57,7 +57,18 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
     }
 
     public void notifyDataChanged(){
+        int oldCount = mAdapter.mActualCount;
+        int newCount = mAdapter.getItemCount();
 
+        int first = getFirstVisiblePosition();
+        int last = getLastVisiblePosition();
+        if (oldCount <= newCount){
+            for(int i = first; i <= last; i ++){
+
+            }
+        }else {
+
+        }
     }
 
     @Override
@@ -197,6 +208,7 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
 
     public static abstract class BaseLoopSelectorAdapter extends BaseAdapter{
         private int mMaxCount;
+        private int mActualCount;
 
         public BaseLoopSelectorAdapter(int maxCount){
             this.mMaxCount = maxCount;
@@ -205,6 +217,11 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
         @Override
         public int getCount() {
 //            return mAdapter.getCount() * 3;
+            int c = getItemCount();
+            if (mActualCount != c){
+                mActualCount = c;
+            }
+
             return mMaxCount * 3;
         }
 

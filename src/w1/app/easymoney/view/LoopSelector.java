@@ -50,6 +50,26 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
     public void setAdapter(BaseLoopSelectorAdapter adapter){
         super.setAdapter(adapter);
         mAdapter = adapter;
+
+        int c1 = mAdapter.getCount();
+        int c2 = mAdapter.getItemCount();
+        int t2 = c1 / c2;
+        t2 = t2 / 2;
+        setSelection(t2 * c2);
+
+
+//        int count = mAdapter.getItemCount();
+//        if (count <= 2){
+//            count = 4;
+//        }
+//        setSelection(10);
+
+//        int c1 = mAdapter.getCount();
+//        int c2 = mAdapter.getItemCount();
+//        int t2 = c1 / c2;
+//        t2 = t2 / 2;
+//        smoothScrollToBeSelected(t2 * c2, false);
+//        smoothScrollToBeSelected(t2 * c2, false);
     }
 
     public void setOnSelectedChangedListener(OnSelectedChangedListener listener){
@@ -76,11 +96,12 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
             mTopOfSelectionMask = (this.getHeight() - firstView.getHeight())/2;
             mSelectionMaskHeight = firstView.getHeight();
 
-//            int c1 = mAdapter.getCount();
-//            int c2 = mAdapter.getItemCount();
-//            int t2 = c1 / c2;
-//            t2 = t2 / 2;
-//            smoothScrollToBeSelected(t2 * mAdapter.getItemCount() , false);
+            int c1 = mAdapter.getCount();
+            int c2 = mAdapter.getItemCount();
+            int t2 = c1 / c2;
+            t2 = t2 / 2;
+            smoothScrollToBeSelected(t2 * c2 , false);
+//            smoothScrollToBeSelected(14 , false);
         }
     }
 
@@ -131,14 +152,15 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
 //                this.setSelection(firstVisibleItem - mAdapter.getItemCount());
 //            }
 
-            if (firstVisibleItem == 0){
-                int c1 = mAdapter.getCount();
-            int c2 = mAdapter.getItemCount();
-            int t2 = c1 / c2;
-            t2 = t2 / 2;
-            smoothScrollToBeSelected(t2 * c2, false);
-            }
-//
+//            if (firstVisibleItem == 0) {
+//                int c1 = mAdapter.getCount();
+//                int c2 = mAdapter.getItemCount();
+//                int t2 = c1 / c2;
+//                t2 = t2 / 2;
+//                smoothScrollToBeSelected(t2 * c2, false);
+//                smoothScrollToBeSelected(t2 * c2, false);
+//            }
+
             int count = mAdapter.getItemCount();
             int t = mAdapter.getCount() / count;
             if (firstVisibleItem <= 2) {
@@ -177,7 +199,7 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
 
         final int offset = positionToFirst - lineToFirst;
         if (isSmooth){
-            this.smoothScrollBy(offset, 300);
+            this.smoothScrollBy(offset, 3000);
         }else {
             this.scrollListBy(offset);
         }

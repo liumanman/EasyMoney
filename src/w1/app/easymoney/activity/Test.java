@@ -46,8 +46,8 @@ public class Test extends Activity {
                 mAdapter2.setGroup(String.valueOf(selectedPosition));
                 mListview2.resetPosition();
 
-                mLoopAdapter.changeData(getData(selectedPosition));
-                mLoopAdapter.notifyDataSetChanged();
+//                mLoopAdapter.changeData(getData(selectedPosition));
+//                mLoopAdapter.notifyDataSetChanged();
             }
         });
 

@@ -259,7 +259,6 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
 
         @Override
         public int getCount() {
-//            return mAdapter.getCount() * 3;
             int c = getItemCount();
             if (mActualCount != c){
                 mActualCount = c;

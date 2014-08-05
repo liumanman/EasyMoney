@@ -1,13 +1,15 @@
 package w1.app.easymoney.activity;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import w1.app.easymoney.R;
 
@@ -29,10 +31,14 @@ public class Test extends Activity {
 
     private LoopSelector mLoopSelector;
     private MyLoopAdapter mLoopAdapter;
+    private Activity mContext;
+    private View mParent;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
+        mContext = this;
+        mParent = findViewById(R.id.test_parent);
 
         mListview = (RollingSelectorWithStyle) findViewById(R.id.test_listselector);
         Map<String, List<String>> map = new HashMap<String, List<String>>(1);
@@ -46,8 +52,8 @@ public class Test extends Activity {
                 mAdapter2.setGroup(String.valueOf(selectedPosition));
                 mListview2.resetPosition();
 
-//                mLoopAdapter.changeData(getData(selectedPosition));
-//                mLoopAdapter.notifyDataSetChanged();
+                mLoopAdapter.changeData(getData(selectedPosition));
+                mLoopAdapter.notifyDataSetChanged();
             }
         });
 
@@ -84,6 +90,22 @@ public class Test extends Activity {
         selector.setAdapter(adapter3);
         mContainer.setSelector(selector);
 //        mContainer.setSelectorManager(selector);
+
+        Button button = (Button) findViewById(R.id.test_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BasePopupWindow menu = new BasePopupWindow(Test.this);
+
+                int[] location = new int[2];
+                mParent.getLocationOnScreen(location);
+
+
+
+                menu.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                menu.showAtLocation(v, Gravity.TOP, 0 , mParent.getHeight() - menu.getHeight() + location[1]);
+            }
+        });
     }
 
     private List<String> getData(int i) {

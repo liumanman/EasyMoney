@@ -5,4 +5,8 @@
         <item name="android:windowEnterAnimation">@anim/tranlistview_popupwindow_enter</item>
         <item name="android:windowExitAnimation">@anim/tranlistview_popupwindow_exit</item>
     </style>
+    <style name="BasePopupWindowAnimation" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/basepopupwindow_enter</item>
+        <item name="android:windowExitAnimation">@anim/basepopupwindow_exit</item>
+    </style>
 </resources>

@@ -3,12 +3,10 @@ package w1.app.easymoney.activity;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import w1.app.easymoney.R;
@@ -33,6 +31,8 @@ public class Test extends Activity {
     private MyLoopAdapter mLoopAdapter;
     private Activity mContext;
     private View mParent;
+    private BasePopupWindow mPopupWindow;
+    private Button mButton1, mButton2;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +41,7 @@ public class Test extends Activity {
         mParent = findViewById(R.id.test_parent);
 
         mListview = (RollingSelectorWithStyle) findViewById(R.id.test_listselector);
+
         Map<String, List<String>> map = new HashMap<String, List<String>>(1);
         map.put("1", getData(-1));
         MySelectorAdapter adapter1 = new MySelectorAdapter(this, map);
@@ -88,22 +89,54 @@ public class Test extends Activity {
         adapter3.setGroup("1");
         selector.setRollingAdapter(adapter3);
         selector.setAdapter(adapter3);
+        selector.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (mPopupWindow != null && event.getAction() == MotionEvent.ACTION_UP) {
+                    mPopupWindow.dismiss();
+                }
+
+                return false;
+            }
+        });
         mContainer.setSelector(selector);
-//        mContainer.setSelectorManager(selector);
 
         Button button = (Button) findViewById(R.id.test_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BasePopupWindow menu = new BasePopupWindow(Test.this);
+                if (mPopupWindow == null) {
+                    mPopupWindow = createPopupWindow();
+                }
 
                 int[] location = new int[2];
                 mParent.getLocationOnScreen(location);
+                mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                Rect r = new Rect();
+                mParent.getWindowVisibleDisplayFrame(r);
+                mPopupWindow.setHeight(r.height());
 
 
+                mPopupWindow.showAtLocation(mParent, Gravity.TOP, 0 , mParent.getHeight() - mPopupWindow.getHeight() + location[1]);
+            }
+        });
 
-                menu.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-                menu.showAtLocation(v, Gravity.TOP, 0 , mParent.getHeight() - menu.getHeight() + location[1]);
+
+        mButton1 = (Button)findViewById(R.id.test_button1);
+        mButton2 = (Button)findViewById(R.id.test_button2);
+        mButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mButton2.setVisibility(View.INVISIBLE);
+                mButton1.setVisibility(View.VISIBLE);
+            }
+        });
+
+        mButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mButton1.setVisibility(View.INVISIBLE);
+                mButton2.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -124,6 +157,52 @@ public class Test extends Activity {
             data.add(String.valueOf(i) + "-" + "数据2");
         }
         return data;
+    }
+
+    private BasePopupWindow createPopupWindow(){
+        LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(R.layout.view_test_tabcontent1, null);
+
+        /////selector0////////////////////
+        Map<String, List<String>> map = new HashMap<String, List<String>>(1);
+        map.put("1", getData(-1));
+        MySelectorAdapter adapter = new MySelectorAdapter(this, map);
+        adapter.setGroup("1");
+
+        RollingSelector rs = new RollingSelector(this);
+        rs.setRollingAdapter(adapter);
+//        rs.setAdapter(adapter);
+
+        SelectorContainer sc0 = (SelectorContainer)v.findViewById(R.id.container0);
+        sc0.setSelector(rs);
+
+        ////////////selector1///////////////////
+        map = new HashMap<String, List<String>>(1);
+        map.put("1", getData(-1));
+        adapter = new MySelectorAdapter(this, map);
+        adapter.setGroup("1");
+
+        rs = new RollingSelector(this);
+        rs.setRollingAdapter(adapter);
+//        rs.setAdapter(adapter);
+
+        SelectorContainer sc1 = (SelectorContainer)v.findViewById(R.id.container1);
+        sc1.setSelector(rs);
+
+        //////////////selector2/////////////////
+        MyLoopAdapter adapter2 = new MyLoopAdapter(this, getData(0), 10);
+
+        LoopSelector ls = new LoopSelector(this);
+        ls.setAdapter(adapter2);
+
+        SelectorContainer sc2 = (SelectorContainer)v.findViewById(R.id.container2);
+        sc2.setSelector(ls);
+
+        //////////////////////
+        BasePopupWindow bpw = new BasePopupWindow(this);
+        bpw.setTab(0, null, v);
+
+        return bpw;
     }
 
     private class MyLoopAdapter extends LoopSelector.BaseLoopSelectorAdapter {
@@ -171,7 +250,7 @@ public class Test extends Activity {
         }
     }
 
-    private class MySelectorAdapter extends BaseRollingSelectorSelectorAdapter<String> {
+    private class MySelectorAdapter extends BaseRollingSelectorAdapter<String> {
         private Context mContext;
 
         public MySelectorAdapter(Context context, Map<String, List<String>> dataMap) {

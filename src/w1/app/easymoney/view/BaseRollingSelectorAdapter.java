@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Created by el17 on 7/15/2014.
  */
-public abstract class BaseRollingSelectorSelectorAdapter<T> extends BaseAdapter implements RollingSelector.RollingSelectorAdapter {
+public abstract class BaseRollingSelectorAdapter<T> extends BaseAdapter implements RollingSelector.RollingSelectorAdapter {
     private Map<String, List<T>> mDataMap;
     private List<T> mDataList;
     private int mUpperBlankCount = 0;
@@ -20,7 +20,7 @@ public abstract class BaseRollingSelectorSelectorAdapter<T> extends BaseAdapter 
     private Context mContext;
     private int mMaxSize;
 
-    public BaseRollingSelectorSelectorAdapter(Context context, Map<String, List<T>> dataMap) {
+    public BaseRollingSelectorAdapter(Context context, Map<String, List<T>> dataMap) {
         this.mDataMap = dataMap;
         this.mUpperBlankCount = this.getBasicBlankSize();
         this.mLowerBlankCount = this.getBasicBlankSize();

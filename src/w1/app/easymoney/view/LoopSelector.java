@@ -199,7 +199,7 @@ public class LoopSelector extends ListView implements AbsListView.OnScrollListen
 
         final int offset = positionToFirst - lineToFirst;
         if (isSmooth){
-            this.smoothScrollBy(offset, 3000);
+            this.smoothScrollBy(offset, 300);
         }else {
             this.scrollListBy(offset);
         }

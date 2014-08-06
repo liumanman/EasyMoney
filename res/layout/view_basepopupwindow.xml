@@ -5,10 +5,11 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <LinearLayout
+            android:id="@+id/basepopupwindow_top"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#FFFFFF"></LinearLayout>
+            android:background="@android:color/transparent"></LinearLayout>
 
     <LinearLayout
             android:orientation="horizontal"
@@ -17,14 +18,26 @@
             android:background="@android:color/transparent"
             android:gravity="right"
             >
-        <LinearLayout android:layout_width="236px" android:layout_height="match_parent"></LinearLayout>
-        <LinearLayout android:layout_width="19px" android:layout_height="match_parent"></LinearLayout>
-        <LinearLayout android:layout_width="236px" android:layout_height="match_parent"></LinearLayout>
-        <LinearLayout android:layout_width="19px" android:layout_height="match_parent"></LinearLayout>
-        <LinearLayout android:layout_width="236px" android:layout_height="match_parent"></LinearLayout>
-        <LinearLayout android:layout_width="19px" android:layout_height="match_parent"></LinearLayout>
-        <LinearLayout android:layout_width="151px" android:layout_height="match_parent"
-                      android:background="@drawable/basepopupwindow_tab_bg"></LinearLayout>
+        <LinearLayout android:layout_width="236px" android:layout_height="match_parent" android:visibility="invisible"
+                      android:background="@drawable/basepopupwindow_tab_bg"
+                      android:id="@+id/basepopupwindow_tab_3"></LinearLayout>
+        <LinearLayout android:layout_width="19px" android:layout_height="match_parent"
+                      android:background="@android:color/transparent"></LinearLayout>
+        <LinearLayout android:layout_width="236px" android:layout_height="match_parent" android:visibility="invisible"
+                      android:background="@drawable/basepopupwindow_tab_bg"
+                      android:id="@+id/basepopupwindow_tab_2"></LinearLayout>
+        <LinearLayout android:layout_width="19px" android:layout_height="match_parent"
+                      android:background="@android:color/transparent"></LinearLayout>
+        <LinearLayout android:layout_width="236px" android:layout_height="match_parent" android:visibility="invisible"
+                      android:background="@drawable/basepopupwindow_tab_bg"
+                      android:id="@+id/basepopupwindow_tab_1"></LinearLayout>
+        <LinearLayout android:layout_width="19px" android:layout_height="match_parent"
+                      android:background="@android:color/transparent"></LinearLayout>
+        <LinearLayout android:layout_width="151px"
+                      android:layout_height="match_parent"
+                      android:background="@drawable/basepopupwindow_tab_bg"
+                      android:id="@+id/basepopupwindow_tab_0"
+                      android:visibility="invisible"></LinearLayout>
     </LinearLayout>
     <LinearLayout
             android:orientation="horizontal"
@@ -38,12 +51,13 @@
             android:layout_height="3px"
             android:background="#626262">
     </LinearLayout>
-    <LinearLayout
+    <FrameLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/basepopupwindow_content"
             >
-    </LinearLayout>
+    </FrameLayout>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"

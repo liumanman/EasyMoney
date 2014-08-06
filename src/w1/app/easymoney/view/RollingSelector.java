@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 /**
@@ -49,6 +50,7 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
     }
 
     private void init() {
+        this.setVerticalScrollBarEnabled(false);
         this.setOnScrollListener(this);
         this.setDividerHeight(0);
         this.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -66,6 +68,9 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
     public void setRollingAdapter(RollingSelectorAdapter adapter) {
         this.mRollingSelectorAdapter = adapter;
 
+        if (adapter instanceof ListAdapter){
+            super.setAdapter((ListAdapter)adapter);
+        }
 //        this.mUpperBlankCount = mRollingSelectorAdapter.getUpperBlankSize();
 //        this.mLowerBlankCount = mRollingSelectorAdapter.getLowerBlankSize();
     }

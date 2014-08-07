@@ -6,11 +6,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Created by el17 on 7/15/2014.
@@ -83,14 +86,23 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         super.onLayout(changed, l, t, r, b);
 
         final View firstView = this.getChildAt(0);
+        firstView.measure(0, 0);
 
         if (changed && firstView != null) {
+            ViewGroup.LayoutParams lp = firstView.getLayoutParams();
+            if (lp == null || lp.height <= 0){
+
+                Exception e = new Exception("Can't get the item's layout params or the height is invalid.");
+                Log.e("",e.getMessage(), e);
+
+                return;
+            }
+
             this.mTopOfSelectionLine = this.mSelectionMaskPosition * firstView.getHeight() + firstView.getHeight() / 2;
-//
+
             this.mTopOfSelectionMask = this.mSelectionMaskPosition * firstView.getHeight();
             this.mSelectionMaskHeight = firstView.getHeight();
-//
-//            this.scrollListBy(mRollingSelectorAdapter.getUpperBlankSize() * firstView.getHeight() + firstView.getHeight() / 2 - this.mTopOfSelectionLine);
+
             this.setSelection(mRollingSelectorAdapter.getUpperBlankSize() - this.mSelectionMaskPosition);
             this.mDoOnce = true;
         }
@@ -213,10 +225,23 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Paint p = new Paint();
-        p.setColor(Color.RED);
+//        Paint p = new Paint();
+//        p.setColor(Color.RED);
+//
+//        canvas.drawLine(0f, mTopOfSelectionLine, (float) this.getWidth(), mTopOfSelectionLine, p);
 
-        canvas.drawLine(0f, mTopOfSelectionLine, (float) this.getWidth(), mTopOfSelectionLine, p);
+//        View firstView = this.getChildAt(0);
+//        if (this.mTopOfSelectionLine < 0) {
+//            this.mTopOfSelectionLine = this.mSelectionMaskPosition * firstView.getHeight() + firstView.getHeight() / 2;
+//        }
+//
+//        if (mTopOfSelectionMask < 0) {
+//            this.mTopOfSelectionMask = this.mSelectionMaskPosition * firstView.getHeight();
+//        }
+//
+//        if (mSelectionMaskHeight < 0) {
+//            this.mSelectionMaskHeight = firstView.getHeight();
+//        }
 
 
     }

@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.*;
 
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.TextView;
 import w1.app.easymoney.R;
@@ -263,12 +264,20 @@ public class Test extends Activity {
         protected View getDataView(View convertView, ViewGroup parent, String data) {
             TextView tv;
             if (convertView != null && convertView.getTag() != null) {
+                if ((convertView.getLayoutParams() == null || convertView.getLayoutParams().height <= 0) && parent.getHeight() > 0){
+                    ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0 / 5);
+                    convertView.setLayoutParams(lp);
+                }
+
                 tv = (TextView) convertView.getTag();
             } else {
                 LayoutInflater inflater = LayoutInflater.from(mContext);
                 convertView = inflater.inflate(R.layout.view_listselector_child, null);
                 tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
-
+                if (parent.getHeight() > 0) {
+                    ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0 / 5);
+                    convertView.setLayoutParams(lp);
+                }
                 convertView.setTag(tv);
             }
 
@@ -281,11 +290,20 @@ public class Test extends Activity {
         protected View getBlankView(View convertView, ViewGroup parent) {
             TextView tv;
             if (convertView != null && convertView.getTag() != null) {
+                if ((convertView.getLayoutParams() == null || convertView.getLayoutParams().height <= 0) && parent.getHeight() > 0){
+                    ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0 / 5);
+                    convertView.setLayoutParams(lp);
+                }
+
                 tv = (TextView) convertView.getTag();
             } else {
                 LayoutInflater inflater = LayoutInflater.from(mContext);
                 convertView = inflater.inflate(R.layout.view_listselector_child, null);
                 tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
+                if (parent.getHeight() > 0) {
+                    ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0 / 5);
+                    convertView.setLayoutParams(lp);
+                }
 
                 convertView.setTag(tv);
             }

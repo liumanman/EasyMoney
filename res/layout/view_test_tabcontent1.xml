@@ -3,20 +3,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
-    <w1.app.easymoney.view.SelectorContainer android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <w1.app.easymoney.view.SelectorContainer android:layout_width="0dp"
                                              android:layout_weight="1"
-                                             android:layout_height="250dp"
+                                             android:layout_height="match_parent"
                                              android:id="@+id/container0">
     </w1.app.easymoney.view.SelectorContainer>
-    <w1.app.easymoney.view.SelectorContainer android:layout_width="match_parent"
+    <w1.app.easymoney.view.SelectorContainer android:layout_width="0dp"
                                              android:layout_weight="1"
-                                             android:layout_height="250dp"
+                                             android:layout_height="match_parent"
                                              android:id="@+id/container1">
     </w1.app.easymoney.view.SelectorContainer>
-    <w1.app.easymoney.view.SelectorContainer android:layout_width="match_parent"
+    <w1.app.easymoney.view.SelectorContainer android:layout_width="0dp"
                                              android:layout_weight="1"
-                                             android:layout_height="250dp"
+                                             android:layout_height="match_parent"
                                              android:id="@+id/container2">
     </w1.app.easymoney.view.SelectorContainer>
 </LinearLayout>

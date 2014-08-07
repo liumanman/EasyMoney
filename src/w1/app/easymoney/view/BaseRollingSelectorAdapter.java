@@ -63,7 +63,7 @@ public abstract class BaseRollingSelectorAdapter<T> extends BaseAdapter implemen
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (position < this.mUpperBlankCount || position > (this.mDataList.size() + this.mUpperBlankCount - 1)) {
+        if ((position < this.mUpperBlankCount) || (position > (this.mDataList.size() + this.mUpperBlankCount - 1))) {
             return this.getBlankView(convertView, parent);
         } else {
             return this.getDataView(convertView, parent, mDataList.get(position - this.mUpperBlankCount));

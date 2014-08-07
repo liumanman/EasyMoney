@@ -1,6 +1,7 @@
 package w1.app.easymoney.view;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +70,17 @@ public class SelectorContainer extends LinearLayout {
             lp.topMargin = mManager.getSelectionMaskTop();
             lp.height = mManager.getSelectionMaskHeight();
         }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+//        if (mManager != null){
+//            MarginLayoutParams lp = (MarginLayoutParams) mSelectionMask.getLayoutParams();
+//            lp.topMargin = mManager.getSelectionMaskTop();
+//            lp.height = mManager.getSelectionMaskHeight();
+//        }
+
+        super.onDraw(canvas);
     }
 
     public interface SelectorManager{

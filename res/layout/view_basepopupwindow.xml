@@ -7,14 +7,15 @@
     <LinearLayout
             android:id="@+id/basepopupwindow_top"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_weight="971"
             android:background="@android:color/transparent"></LinearLayout>
 
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="114px"
+            android:layout_height="0dp"
+            android:layout_weight="114"
             android:background="@android:color/transparent"
             android:gravity="right"
             >
@@ -42,26 +43,30 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="10px"
+            android:layout_height="0dp"
+            android:layout_weight="10"
             android:background="#494848">
     </LinearLayout>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="3px"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:background="#626262">
     </LinearLayout>
     <FrameLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="675"
             android:id="@+id/basepopupwindow_content"
             >
     </FrameLayout>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="3px"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:background="#626262">
     </LinearLayout>
 </LinearLayout>

@@ -91,11 +91,7 @@ public class RollingSelector extends ListView implements AbsListView.OnScrollLis
         if (changed && firstView != null) {
             ViewGroup.LayoutParams lp = firstView.getLayoutParams();
             if (lp == null || lp.height <= 0){
-
-                Exception e = new Exception("Can't get the item's layout params or the height is invalid.");
-                Log.e("",e.getMessage(), e);
-
-                return;
+                throw new RuntimeException("Can't get item view's layout params or the height is invalid.");
             }
 
             this.mTopOfSelectionLine = this.mSelectionMaskPosition * firstView.getHeight() + firstView.getHeight() / 2;

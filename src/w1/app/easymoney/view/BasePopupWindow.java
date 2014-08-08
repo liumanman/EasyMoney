@@ -2,13 +2,13 @@ package w1.app.easymoney.view;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
+import android.webkit.WebSettings;
+import android.widget.*;
 import w1.app.easymoney.R;
 
 /**
@@ -23,6 +23,8 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
     private View[] mTabContent;
     private int mCurrentTab = -1;
 
+    private boolean mIsRelayout = false;
+
     public BasePopupWindow(Context context){
         super(context);
         this.init(context);
@@ -34,6 +36,15 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContent = inflater.inflate(R.layout.view_basepopupwindow, null);
+        mContent.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (!mIsRelayout) {
+                    relayoutTab(mTabs[1]);
+                    mIsRelayout = true;
+                }
+            }
+        });
         mContainer = (FrameLayout)mContent.findViewById(R.id.basepopupwindow_content);
 
         mTabs[0] = (LinearLayout)mContent.findViewById(R.id.basepopupwindow_tab_0);
@@ -77,7 +88,6 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
         if (tab != null) {
             mTabs[index].addView(tab);
             mTabs[index].setVisibility(View.VISIBLE);
-
         }
 
         if(content != null){
@@ -98,6 +108,23 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
 
         mTabContent[index].setVisibility(View.VISIBLE);
         mCurrentTab = index;
+    }
+
+    private void relayoutTab(ViewGroup tab){
+        int h = tab.getHeight();
+        int w = tab.getWidth();
+
+        for (int i = 0; i < 1; i ++){
+            View v = tab.getChildAt(i);
+            if (v instanceof TextView){
+                TextView tv = (TextView)v;
+                tab.setPadding(h/3, 0, h/3, 0);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, h / 2);
+            }else if (v instanceof ImageView) {
+                ImageView iv = (ImageView)v;
+            }
+        }
+
     }
 
     @Override

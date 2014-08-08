@@ -265,7 +265,7 @@ public class Test extends Activity {
             TextView tv;
             if (convertView != null && convertView.getTag() != null) {
                 if ((convertView.getLayoutParams() == null || convertView.getLayoutParams().height <= 0) && parent.getHeight() > 0){
-                    ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0 / 5);
+                    ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, parent.getHeight() / 5);
                     convertView.setLayoutParams(lp);
                 }
 
@@ -275,7 +275,7 @@ public class Test extends Activity {
                 convertView = inflater.inflate(R.layout.view_listselector_child, null);
                 tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
                 if (parent.getHeight() > 0) {
-                    ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0 / 5);
+                    ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, parent.getHeight() / 5);
                     convertView.setLayoutParams(lp);
                 }
                 convertView.setTag(tv);
@@ -291,7 +291,7 @@ public class Test extends Activity {
             TextView tv;
             if (convertView != null && convertView.getTag() != null) {
                 if ((convertView.getLayoutParams() == null || convertView.getLayoutParams().height <= 0) && parent.getHeight() > 0){
-                    ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0 / 5);
+                    ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, parent.getHeight() / 5);
                     convertView.setLayoutParams(lp);
                 }
 
@@ -301,7 +301,7 @@ public class Test extends Activity {
                 convertView = inflater.inflate(R.layout.view_listselector_child, null);
                 tv = (TextView) convertView.findViewById(R.id.selector_child_tb);
                 if (parent.getHeight() > 0) {
-                    ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0 / 5);
+                    ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, parent.getHeight() / 5);
                     convertView.setLayoutParams(lp);
                 }
 

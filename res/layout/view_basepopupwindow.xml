@@ -18,27 +18,43 @@
             android:layout_weight="114"
             android:background="@android:color/transparent"
             android:gravity="right"
-            >
-        <LinearLayout android:layout_width="236px" android:layout_height="match_parent" android:visibility="invisible"
-                      android:background="@drawable/basepopupwindow_tab_bg"
-                      android:id="@+id/basepopupwindow_tab_3"></LinearLayout>
-        <LinearLayout android:layout_width="19px" android:layout_height="match_parent"
+            android:baselineAligned="false">
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+                      android:layout_weight="164"
                       android:background="@android:color/transparent"></LinearLayout>
-        <LinearLayout android:layout_width="236px" android:layout_height="match_parent" android:visibility="invisible"
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:visibility="visible"
                       android:background="@drawable/basepopupwindow_tab_bg"
-                      android:id="@+id/basepopupwindow_tab_2"></LinearLayout>
-        <LinearLayout android:layout_width="19px" android:layout_height="match_parent"
-                      android:background="@android:color/transparent"></LinearLayout>
-        <LinearLayout android:layout_width="236px" android:layout_height="match_parent" android:visibility="invisible"
+                      android:id="@+id/basepopupwindow_tab_3"
+                      android:layout_weight="236"></LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+                      android:background="@android:color/transparent"
+                      android:layout_weight="19"></LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:visibility="visible"
                       android:background="@drawable/basepopupwindow_tab_bg"
-                      android:id="@+id/basepopupwindow_tab_1"></LinearLayout>
-        <LinearLayout android:layout_width="19px" android:layout_height="match_parent"
-                      android:background="@android:color/transparent"></LinearLayout>
-        <LinearLayout android:layout_width="151px"
+                      android:id="@+id/basepopupwindow_tab_2"
+                      android:layout_weight="236"></LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+                      android:background="@android:color/transparent"
+                      android:layout_weight="19"></LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:visibility="visible"
+                      android:background="@drawable/basepopupwindow_tab_bg"
+                      android:id="@+id/basepopupwindow_tab_1"
+                      android:layout_weight="236"
+                android:orientation="horizontal"
+                android:gravity="center">
+            <!--<ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"/>-->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="编辑"
+                     />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+                      android:background="@android:color/transparent"
+                      android:layout_weight="19"></LinearLayout>
+        <LinearLayout android:layout_width="0dp"
                       android:layout_height="match_parent"
                       android:background="@drawable/basepopupwindow_tab_bg"
                       android:id="@+id/basepopupwindow_tab_0"
-                      android:visibility="invisible"></LinearLayout>
+                      android:visibility="visible"
+                      android:layout_weight="151"></LinearLayout>
     </LinearLayout>
     <LinearLayout
             android:orientation="horizontal"

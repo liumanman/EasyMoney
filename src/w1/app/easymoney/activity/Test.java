@@ -200,8 +200,17 @@ public class Test extends Activity {
         sc2.setSelector(ls);
 
         //////////////////////
-        BasePopupWindow bpw = new BasePopupWindow(this);
-        bpw.setTab(0, null, v);
+        final BasePopupWindow bpw = new BasePopupWindow(this);
+        bpw.setTab(0, "OK", null);
+        bpw.setTab(1, null, v);
+        bpw.setOnTabClickListener(new BasePopupWindow.OnTabClickListener() {
+            @Override
+            public void onClick(int index, View tab) {
+                if (index == 0) {
+                    bpw.dismiss();
+                }
+            }
+        });
 
         return bpw;
     }

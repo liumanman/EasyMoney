@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <w1.app.easymoney.view.TestLinearLayout1 xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <w1.app.easymoney.view.TestLinearLayout2 android:layout_width="match_parent" android:layout_height="match_parent">
-        <w1.app.easymoney.view.TestButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Click me"/>
+                                         android:orientation="vertical"
+                                         android:layout_width="match_parent"
+                                         android:layout_height="match_parent"
+                                         android:id="@+id/l1">
+    <w1.app.easymoney.view.TestLinearLayout2 android:layout_width="match_parent" android:layout_height="match_parent"
+                                             android:id="@+id/l2">
+        <w1.app.easymoney.view.TestButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                          android:text="Click me"
+                                          android:id="@+id/b3"/>
+        <w1.app.easymoney.view.TestTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:id="@+id/t4"
+                android:text="Text"/>
     </w1.app.easymoney.view.TestLinearLayout2>
 
 </w1.app.easymoney.view.TestLinearLayout1>

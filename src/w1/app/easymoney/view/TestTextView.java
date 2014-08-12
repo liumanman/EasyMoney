@@ -4,26 +4,27 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.Button;
+import android.widget.TextView;
 
 /**
- * Created by el17 on 6/27/2014.
+ * Created by el17 on 8/11/2014.
  */
-public class TestButton extends Button {
-    public TestButton(Context context) {
+public class TestTextView extends TextView {
+
+    public TestTextView(Context context) {
         super(context);
     }
 
-    public TestButton(Context context, AttributeSet attrs) {
+    public TestTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public TestButton(Context context, AttributeSet attrs, int defStyle) {
+    public TestTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event){
+    public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
         String a;
         switch (action){
@@ -43,7 +44,7 @@ public class TestButton extends Button {
                 a = "Other";
         }
 
-        Log.i("onTouchEvent", "TestButton:" + a);
+        Log.i("onTouchEvent", "TestTextView:" + a);
 //        return false;
 
         return super.onTouchEvent(event);

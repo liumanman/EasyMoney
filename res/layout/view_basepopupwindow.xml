@@ -18,7 +18,8 @@
             android:layout_weight="114"
             android:background="@android:color/transparent"
             android:gravity="right"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:id="@+id/basepopupwindow_tab_main">
         <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
                       android:layout_weight="164"
                       android:background="@android:color/transparent"></LinearLayout>

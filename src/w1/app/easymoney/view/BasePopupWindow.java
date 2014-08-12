@@ -28,6 +28,8 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
     private int mCurrentTab = -1;
     private OnTabClickListener mOnTabClickListener;
 
+    private LinearLayout mTabMain;
+
     private boolean mIsRelayout = false;
     private final int mTabColor_Normal = Color.argb(255, 98, 98, 98);
     private final int mTabColor_Pressed = Color.argb(255, 138, 138, 138);
@@ -48,11 +50,11 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 if (!mIsRelayout) {
-                    for (int i = 0; i < mTabs.length ; i ++) {
+                    for (int i = 0; i < mTabs.length; i++) {
                         relayoutTab(mTabs[i]);
                     }
 
-                    if (mCurrentTab >= 0){
+                    if (mCurrentTab >= 0) {
                         changeTab(mCurrentTab);
                     }
 
@@ -70,7 +72,6 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
         for(int i = 0; i < mTabs.length; i ++){
             mTabs[i].setOnTouchListener(this);
             mTabs[i].setVisibility(View.INVISIBLE);
-//            mTabs[i].setOnClickListener(this);
             TabHolder holder = new TabHolder();
             holder.mIndex = i;
             mTabs[i].setTag(holder);
@@ -80,18 +81,17 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
         mTop.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (mParent != null){
-                    int[] location = new int[2];
-                    mParent.getLocationOnScreen(location);
-                    float newY = event.getRawY() - location[1];
-                    float newX = event.getRawX() - location[0];
-                    event.setLocation(newX, newY);
-
-                    mParent.dispatchTouchEvent(event);
-                }
-
+                dispatchTouchEventToParent(v, event);
                 return true;
             }
+        });
+
+        mTabMain = (LinearLayout)mContent.findViewById(R.id.basepopupwindow_tab_main);
+        mTabMain.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                dispatchTouchEventToParent(v, event);
+                return true;            }
         });
 
 
@@ -100,6 +100,18 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
         this.setBackgroundDrawable(dw);
         this.setFocusable(true);
         this.setAnimationStyle(R.style.BasePopupWindowAnimation);
+    }
+
+    private void dispatchTouchEventToParent(View v, MotionEvent event){
+        if (mParent != null){
+            int[] location = new int[2];
+            mParent.getLocationOnScreen(location);
+            float newY = event.getRawY() - location[1];
+            float newX = event.getRawX() - location[0];
+            event.setLocation(newX, newY);
+
+            mParent.dispatchTouchEvent(event);
+        }
     }
 
     @Override
@@ -152,7 +164,6 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
 
             if (v instanceof TextView){
                 TextView tv = (TextView)v;
-//                tab.setPadding(h/3, 0, h/3, 0);
                 tv.setText(((TabHolder)tab.getTag()).mText);
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, h / 2 );
             }else if (v instanceof ImageView) {
@@ -225,7 +236,7 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
                         if (tag instanceof  TabHolder){
                             holder = (TabHolder)tag;
 
-                            mOnTabClickListener.onClick(holder.mIndex, v);
+//                            mOnTabClickListener.onClick(holder.mIndex, v);
                         }
                     }
                 }

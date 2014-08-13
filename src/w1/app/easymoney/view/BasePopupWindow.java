@@ -49,19 +49,10 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
         mContent.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                if (!mIsRelayout) {
-                    for (int i = 0; i < mTabs.length; i++) {
-                        relayoutTab(mTabs[i]);
-                    }
-
-                    if (mCurrentTab >= 0) {
-                        changeTab(mCurrentTab);
-                    }
-
-                    mIsRelayout = true;
-                }
+                changeTab(mCurrentTab);
             }
         });
+
         mContainer = (FrameLayout)mContent.findViewById(R.id.basepopupwindow_content);
 
         mTabs[0] = (LinearLayout)mContent.findViewById(R.id.basepopupwindow_tab_0);
@@ -72,8 +63,33 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
         for(int i = 0; i < mTabs.length; i ++){
             mTabs[i].setOnTouchListener(this);
             mTabs[i].setVisibility(View.INVISIBLE);
+            mTabs[i].addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                @Override
+                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                    if (v.getHeight() > 0) {
+                        v.setBackground(getTabBackground(v.getHeight()));
+                    }
+                }
+            });
+
             TabHolder holder = new TabHolder();
             holder.mIndex = i;
+            for(int j = 0; j < mTabs[i].getChildCount(); j ++){
+                if (mTabs[i].getChildAt(j) instanceof TextView){
+                    holder.mTextView = (TextView)mTabs[i].getChildAt(j);
+
+                    holder.mTextView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                        @Override
+                        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                            int h = ((ViewGroup)v.getParent()).getHeight();
+                            ((TextView)v).setTextSize(TypedValue.COMPLEX_UNIT_PX, h / 2);
+                        }
+                    });
+
+                    break;
+                }
+            }
+
             mTabs[i].setTag(holder);
         }
 
@@ -93,7 +109,6 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
                 dispatchTouchEventToParent(v, event);
                 return true;            }
         });
-
 
         this.setContentView(mContent);
         ColorDrawable dw = new ColorDrawable(0x00000000); //to remove the border.
@@ -117,40 +132,43 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
     @Override
     public void showAtLocation(View parent, int gravity, int x, int y) {
         mParent = parent;
+
         super.showAtLocation(parent, gravity, x, y);
     }
 
-    public void setTab(int index, String tabText, View content){
-        if (tabText != null) {
-            ((TabHolder)mTabs[index].getTag()).mText = tabText;
-            mTabs[index].setVisibility(View.VISIBLE);
-        }
-
+    public void setTab(int index, String tabText, View content, boolean canSelected){
         if(content != null){
             mTabContent[index] = content;
             mContainer.addView(content);
-//            this.changeTab(index);
+            canSelected = true;
+
+            if (mCurrentTab < 0){
+                mCurrentTab = index;
+            }
         }
+
+        if (tabText != null) {
+            ((TabHolder)mTabs[index].getTag()).mTextView.setText(tabText);
+            ((TabHolder)mTabs[index].getTag()).mCanSelected = canSelected;
+            mTabs[index].setVisibility(View.VISIBLE);
+        }
+
     }
 
     public void changeTab(int index){
-        if(mTabContent[index] == null){
-            return;
-        }
-
-        if (mIsRelayout) {
-            if (mCurrentTab >= 0) {
+        if (mTabContent[index] != null) {
+            if (mCurrentTab >= 0 && mCurrentTab != index) {
                 mTabContent[mCurrentTab].setVisibility(View.INVISIBLE);
             }
 
             mTabContent[index].setVisibility(View.VISIBLE);
 
-            if (mTabs[index] != null) {
-                setTabColor(mTabs[index], mTabColor_Selected);
-            }
+            mCurrentTab = index;
         }
 
-        mCurrentTab = index;
+        if (mTabs[index] != null && ((TabHolder)mTabs[index].getTag()).mCanSelected) {
+            setTabColor(mTabs[index], mTabColor_Selected);
+        }
     }
 
     private void relayoutTab(ViewGroup tab){
@@ -164,8 +182,9 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
 
             if (v instanceof TextView){
                 TextView tv = (TextView)v;
-                tv.setText(((TabHolder)tab.getTag()).mText);
+//                tv.setText(((TabHolder)tab.getTag()).mText);
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, h / 2 );
+//                tv.requestLayout();
             }else if (v instanceof ImageView) {
                 ImageView iv = (ImageView)v;
             }
@@ -229,14 +248,16 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
                 break;
             case MotionEvent.ACTION_UP:
                 if (!(x < 0 || y <0 || x > v.getWidth() || y > v.getHeight())){
-                    if (mOnTabClickListener != null){
-                        TabHolder holder;
+                    TabHolder holder;
+                    Object tag = v.getTag();
+                    if (tag instanceof  TabHolder) {
+                        holder = (TabHolder)tag;
+                        if (holder.mCanSelected){
+                            changeTab(holder.mIndex);
+                        }
 
-                        Object tag = v.getTag();
-                        if (tag instanceof  TabHolder){
-                            holder = (TabHolder)tag;
-
-//                            mOnTabClickListener.onClick(holder.mIndex, v);
+                        if (mOnTabClickListener != null) {
+                            mOnTabClickListener.onClick(holder.mIndex, v);
                         }
                     }
                 }
@@ -260,6 +281,8 @@ public class BasePopupWindow extends PopupWindow implements View.OnClickListener
 
     private class TabHolder{
         int mIndex;
-        String mText;
+//        String mText;
+        TextView mTextView;
+        boolean mCanSelected;
     }
 }

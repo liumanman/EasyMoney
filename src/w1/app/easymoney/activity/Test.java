@@ -201,8 +201,8 @@ public class Test extends Activity {
 
         //////////////////////
         final BasePopupWindow bpw = new BasePopupWindow(this);
-        bpw.setTab(0, "OK", null);
-        bpw.setTab(1, null, v);
+        bpw.setTab(0, "OK", null, false);
+        bpw.setTab(1, null, v ,false);
         bpw.setOnTabClickListener(new BasePopupWindow.OnTabClickListener() {
             @Override
             public void onClick(int index, View tab) {

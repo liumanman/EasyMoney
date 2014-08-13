@@ -5,7 +5,7 @@
                                          android:layout_width="match_parent"
                                          android:layout_height="match_parent"
                                          android:id="@+id/l1">
-    <w1.app.easymoney.view.TestLinearLayout2 android:layout_width="match_parent" android:layout_height="match_parent"
+    <w1.app.easymoney.view.TestLinearLayout2 android:layout_width="match_parent" android:layout_height="200dp"
                                              android:id="@+id/l2">
         <w1.app.easymoney.view.TestButton android:layout_width="wrap_content" android:layout_height="wrap_content"
                                           android:text="Click me"
@@ -14,5 +14,13 @@
                 android:id="@+id/t4"
                 android:text="Text"/>
     </w1.app.easymoney.view.TestLinearLayout2>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+            android:orientation="horizontal">
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="Text1"/>
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="Text2"/>
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="Text3"/>
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="Text4"/>
+    </LinearLayout>
 
 </w1.app.easymoney.view.TestLinearLayout1>
